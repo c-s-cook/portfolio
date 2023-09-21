@@ -1,3 +1,5 @@
+"use client"
+
 import './Navbar.css'
 
 import Image from 'next/image'
@@ -13,6 +15,12 @@ import HamburgerX01 from './Hamburgers/HamburgerX01'
 
 
 export default function Navbar({ user }) {
+
+  const unCheckbox = () => {
+    const box = document.getElementById('checkbox_toggle');
+    box.checked = false;
+  }
+
   return (
     <>
     <nav className="navbar">
@@ -29,23 +37,10 @@ export default function Navbar({ user }) {
         {/* NAVICATION MENU */}
         <div className="menu">
 
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/about">About</Link></li>
-
-          <li className='services'>
-            <Link href="/">Services</Link>
-
-              {/* DROPDOWN MENU  */}
-              <ul className="dropdown">
-                <li><Link href="/">Drop 1</Link></li>
-                <li><Link href="/">Drop 2</Link></li>
-                <li><Link href="/">Drop 3</Link></li>
-                <li><Link href="/">Drop 4</Link></li>
-              </ul>
-          </li>
-
-          <li><Link href="/">Pricing</Link></li>
-          <li><Link href="/">Contact</Link></li>
+          <li><Link href="/" onClick={unCheckbox}>Home</Link></li>
+          <li><Link href="/about" onClick={unCheckbox}>About</Link></li>
+          <li><Link href="/" onClick={unCheckbox}>Pricing</Link></li>
+          <li><Link href="/" onClick={unCheckbox}>Contact</Link></li>
 
         </div>
       </ul>

@@ -7,12 +7,13 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    overflow: hidden;
     
   }
-  .hamRotate.active {
-    transform: rotate(45deg);
+  input[type=checkbox]:checked ~ .hamburger .hamRotate {
+    transform: rotate(45deg) scale(1.2);
   }
-  .hamRotate180.active {
+  input[type=checkbox]:checked ~ .hamburger .hamRotate180 {
     transform: rotate(180deg);
   }
   .line {
@@ -28,10 +29,10 @@
   .ham1 .bottom {
     stroke-dasharray: 40 180;
   }
-  .ham1.active .top {
+  input[type=checkbox]:checked ~ .hamburger .ham1 .top {
     stroke-dashoffset: -98px;
   }
-  .ham1.active .bottom {
+  input[type=checkbox]:checked ~ .hamburger .ham1 .bottom {
     stroke-dashoffset: -138px;
   }
 

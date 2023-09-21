@@ -2,7 +2,8 @@ import './globals.css'
 import { Quicksand } from 'next/font/google'
 
 
-import Navbar03 from './components/Navbars/Navbar03'
+import Navbar from './components/Navbars/Navbar'
+import Background from './components/Background'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +18,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar03 />
+        <Background />
+        <Navbar />
         {children}
       </body>
     </html>
