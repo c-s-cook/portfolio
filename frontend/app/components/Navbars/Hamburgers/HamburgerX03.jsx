@@ -11,7 +11,7 @@ export default function HamburgerX03({width}) {
   }
   return (
     <>
-    <svg class="ham ham6" viewBox="0 0 100 100" width="80" onClick={(e) => e.target.classList.toggle('active')}>
+    <svg class="ham ham6" viewBox="0 0 100 100">
             <path
                 class="line top"
                 style={lineStyle}

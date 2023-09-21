@@ -21,7 +21,7 @@
   margin-left: 10%;
   margin-bottom: 2em;
   padding: 0;
-  z-index: -50;
+  z-index: 98;
   transition: 0.6s ease;
 }
   
@@ -30,8 +30,9 @@
   }
   
   /* LOGO */
-  .logo {
+  #logo {
     font-size: 32px;
+    z-index: 99;
   }
   
   /* NAVBAR MENU */
@@ -42,6 +43,12 @@
     align-items: center;
     z-index: 50;
   }
+
+  .menu li {
+    padding: 5px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+  }
   
   .menu li:hover {
     background-color: rgba(255, 255, 255, 0.15);
@@ -50,10 +57,7 @@
     transition: 0.3s ease;
   }
   
-  .menu li {
-    padding: 5px 14px;
-    border-radius: 8px;
-  }
+
   
   /* DROPDOWN MENU */
   .services {
@@ -118,19 +122,32 @@ input[type=checkbox] {
        overflow: hidden;
        transform-origin: top right;
        background: linear-gradient(45deg, var(--background-start-rgb), var(--background-end-rgb));
-       right: -70%;
-       top: 55px;
-       margin-top: 15px;
-       margin-right: 5px;
-       max-width: 100vw;
-       min-width: 50vw;
-       text-align: right;
+       right: 10px;
+       top: 10px;
+       margin: 0px auto;
+       width: 5vw;
+       height: 5vw;
+       text-align: center;
        padding: 3em 0;
        z-index: 10;
-       border-radius: 8px;
+       border-radius: 50%;
        border: 1px solid white;
+       opacity: 0;
        transition: 0.3s ease;
      }
+
+    .menu li {
+      margin: 0.7em auto;
+      padding: 0.5em 0.5em;
+      max-width: 50vw;
+      border: 1px solid transparent;
+      opacity: 0;
+      transition: 0.5s ease-in;
+    }
+
+    .menu li:first-of-type{
+      margin-top: 2em;
+    }
    
      .menu li:hover {
        display: inline-block;
@@ -139,16 +156,23 @@ input[type=checkbox] {
        transition: 0.3s ease;
      }
    
-     .menu li {
-       margin-top: 1.5em;
-       padding: 0 3em;
-     }
+     
    
      input[type=checkbox]:checked ~ .menu {
-       display: inline-block;
        overflow: hidden;
+       border-radius: 8px;
+       opacity: 1;
        right: 10px;
+       width: 95vw;
+       height: auto;
      }
+
+     input[type=checkbox]:checked ~ .menu li {
+      opacity: 1;
+
+     }
+
+
 
     .ham .line {
       stroke: var(--foreground-rgb);

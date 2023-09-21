@@ -8,10 +8,10 @@
     -ms-user-select: none;
     user-select: none;
   }
-  .hamRotate.active {
+  input[type=checkbox]:checked ~ .hamburger .hamRotate {
     transform: rotate(45deg);
   }
-  .hamRotate180.active {
+  input[type=checkbox]:checked ~ .hamburger .hamRotate180 {
     transform: rotate(180deg);
   }
   .line {
@@ -30,13 +30,13 @@
   .ham7 .bottom {
     stroke-dasharray: 40 161;
   }
-  .ham7.active .top {
+  input[type=checkbox]:checked ~ .hamburger .ham7 .top {
     stroke-dasharray: 17 82;
     stroke-dashoffset: -62px;
   }
-  .ham7.active .middle {
+  input[type=checkbox]:checked ~ .hamburger .ham7 .middle {
     stroke-dashoffset: 23px;
   }
-  .ham7.active .bottom {
+  input[type=checkbox]:checked ~ .hamburger .ham7 .bottom {
     stroke-dashoffset: -83px;
   }

@@ -7,7 +7,7 @@ import Background from './components/Background'
 
 export const dynamic = 'force-dynamic'
 
-const inter = Quicksand({ subsets: ['latin'] })
+const quicksand = Quicksand({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',
@@ -17,7 +17,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={quicksand.className}>
         <Background />
         <Navbar />
         {children}

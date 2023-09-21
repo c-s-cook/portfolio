@@ -9,10 +9,10 @@
     user-select: none;
     color: greenyellow;
   }
-  .hamRotate.active {
+  input[type=checkbox]:checked ~ .hamburger .hamRotate {
     transform: rotate(45deg);
   }
-  .hamRotate180.active {
+  input[type=checkbox]:checked ~ .hamburger .hamRotate180 {
     transform: rotate(180deg);
   }
   .line {
@@ -31,12 +31,12 @@
   .ham6 .bottom {
     stroke-dasharray: 40 172;
   }
-  .ham6.active .top {
+  input[type=checkbox]:checked ~ .hamburger .ham6 .top {
     stroke-dashoffset: -132px;
   }
-  .ham6.active .middle {
+  input[type=checkbox]:checked ~ .hamburger .ham6 .middle {
     stroke-dashoffset: -71px;
   }
-  .ham6.active .bottom {
+  input[type=checkbox]:checked ~ .hamburger .ham6 .bottom {
     stroke-dashoffset: -132px;
   }
