@@ -1,14 +1,4 @@
-
-Navbars:
-- https://codepen.io/technext/pen/qBmNbJE
--[nice animated X hamburger] https://codepen.io/technext/pen/JjNEvBZ
-
-Hamburgers:
-- https://www.sliderrevolution.com/resources/css-hamburger-menu/
-
-
-
-
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
