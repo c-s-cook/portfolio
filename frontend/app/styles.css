@@ -1,0 +1,22 @@
+
+.section {
+    margin: 0 auto;
+    max-width: 70vw;
+    padding: 2em;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+/* APPLYING MEDIA QUERIES */
+@media (max-width: 768px) {
+
+    .section {
+        max-width: 90vw;
+        
+    }
+  
+}

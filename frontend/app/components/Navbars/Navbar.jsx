@@ -63,7 +63,12 @@ export default function Navbar({ user }) {
     <>
     <nav className="navbar">
       {/* LOGO */}
-      <div className={satisfy.className} id='logo'><Link href="/">Christopher Cook</Link></div>
+      <div className='logo'>
+        <Link href="/">
+          <h1 className={satisfy.className}>Christopher Cook</h1>
+          <h2>Full Stack <i/> Web Developer</h2>
+        </Link>
+      </div>
 
       {/* NAVIGATION MENU */}
       <ul className="nav-links">
