@@ -40,14 +40,15 @@ export default function Navbar({ user }) {
     const box = document.getElementById('checkbox_toggle');
 
     if(box.checked){ 
-      console.log('Box:check is TRUE!')
+      // console.log('Box:check is TRUE!')
     }
 
     if(!box.checked){
-      console.log('burgerCount: ', burgerCount, ' & burgerCount % 4: ', burgerCount%4);
-      setBurgerCount(burgerCount+1)
-      console.log('NOW...burgerCount: ', burgerCount, ' & burgerCount % 4: ', burgerCount%4);
-      setCurrentBurger(burgers[(burgerCount%4)]);
+      // console.log('burgerCount: ', burgerCount, ' & burgerCount % 4: ', burgerCount%4);
+      // setBurgerCount(burgerCount+1)
+      setBurgerCount(burgerCount < 3 ? burgerCount+1 : 0)
+      // console.log('NOW...burgerCount: ', burgerCount, ' & burgerCount % 4: ', burgerCount%4);
+      setCurrentBurger(burgers[(burgerCount)]);
     }
   }
   
@@ -63,12 +64,7 @@ export default function Navbar({ user }) {
     <>
     <nav className="navbar">
       {/* LOGO */}
-      <div className='logo'>
-        <Link href="/">
-          <h1 className={satisfy.className}>Christopher Cook</h1>
-          <h2>Full Stack <i/> Web Developer</h2>
-        </Link>
-      </div>
+      <div className={satisfy.className} id='logo'><Link href="/">Christopher Cook</Link></div>
 
       {/* NAVIGATION MENU */}
       <ul className="nav-links">
