@@ -1,18 +1,54 @@
 
 /* NAVBAR STYLING STARTS */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    /* background-color: var(--background-end-rgb); */
-    /* color: #fff; */
-    margin: 0 auto;
-    width: 80%;
-    margin-top: 15vh
-  }
+  display: flex;
+  position: sticky;
+  top: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  /* background-color: var(--background-end-rgb); */
+  /* color: #fff; */
+  margin: 0 auto;
+  width: 80%;
+  margin-top: 15vh
+}
+
+.navbar.sticky {
+  position: sticky;
+  top: 0;
+  width: calc(80%);
+  margin-top: 0;
+  padding: 0.8em 0.8em 0.8em 1.5em;
+  overflow: hidden;
+}
+
+
+
+
+.nav-background{
+  display: block;
+  /* border: 2px red dashed; */
+  position: absolute;
+  z-index: -10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 2rem);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+}
+
+.navbar.sticky .nav-background {
+  display: block;
+  z-index: -10;
+}
 
 .nav-divider {
+  position: sticky;
+  top: calc(2em + 2rem);
+
   display: block;
   width: 80%;
   transform-origin: left;
@@ -115,10 +151,43 @@ input[type=checkbox] {
   /* APPLYING MEDIA QUERIES */
 @media (max-width: 768px) {
     .navbar {
-      width: calc(100% - var(--scrollbar-width));
+      position:fixed;
+      top: 0;
+
+      /* border: 1px red dashed; */
+      width: calc(100%);
       margin-top: 0;
-      padding: 0.8em 0.8em 0.4em 1.5em;
+      padding: 0.9em 0.8em 0.8em 2em;
       overflow: hidden;
+      /* background: linear-gradient(135deg, var(--background-start-rgb), var(--background-end-rgb)); */
+      /* background: linear-gradient(180deg, rgba(255, 255, 255, 1),  rgba(255, 255, 255, 1) 50%,  rgba(255, 255, 255, 0.5) 90%, rgba(255, 255, 255, 0)); */
+    }
+
+    .nav-divider {
+      margin-top: -2rem;
+      /* position: fixed; */
+      /* padding-top: -2rem; */
+
+    }
+
+    .nav-background{
+      border: 2px red dashed;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% + 2rem);
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+    }
+
+    .nav-background #background {
+      /* height: 50%; */
+    }
+
+    body {
+      padding-top: 6rem;
     }
 
     .menu {
@@ -173,7 +242,7 @@ input[type=checkbox] {
       /* border: 5px dashed red; */
       opacity: 1;
       right: 10px;
-      width: calc(95vw - var(--scrollbar-width));
+      width: calc(96vw - var(--scrollbar-width));
       height: auto;
       transition: 0.3s ease;
     }

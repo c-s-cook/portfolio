@@ -13,13 +13,8 @@ import HamburgerX02 from './Hamburgers/HamburgerX02'
 import HamburgerX03 from './Hamburgers/HamburgerX03'
 import HamburgerX04 from './Hamburgers/HamburgerX04'
 import { useState } from 'react'
+import Background from '../Background'
 
-
-//  NAVBAR - v2
-//    Working to add...
-//      - animated hamburger -> X button
-//      - animated slide-in menu when in mobile view
-// { String.fromCharCode(9776) }
 
 
 export default function Navbar({ user }) {
@@ -44,10 +39,7 @@ export default function Navbar({ user }) {
     }
 
     if(!box.checked){
-      // console.log('burgerCount: ', burgerCount, ' & burgerCount % 4: ', burgerCount%4);
-      // setBurgerCount(burgerCount+1)
       setBurgerCount(burgerCount < 3 ? burgerCount+1 : 0)
-      // console.log('NOW...burgerCount: ', burgerCount, ' & burgerCount % 4: ', burgerCount%4);
       setCurrentBurger(burgers[(burgerCount)]);
     }
   }
@@ -62,7 +54,7 @@ export default function Navbar({ user }) {
 
   return (
     <>
-    <nav className="navbar">
+    <nav className="navbar ">
       {/* LOGO */}
       <div className={satisfy.className} id='logo'><Link href="/">Christopher Cook</Link></div>
 
@@ -83,6 +75,11 @@ export default function Navbar({ user }) {
 
         </div>
       </ul>
+
+      {/* BACKGROUND FADE ATTEMPT */}
+      <div className="nav-background">
+        <Background/>
+      </div>
     </nav>
     <span className="nav-divider"></span>
     </>
