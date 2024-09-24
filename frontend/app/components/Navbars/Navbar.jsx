@@ -17,8 +17,33 @@ import Background from '../Background'
 
 
 
-export default function Navbar({ user }) {
+export default function Navbar({ user, navLinks }) {
 
+  //  create default array of nav menu items
+  const navLinkDefaults = [
+    {
+      href: "/",
+      text: "Home"
+    },
+    {
+      href: "/about",
+      text: "About"
+    },
+    {
+      href: "/",
+      text: "Pricing"
+    },
+    {
+      href: "/",
+      text: "ConTRACTs"
+    }
+  ];
+  
+  let links = navLinks ? navLinks : navLinkDefaults;
+  
+  
+  
+  
   // create an array of menu-icon components to iterate through
   const burgers = [
     (<HamburgerX01 width={2} />),
@@ -68,10 +93,16 @@ export default function Navbar({ user }) {
         {/* NAVICATION MENU */}
         <div className="menu">
 
-          <li><Link href="/" onClick={unCheckbox}>Home</Link></li>
+          { links.map((link, index) => (
+            <li key={index}><Link href={link.href} onClick={unCheckbox}>{link.text}</Link></li>
+          ))}
+            
+          
+
+          {/* <li><Link href="/" onClick={unCheckbox}>Home</Link></li>
           <li><Link href="/about" onClick={unCheckbox}>About</Link></li>
           <li><Link href="/" onClick={unCheckbox}>Pricing</Link></li>
-          <li><Link href="/" onClick={unCheckbox}>Contact</Link></li>
+          <li><Link href="/" onClick={unCheckbox}>Contact</Link></li> */}
 
         </div>
       </ul>

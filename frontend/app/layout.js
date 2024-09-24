@@ -15,11 +15,21 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  
+  const navLinks = [
+    { href: "/",        text: "Main" },
+    { href: "/about",   text: "About?" },
+    { href: "/",        text: "Costs" },
+    { href: "/",        text: "Comminucations" }
+  ];
+
+
+
   return (
     <html lang="en">
       <body className={quicksand.className}>
         <Background />
-        <Navbar />
+        <Navbar navLinks={navLinks} />
         {children}
       </body>
     </html>
