@@ -1,9 +1,57 @@
 
-.section {
+
+.scrollsnap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+    scroll-snap-type: y mandatory;
+    scroll-snap-stop: always;
+    overflow-y: scroll;
+    /* border: 3px dashed red; */
+}
+
+.scrollsnap > section {
+    scroll-snap-align: start;
+    
+    /* border: 1px dashed greenyellow; */
+    min-height: 100vh;
+    max-width: 80%;
     margin: 0 auto;
+    position: relative;
+    padding: 5em 5em;
+    
+    /* padding-top: 3em;
+    margin: 3em auto;
     max-width: 70vw;
     padding: 2em;
     border-radius: 20px;
+    
+    background-color: rgba(0, 0, 0, 0.2); */
+}
+
+.scrollsnap > footer {
+    scroll-snap-align: start;
+}
+
+
+section > .content {
+
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    padding-top: 3em;
+    margin: 3em auto;
+    max-width: 70vw;
+    width: 100%;
+    margin-bottom: 10em;
+    padding: 2em;
+    border-radius: 20px;
+    /* border: 1px dashed cyan; */
     background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -14,9 +62,20 @@
 /* APPLYING MEDIA QUERIES */
 @media (max-width: 768px) {
 
-    .section {
+    /* .section {
         max-width: 90vw;
         
+    } */
+
+    .scrollsnap > section {
+        max-width: 90%;
+        padding: 5em 5em;
     }
+
+    section > .content {
+        max-width: 90vw;
+    }
+
+
   
 }

@@ -29,8 +29,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={quicksand.className}>
         <Background />
-        <Navbar navLinks={navLinks} />
-        {children}
+        <main className='scrollsnap'>
+          <Navbar navLinks={navLinks} />
+          {children}
+          <footer>Copyright 2024 Christopher Cook. All rights reserved.</footer>
+        </main>
       </body>
     </html>
   )

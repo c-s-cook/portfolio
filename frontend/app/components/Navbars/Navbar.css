@@ -3,6 +3,7 @@
 .navbar {
   display: flex;
   position: sticky;
+  z-index: 99;
   top: 0;
   align-items: center;
   justify-content: space-between;
@@ -11,7 +12,7 @@
   /* color: #fff; */
   margin: 0 auto;
   width: 80%;
-  margin-top: 15vh
+  margin-top: 0vh
 }
 
 .navbar.sticky {
@@ -53,7 +54,7 @@
   width: 80%;
   transform-origin: left;
   border-bottom: 1px solid var(--foreground-rgb);
-  opacity: 40%;
+  /* opacity: 100%; */
   margin-left: 10%;
   margin-bottom: 2em;
   padding: 0;
@@ -101,7 +102,7 @@
   }
   
   .dropdown {
-    background-color: rgb(1, 139, 139);
+    /* background-color: rgb(1, 139, 139); */
     padding: 1em 0;
     position: absolute; /*WITH RESPECT TO PARENT*/
     display: none;
@@ -165,6 +166,7 @@ input[type=checkbox] {
 
     .nav-divider {
       margin-top: -2rem;
+      top: calc(1em + 1rem);
       /* position: fixed; */
       /* padding-top: -2rem; */
 
