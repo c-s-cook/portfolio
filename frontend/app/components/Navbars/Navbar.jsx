@@ -118,7 +118,7 @@ export default function Navbar({ user, navLinks }) {
         <label htmlFor="checkbox_toggle" className='hamburger' onClick={ burgerFlipper }>{ currentBurger }</label>
 
         {/* NAVICATION MENU */}
-        <div className="menu">
+        <div id='menu'>
 
           { links.map((link, index) => (
             <li key={index}><Link href={link.href} onClick={unCheckbox}>{link.text}</Link></li>

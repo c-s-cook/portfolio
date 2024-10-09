@@ -3,8 +3,8 @@
 #navbar {
   display: flex;
   position: sticky;
-  opacity: 0;
-  visibility: hidden;
+  /* opacity: 0; */
+  /* visibility: hidden; */
   z-index: 99;
   top: 0;
   align-items: center;
@@ -28,7 +28,7 @@
   overflow: hidden;
 }
 
-#navbar.visible, #nav-divider.visible{
+#nav-logo.visible, #nav-divider.visible, #menu.visible{
   /* display: none; */
   visibility: visible;
   opacity: 1;
@@ -82,24 +82,28 @@
   #nav-logo {
     font-size: 32px;
     z-index: 99;
+    opacity: 0;
+    visibility: hidden;
   }
   
   /* NAVBAR MENU */
-  .menu {
+  #menu {
     display: flex;
+    opacity: 0;
+    visibility: hidden;
     gap: 1em;
     font-size: 18px;
     align-items: center;
     z-index: 50;
   }
 
-  .menu li {
+  #menu li {
     padding: 5px 14px;
     border-radius: 8px;
     border: 1px solid transparent;
   }
   
-  .menu li:hover {
+  #menu li:hover {
     background-color: rgba(255, 255, 255, 0.15);
     border: 1px solid white;
     border-radius: 8px;
@@ -185,7 +189,7 @@ input[type=checkbox] {
     }
 
     .nav-background{
-      border: 2px red dashed;
+      /* border: 2px red dashed; */
       position: absolute;
       top: 0;
       left: 0;
@@ -204,8 +208,12 @@ input[type=checkbox] {
       padding-top: 6rem;
     }
 
-    .menu {
+    #menu {
       display: inline-block;
+      
+      /* opacity: 1;
+      visibility: visible; */
+
       position: fixed;
       overflow: hidden;
       transform-origin: top right;
@@ -224,11 +232,17 @@ input[type=checkbox] {
       /* transition: 0.3s ease; */
     }
 
-    .menu li:first-of-type{
+    #menu.visible{
+      visibility: visible;
+      opacity: 0;
+      transition: 0.2s ease-in-out;
+    }
+
+    #menu li:first-of-type{
       margin-top: 2em;
     }
 
-    .menu li {
+    #menu li {
       margin: 0.7em auto;
       padding: 0.5em 0.5em;
       max-width: 50vw;
@@ -239,7 +253,7 @@ input[type=checkbox] {
     }
 
        
-    .menu li:hover {
+    #menu li:hover {
       /* display: inline-block; */
       background-color: rgba(255, 255, 255, 0.25);
       border: 1px solid white;
@@ -249,19 +263,20 @@ input[type=checkbox] {
    
      
    
-    input[type=checkbox]:checked ~ .menu {
+    input[type=checkbox]:checked ~ #menu {
       display: inline-block;
       overflow: hidden;
       border-radius: 8px;
       /* border: 5px dashed red; */
       opacity: 1;
+      visibility: visible;
       right: 10px;
       width: calc(96vw - var(--scrollbar-width));
       height: auto;
       transition: 0.3s ease;
     }
 
-    input[type=checkbox]:checked ~ .menu li {
+    input[type=checkbox]:checked ~ #menu li {
       opacity: 1;
 
     }

@@ -26,16 +26,19 @@ const Logo = ({forNavBar}) => {
     useEffect(() => {
 
         const mainLogoGet = document.getElementById('main-logo');
-        const navbar = document.getElementById('navbar');
+        const navLogo = document.getElementById('nav-logo');
+        const navMenu = document.getElementById('menu');
         const navDivider = document.getElementById('nav-divider');
         let mainLogoVisible = mainLogoGet ? true : false;
 
         const toggleNavbarVisible = () => {
             if(mainLogoVisible){
-                navbar.classList.remove('visible');
+                navLogo.classList.remove('visible');
+                navMenu.classList.remove('visible');
                 navDivider.classList.remove('visible');
             } else {
-                navbar.classList.add('visible');
+                navLogo.classList.add('visible');
+                navMenu.classList.add('visible');
                 navDivider.classList.add('visible');
             }
         }
