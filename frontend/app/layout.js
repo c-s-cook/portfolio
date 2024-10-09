@@ -5,6 +5,7 @@ import { Quicksand } from 'next/font/google'
 import Navbar from './components/Navbars/Navbar'
 import Background from './components/Background'
 
+
 export const dynamic = 'force-dynamic'
 
 const quicksand = Quicksand({ subsets: ['latin'] })
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      {/* INSERT JavaScript file for hideNavBar here with defer */}
       <body className={quicksand.className}>
         <Background />
         <main className='scrollsnap'>

@@ -1,19 +1,35 @@
+
 import Image from 'next/image'
 import Link from 'next/link'
+
 
 import './styles.css'
 
 import { Satisfy } from 'next/font/google'
+import Logo from './components/Logo/Logo'
 const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
 
 
 export default function Home() {
+
+
+
+
+
+
   return (
     <>
       {/* <main className='scrollsnap'> */}
+
+      
       
         
         
+        <section>
+          <div className="content no-background">
+            <Logo />
+          </div>
+        </section>
         <section>
           <div className="content">
             <div className="section-title">

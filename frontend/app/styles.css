@@ -17,6 +17,7 @@
     scroll-snap-align: start;
     
     /* border: 1px dashed greenyellow; */
+
     min-height: 100vh;
     max-width: 80%;
     margin: 0 auto;
@@ -45,7 +46,7 @@ section > .content {
     transform: translate(-50%, -50%);
 
     padding-top: 3em;
-    margin: 3em auto;
+    margin: 2em auto;
     max-width: 70vw;
     width: 100%;
     margin-bottom: 10em;
@@ -53,6 +54,10 @@ section > .content {
     border-radius: 20px;
     /* border: 1px dashed cyan; */
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+section > .content.no-background {
+    background-color: transparent;
 }
 
 
@@ -74,6 +79,8 @@ section > .content {
 
     section > .content {
         max-width: 90vw;
+        padding: 1em;
+        margin: 0em auto;
     }
 
 

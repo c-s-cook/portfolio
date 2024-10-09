@@ -2,8 +2,8 @@
 
 import './Navbar.css'
 
-import { Satisfy } from 'next/font/google'
-const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
+// import { Satisfy } from 'next/font/google'
+// const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
 
 
 import Image from 'next/image'
@@ -14,10 +14,36 @@ import HamburgerX03 from './Hamburgers/HamburgerX03'
 import HamburgerX04 from './Hamburgers/HamburgerX04'
 import { useState } from 'react'
 import Background from '../Background'
+import Logo from '../Logo/Logo'
 
 
 
 export default function Navbar({ user, navLinks }) {
+
+
+  //  InsersectionObserver for Main Page Logo Banner & Navbar Logo
+  // const observeMainLogo = () => {
+
+  //   console.log("i'm tryin here");
+
+  //   if (mainLogo){
+  
+  //     const hideLogo = (entries) => {
+  //       console.log("Fired Observer!", entries);
+  //     }
+  
+  //     let observerOptions = {
+  //       root: null,
+  //       rootMargin: "30px",
+  //       threshold: 1.0,
+  //     }
+  
+  //     const observer = new IntersectionObserver(hideLogo, observerOptions);
+  //   }
+  // }
+
+
+
 
   //  create default array of nav menu items
   const navLinkDefaults = [
@@ -79,9 +105,10 @@ export default function Navbar({ user, navLinks }) {
 
   return (
     <>
-    <nav className="navbar ">
+    <nav id="navbar">
       {/* LOGO */}
-      <div className={satisfy.className} id='logo'><Link href="/">Christopher Cook</Link></div>
+      {/* <div className={satisfy.className} id='nav-logo'><Link href="/">Christopher Cook</Link></div> */}
+      <Logo forNavBar={true} />
 
       {/* NAVIGATION MENU */}
       <ul className="nav-links">
@@ -112,7 +139,7 @@ export default function Navbar({ user, navLinks }) {
         <Background/>
       </div>
     </nav>
-    <span className="nav-divider"></span>
+    <span id="nav-divider"></span>
     </>
   )
 }
