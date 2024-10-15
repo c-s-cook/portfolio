@@ -41,9 +41,13 @@
 section > .content {
 
     position:absolute;
+    /* position:relative; */
+    margin-left: auto;
+    margin-right: auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /* transform-origin: top center; */
 
     padding-top: 3em;
     margin: 2em auto;
@@ -60,6 +64,13 @@ section > .content.no-background {
     background-color: transparent;
 }
 
+section > .content.extra-long {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: translate(0,0);
+}
+
 
 
 
@@ -74,13 +85,20 @@ section > .content.no-background {
 
     .scrollsnap > section {
         max-width: 90%;
-        padding: 5em 5em;
+        padding: 5em 0em;
     }
 
     section > .content {
         max-width: 90vw;
         padding: 1em;
-        margin: 0em auto;
+        margin: auto auto;
+    }
+
+    section > .content.long {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: translate(0,0);
     }
 
 
