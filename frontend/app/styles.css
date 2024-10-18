@@ -54,14 +54,30 @@ section > .content {
     max-width: 70vw;
     width: 100%;
     margin-bottom: 10em;
-    padding: 2em;
-    border-radius: 20px;
+    
+    
     /* border: 1px dashed cyan; */
-    background-color: rgba(0, 0, 0, 0.2);
+    
+}
+
+section .body {
+    padding: 2em;
+    position: relative;
+}
+
+.content h2 {
+    text-align: center;
+    font-size: 1.5em;
 }
 
 section > .content.no-background {
     background-color: transparent;
+}
+
+section .with-background {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+
 }
 
 section > .content.extra-long {
@@ -69,6 +85,7 @@ section > .content.extra-long {
     top: auto;
     left: auto;
     transform: translate(0,0);
+    margin-bottom: 35vh;
 }
 
 
@@ -90,8 +107,12 @@ section > .content.extra-long {
 
     section > .content {
         max-width: 90vw;
-        padding: 1em;
+        /* padding: 1em; */
         margin: auto auto;
+    }
+
+    section .body {
+        padding: 0em;
     }
 
     section > .content.long {
