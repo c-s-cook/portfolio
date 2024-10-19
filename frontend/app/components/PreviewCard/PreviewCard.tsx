@@ -107,6 +107,25 @@ const PreviewCard = ({ cardID, project, interval = 2.5 }: PreviewCardProps): Rea
         card.addEventListener('mouseenter', startShuffle);
         card.addEventListener('mouseleave', stopShuffle, false);
 
+        // IntersectionObserver for Phone /responsive layout
+
+        const toggleActiveCard = (entries) => {
+            if(entries[0].isIntersecting){
+                card.classList.add("active");
+            } else {
+                card.classList.remove("active");
+            }
+        }
+
+        let cardObserverOptions = {
+            root: null,
+            rootMargin: "-30% 0% -50% 0%",
+            threshold: 0,
+        };
+
+        const observer = new IntersectionObserver(toggleActiveCard, cardObserverOptions);
+        observer.observe(card);
+
 
     }, [])
     
