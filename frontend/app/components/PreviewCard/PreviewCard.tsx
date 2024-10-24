@@ -119,7 +119,7 @@ const PreviewCard = ({ cardID, project, interval = 2.5 }: PreviewCardProps): Rea
 
         let cardObserverOptions = {
             root: null,
-            rootMargin: "-30% 0% -50% 0%",
+            rootMargin: "-30% 0% -30% 0%",
             threshold: 0,
         };
 
