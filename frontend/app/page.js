@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 
-import './styles.css'
+
 
 import { Satisfy } from 'next/font/google'
 import Logo from './components/Logo/Logo'

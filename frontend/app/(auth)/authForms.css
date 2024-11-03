@@ -1,0 +1,28 @@
+.content form {
+    border: 1px red dashed;
+    text-align: center;
+}
+
+.content form input {
+    display: block;
+    margin: 0 auto;
+    padding: 5px 10px;
+    margin-bottom: 1em;
+    color: var(--background-start-rgb);
+    border-radius: 8px;
+    border: 0px var(--background-start-rgb) solid;
+}
+
+.content form button {
+    background-color: rgba(255, 255, 255, 0.25);
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 0.5em 1.5em;
+    text-transform: uppercase;
+    transition: 0.2s ease-in-out;
+}
+
+.content form button:hover {
+    background-color: rgba(255, 255, 255, 0.75);
+    color: var(--background-start-rgb);
+}

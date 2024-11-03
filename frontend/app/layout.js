@@ -1,9 +1,12 @@
 import './globals.css'
+import './styles.css'
 import { Quicksand } from 'next/font/google'
 
 
 import Navbar from './components/Navbars/Navbar'
 import Background from './components/Background'
+
+import dbConnect from '../lib/dbConnect'
 
 
 export const dynamic = 'force-dynamic'
