@@ -35,7 +35,11 @@
 
 .scrollsnap > footer {
     scroll-snap-align: start;
+    max-width: 80%;
     margin: 0 auto;
+    text-align: center;
+    /* border: 1px dotted orange; */
+    padding-bottom: 1em;
     bottom: 0;
 
 }
@@ -52,14 +56,14 @@ section > .content {
     transform: translate(-50%, -50%);
     /* transform-origin: top center; */
 
-    padding-top: 3em;
+    /* padding-top: 3em; */
     margin: 2em auto;
     max-width: 70vw;
     width: 100%;
     margin-bottom: 10em;
     
     
-    border: 1px dashed cyan;
+    /* border: 1px dashed cyan; */
     
 }
 
@@ -91,6 +95,9 @@ section > .content.extra-long {
     margin-bottom: 35vh;
 }
 
+section .centered {
+    text-align: center;
+}
 
 
 

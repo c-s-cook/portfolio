@@ -39,7 +39,22 @@ export async function middleware(request: NextRequest) {
                 return NextResponse.next()
               } catch (err) {
                 console.log(err.message);
-                return NextResponse.redirect(new URL('/login', request.url))
+                
+                const url = new URL('/login', request.url)
+                
+                // if request HAD a JWT, but it was expired, add 'expired' param
+                if(err.message.includes('exp')){
+                  console.log("The token has expired!")
+                  url.searchParams.set("expired", "true")
+                }
+
+                const response = NextResponse.redirect(url)
+
+                console.log("deleteing JWT cookie...")
+                response.cookies.delete('jwt')
+
+                return response
+                
               }
 
         }

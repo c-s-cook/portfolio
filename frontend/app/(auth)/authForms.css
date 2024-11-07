@@ -1,6 +1,7 @@
 .content form {
-    border: 1px red dashed;
+    
     text-align: center;
+    animation: fade-in-up 0.5s ease-in-out;
 }
 
 .content form input {
@@ -13,7 +14,9 @@
     border: 0px var(--background-start-rgb) solid;
 }
 
-.content form button {
+
+
+.content form button, .error button {
     background-color: rgba(255, 255, 255, 0.25);
     border: 1px solid white;
     border-radius: 8px;
@@ -22,7 +25,18 @@
     transition: 0.2s ease-in-out;
 }
 
-.content form button:hover {
+.error button {
+    padding: 5px 10px;
+    margin-top: 5px;
+}
+
+.content form button:hover, .error button:hover {
     background-color: rgba(255, 255, 255, 0.75);
     color: var(--background-start-rgb);
 }
+
+.content .error {
+    padding-top: 5px;
+    min-height: 2em;
+}
+

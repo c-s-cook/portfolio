@@ -1,8 +1,8 @@
 "use client"
 
 import { FormEvent } from 'react'
-// import { useRouter } from 'next/router'
 import { useRouter } from 'next/navigation'
+import type { AuthType } from '../../../lib/types'
  
 import '../authForms.css'
 
@@ -10,16 +10,13 @@ export default function SignupPage() {
   const router = useRouter()
  
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    console.log("submitting...")
-    
+    event.preventDefault() 
  
     const formData = new FormData(event.currentTarget)
     const form = document.getElementById('signup-form')
     const email = formData.get('email')
     const password = formData.get('password')
-    const isSignup = true;
+    const authType:AuthType = "SIGN-UP"
 
     const errorMsg = document.getElementById('error-msg')
     errorMsg.textContent = ''
@@ -33,23 +30,22 @@ export default function SignupPage() {
     const response = await fetch('./api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, isSignup }),
+      body: JSON.stringify({ email, password, authType }),
     })
  
     if (response.status == 201) {
 
       form.classList.add('disable')
       form.style.display = 'none'
-      errorMsg.textContent = `Thank you for signing up. I've sent a email to ${email} with a link to verify your email address and activate your account.`
-        
-      // router.push('/about')
+      errorMsg.textContent = `Thank you for signing up. I've sent an email to ${email} with a link to verify your email address and activate your account.`
+      
     } else {
       // Handle errors
-      console.log('res status: ', response.status)
+
       let err = await response.json()
-      console.log("I'm the awaited signup page: ", err)
       errorMsg.textContent = err.email + err.password
       submitBtn.disabled = false;
+      submitBtn.textContent = "Sign up"
     }
   }
  
@@ -63,7 +59,7 @@ export default function SignupPage() {
             <input type="password" name="password" placeholder="Password" required />
             <button id='submit-btn' type="submit">Sign up</button>
             </form>
-            <div id="error-msg"> </div>
+            <div id="error-msg" className='centered'> </div>
         </div>
     </section>
     </>

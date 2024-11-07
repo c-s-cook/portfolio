@@ -4,13 +4,15 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 // import 'dotenv/config'
+import type { AuthType } from "../../../../lib/types";
 
 const userVerification = async ({params}: {params: {tokens: Array<string>}}) => {
     const router = useRouter()
 
     const userId:string = params.tokens[0];
     const verificationToken:string = params.tokens[1];
-    const isVerify: boolean = true;
+    const authType: AuthType = "VERIFY"
+
     console.log("verify received params.tokens: ", userId, verificationToken);
 
         
@@ -21,7 +23,7 @@ const userVerification = async ({params}: {params: {tokens: Array<string>}}) => 
         fetch('../../api/auth', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, verificationToken, isVerify }),
+            body: JSON.stringify({ userId, verificationToken, authType }),
           }).then(async (response) => {
             if(response.status == 201) {
                 
@@ -49,7 +51,7 @@ const userVerification = async ({params}: {params: {tokens: Array<string>}}) => 
         <>
         <section>
             <div className="content">
-                <div id="verification-msg"> Verifying... </div>
+                <div id="verification-msg" className="centered"> Verifying... </div>
             </div>
         </section>
         </>
