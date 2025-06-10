@@ -1,0 +1,57 @@
+.controls {
+  display: flex;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 10px;
+}
+
+.controls-right {
+  margin-left: auto;
+}
+
+.state {
+  margin: 10px 0;
+  font-family: monospace;
+}
+
+.state-title {
+  color: #999;
+  text-transform: uppercase;
+}
+
+#add-item #certificate-url{
+  display: none;
+
+}
+
+#add-item #image-files{
+  display: none;
+  
+}
+
+
+img.img-preview{
+  max-width: 125px;
+  max-height: auto;
+  margin: 1em;
+  display: inline-block;
+}
+
+
+
+
+.quill-editor {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: black;
+  border-radius: 15px;
+  padding: 1em;
+  margin-top: 2em;
+}
+
+.quill-editor button {
+  border-radius: 15px;
+  border: var(--border-rgb) 1px solid;
+  padding: 0.8em;
+  background-color: var(--background-rgb);
+  margin-top: 1em;
+}

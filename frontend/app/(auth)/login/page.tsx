@@ -70,7 +70,7 @@ export default function LoginPage() {
     
     const authType:AuthType = 'LOG-IN'
 
-    
+    const errorMsg = document.getElementById('error-msg')
     errorMsg.textContent = ' '
 
     const submitBtn = document.getElementById('submit-btn')

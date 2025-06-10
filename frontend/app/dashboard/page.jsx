@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 
 
@@ -10,6 +11,10 @@ export default function Dashboard() {
           <div className="mx-auto text-center">
             <h1>The Dashboard!</h1>
             <p>Here is all the info and access</p>
+            <ul>
+              <li><Link href="./dashboard/addItem">Add Item</Link></li>
+            </ul>
+            
           </div>
         </div>
       </section>

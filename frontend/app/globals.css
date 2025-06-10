@@ -4,6 +4,8 @@
 
 :root {
   --foreground-rgb: rgb(225, 225, 225);
+  --border-rgb: rgb(30, 30, 30);
+
 
   --background-start-rgb: rgb(59, 0, 110);
   --background-end-rgb: rgb(14, 87, 14);
