@@ -28,7 +28,7 @@ export default function LoginPage() {
     const handleResend = async (event) => {
       event.preventDefault();
 
-      const resendBtn = document.getElementById('resend-btn')
+      const resendBtn: HTMLButtonElement = document.getElementById('resend-btn') as HTMLButtonElement
       resendBtn.disabled = true;
       resendBtn.textContent = 'Requesting'
       
@@ -55,7 +55,7 @@ export default function LoginPage() {
         <p></p>
         <p>You need to verify your email account before you can log in.</p>
         <p>Need a new verification email? Click the button below:</p>
-        <button classlist='small' id='resend-btn' onClick={handleResend} >Resend</button>
+        <button className='small' id='resend-btn' onClick={handleResend} >Resend</button>
       </div>
       
     )
@@ -73,7 +73,7 @@ export default function LoginPage() {
     const errorMsg = document.getElementById('error-msg')
     errorMsg.textContent = ' '
 
-    const submitBtn = document.getElementById('submit-btn')
+    const submitBtn: HTMLButtonElement = document.getElementById('submit-btn') as HTMLButtonElement
     submitBtn.disabled = true;
     submitBtn.textContent = 'SENDING...'
     submitBtn.classList.add('disabled')
@@ -108,10 +108,20 @@ export default function LoginPage() {
     <>
     <section>
         <div className="content">
-            <form onSubmit={handleSubmit}>
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <button id='submit-btn' type="submit">Log in</button>
+            <form onSubmit={handleSubmit} id='login-form' className='with-background bg-grad'>
+
+              
+
+              <label htmlFor="email">Email:</label>
+              <input type="email" name="email" id="email" placeholder="Email" required />
+              
+              
+              <label htmlFor="password">Password:</label>
+              <input type="password" name="password" id="password" placeholder="Password" required />
+              
+              
+
+              <button id='submit-btn' type="submit">Log in</button>
             </form>
             <div id="error-msg" className='centered error'> </div>
         </div>

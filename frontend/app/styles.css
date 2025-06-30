@@ -58,7 +58,7 @@ section > .content {
 
     /* padding-top: 3em; */
     margin: 2em auto;
-    max-width: 70vw;
+    max-width: 1000px;
     width: 100%;
     margin-bottom: 10em;
     
@@ -82,9 +82,12 @@ section > .content.no-background {
 }
 
 section .with-background {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--background-rgba-20);
     border-radius: 20px;
+}
 
+section .bg-grad {
+    background-image: var(--content-bg-grad);
 }
 
 section > .content.extra-long {
@@ -98,6 +101,92 @@ section > .content.extra-long {
 section .centered {
     text-align: center;
 }
+
+
+
+/* BUTTONS */
+button {
+    /* margin: 0.5em; */
+    padding: 0.5em 1.5em;
+    color: var(--foreground-rgba-60);
+    background-color: var(--background-rgba-60);
+    border: 1px solid var(--foreground-rgba-20);
+    border-radius: 8px;
+    
+    text-transform: uppercase;
+    transition: 0.2s ease-in-out;
+}
+button:hover {
+    color: var(--foreground-rgb);
+    border: 1px solid var(--foreground-rgba-60);
+    background-color: var(--background-rgba-20);
+}
+
+
+
+/* FORMS & INPUTS */
+input {
+    display: block;
+    /* margin: 0 auto; */
+    padding: 0.5em 1em;
+    /* margin-top: 1.5em; */
+    line-height: 1em;
+    max-height: 2em;
+    
+    color: var(--foreground-rgb);
+    background-color: var(--background-rgba-40);
+    border-radius: 8px;
+    /* border: 1px transparent solid; */
+    transition: 0.3s ease-in-out;
+    outline: none;
+}
+input:focus {
+    background: var(--background-rgba-60);
+    /* border: 1px var(--background-start-rgb) solid; */
+    outline: none;
+}
+input:focus::placeholder {
+    opacity: 0.3;
+}
+
+label {
+    
+    font-size: 0.7em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding-left: calc(0.5em / 0.7);
+    transition: 0.5s ease-in-out;
+    opacity: 0;
+}
+label:has(+ input:not(:placeholder-shown)) {
+    opacity: 0.6;
+}
+
+/* input[type='text'] + label, 
+input[type='email'] + label, 
+input[type=password] + label, 
+textarea + label {
+    
+    
+
+    opacity: 0;
+
+    transform: translateY(-1em);
+    top: calc(-3.5em / 0.7);
+
+    
+    
+}
+input:not(:placeholder-shown) + label {
+    opacity: 0.6;
+}
+
+input[type=password] + label {
+    color: orange;
+} */
+
+
 
 
 
