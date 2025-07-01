@@ -1,0 +1,92 @@
+
+
+/* LABEL  */
+.item-tags>h3:has(+ div input:not(:placeholder-shown)) {
+    opacity: 0.6;
+}
+
+.item-tags {
+    display: block;
+
+    /* border: 1px dashed yellow; */
+}
+
+.item-tags #tag-input {
+    display: block;
+    /* line-height: 1em; */
+    max-height: 50vh;
+    width: 100%;
+    padding: 0em 0em;
+
+    /* border: 1px dotted magenta; */
+}
+
+.item-tags #tag-input input.tag-input-field {
+    display: inline-block;
+    margin: 0.75em -0.25em 0.75em 1em;
+    background-color: transparent;
+    outline: none;
+    max-width: 100%;
+    min-width: 25%;
+    /* border: 1px dashed cyan; */
+}
+
+
+
+/* PREVIOUS TAGS */
+
+.tag-box {
+    display: inline-block;
+    padding: 0.25em .5em;
+    margin: 0.75em -0.25em 0.75em 1em;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    text-align: center;
+    transition: 1s ease-in-out;
+}
+
+.tag-box.error {
+    border: 1px solid red;
+}
+
+
+.tag-box .remove-tag {
+    display: inline-block;
+    position: relative;
+    margin-left: 0.5em;
+    /* background-color: var(--background-rgba-40); */
+    /* border-radius: 50%; */
+    width: 0.8em;
+    height: 0.8em;
+    max-width: 0.8em;
+    max-height: 0.8em;
+    transition: 0.3s ease-in-out;
+    opacity: 0.3;
+}
+
+.tag-box:hover .remove-tag {
+    opacity: 0.6;
+}
+.tag-box:hover .remove-tag:hover {
+    opacity: 1;
+}
+
+
+.tag-box .remove-tag > div {
+    position: absolute;
+    height: 0.7em;
+    width: 1px;
+    transform: translateY(-50%) rotate(-45deg);
+    top: 0.4em;
+    left: 0.4em;
+    border: 0.5px solid var(--foreground-rgb);
+}
+.tag-box .remove-tag > div:first-of-type {
+    transform: translateY(-50%)  rotate(45deg);
+}
+
+
+
+.tag-box[data-tag="Test Tag"] {
+    border: 3px solid red;
+}
