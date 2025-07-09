@@ -125,7 +125,10 @@ button:hover {
 
 
 /* FORMS & INPUTS */
-input {
+input[type="text"]:not(.tag-input-field), 
+input[type="email"]:not(.tag-input-field),
+input[type="password"]:not(.tag-input-field), 
+#tag-input {
     display: block;
     /* margin: 0 auto; */
     padding: 0.5em 1em;
@@ -140,16 +143,16 @@ input {
     transition: 0.3s ease-in-out;
     outline: none;
 }
-input:focus {
+input:not(.tag-input-field):focus {
     background: var(--background-rgba-60);
     /* border: 1px var(--background-start-rgb) solid; */
     outline: none;
 }
-input:focus::placeholder {
+input:not(.tag-input-field):focus::placeholder {
     opacity: 0.3;
 }
 
-label {
+label, .item-tags>h3 {
     
     font-size: 0.7em;
     font-weight: bold;
