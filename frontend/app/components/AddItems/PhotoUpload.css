@@ -1,19 +1,31 @@
 /******************************************/
 /****   PHOTO UPLOAD COMPONENT STYLES  ****/
 /******************************************/
-/* 
-    Depends on the following css var() from globals.css
-    --foreground-rgba-05
-    --foreground-rgba-20
-    --foreground-rgba-60
-    --background-rgb
-    --background-rgba-40
-    --content-bg-grad
-    --background-end-rgb
 
 
+:root {
+    /* All colors and vars(), defined here... */
+    --photo-upload-foreground: var(--foreground-rgb);
 
-*/
+    --photo-upload-foreground-60: var(--foreground-rgba-60);
+    --photo-upload-foreground-20: var(--foreground-rgba-20);
+
+    --photo-upload-background: var(--background-rgb);
+
+    --photo-upload-preview-area-background: var(--background-rgba-60);
+    --photo-upload-preview-area-bg-gradient: var(--content-bg-grad);
+    --photo-upload-border-radius: var(--border-radius);
+
+    --photo-upload-error-color: red;
+    --photo-upload-success-icon: var(--background-end-rgb);
+    
+    /* Colors for {optional} Add Star & Add Caption elements */
+    --photo-upload-star-hover-color: var(--foreground-rgb);
+    --photo-preview-overlay-color: var(--background-start-rgb);
+
+}
+
+
 
 /* Top-Level Component Container */
 div#image-files {
@@ -28,37 +40,33 @@ div#image-files {
 #image-file-errors {
     display: inline-block;
     padding-left: 1em;
-    color: red;
-    
+    color: var(--photo-upload-error-color);
+
 }
 
-#image-file-errors.fade-in{
-    
+#image-file-errors.fade-in {
+
     opacity: 0;
     animation: fadeIn 0.5s linear 0s 1 forwards;
 }
 
-#image-file-errors.fade-out{
+#image-file-errors.fade-out {
     opacity: 1;
     animation: fadeOut 0.8s linear 5s 1 forwards;
 }
 
 
 #image-preview-area {
-    /* padding: 1em; */
-    /* background-color: rgba(240, 248, 255, 0.306); */
-    /* border-radius: 20px; */
-    /* padding: 0px -15px; */
-    background-color: var(--background-rgba-40);
-    background-image: var(--content-bg-grad);
-    border-radius: var(--border-radius);
+    position: relative;
+    background-color: var(--photo-upload-preview-area-background);
+    background-image: var(--photo-upload-preview-area-bg-gradient);
+    border-radius: var(--photo-upload-border-radius);
     margin: 1em 0;
     padding: 1em;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
-    /* border: 1px green dashed; */
 }
 
 #image-preview-area>.img-container {
@@ -71,6 +79,8 @@ div#image-files {
     max-height: 200px;
     width: 22%;
     opacity: 0;
+    border-radius: var(--photo-upload-border-radius);
+    overflow: hidden;
     animation: fadeIn 0.5s ease-in-out 1s forwards;
 }
 
@@ -84,91 +94,65 @@ div#image-files {
     height: auto;
     object-fit: cover;
     aspect-ratio: 1.0;
-    /* margin: 1em; */
     display: inline-block;
-    border-radius: 15px;
-    /* animation: fadeIn 0.5s ease-in-out; */
+    transition: 0.3s linear;
 }
-
-img.img-preview {}
 
 
 /* Icons in Top-Right of each Photo Preview */
-#image-preview-area > .img-container > .icon {
+#image-preview-area>.img-container>.icon {
     position: absolute;
-    right: 20px;
-    top: 20px;
     transform: translate(50%, -50%);
     width: 24px;
     height: 24px;
     border-radius: 50%;
+    z-index: 15;
+    transition: 0.1s linear;
 }
 
-
-/* Remove Image Icon/Buton */
-
-/* #image-preview-area>.img-container>.img-remove,
-#image-preview-area>.img-container>.img-error:hover {
-    background-color: var(--background-rgb);
-    opacity: 0.0;
-    transition: 0.2s ease-in-out;
-} */
-
-/* #image-preview-area>.img-container:hover>.img-remove {
-    opacity: 0.5;
-} */
-
-
-
-/* #image-preview-area>.img-container>.img-remove>div,
-#image-preview-area>.img-container>.img-error:hover>div {
-    position: absolute;
-    height: 15px;
-    width: 1px;
-    transform: translateY(-50%) rotate(-45deg);
-    top: 12px;
-    left: 12px;
-    border: 1px solid var(--foreground-rgb);
-} */
-
-/* #image-preview-area>.img-container>.img-remove>div:first-of-type,
-#image-preview-area>.img-container>.img-error:hover>div:first-of-type {
-    transform: translateY(-50%) rotate(45deg);
-} */
 
 
 /* "Photo Uploading" Status Icon */
 
 #image-preview-area>.img-container>.img-uploading {
+    right: 20px;
+    top: 20px;
     animation: upload-icon-spin 1s linear infinite;
     -webkit-animation: upload-icon-spin 1s linear infinite;
 }
 
 #image-preview-area>.img-container>.img-uploading,
-#image-preview-area>.img-container>.img-uploading > * {
+#image-preview-area>.img-container>.img-uploading::after,
+#image-preview-area>.img-container>.img-uploading::before {
     border: 3px solid;
-    border-top-color: var(--foreground-rgba-60);
-    border-left-color: var(--foreground-rgba-20);
-    border-bottom-color: var(--foreground-rgba-05);
-    border-right-color: transparent;
     padding: 0;
+    border-top-color: var(--photo-upload-foreground);
+    border-left-color: var(--photo-upload-foreground-60);
+    border-bottom-color: var(--photo-upload-foreground-20);
+    border-right-color: transparent;
     box-sizing: content-box;
 }
-#image-preview-area>.img-container>.img-uploading div{
+
+#image-preview-area>.img-container>.img-uploading::after,
+#image-preview-area>.img-container>.img-uploading::before {
+    content: '';
     position: absolute;
     margin: 0;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(-15deg);
     width: 100%;
     height: 100%;
     border-radius: 50%;
 }
-#image-preview-area>.img-container>.img-uploading div:nth-of-type(2){
-    transform: translate(-50%, -50%) rotate(-30deg);
+
+#image-preview-area>.img-container>.img-uploading::after {
+    transform: translate(-50%, -50%) rotate(-15deg);
+    filter: opacity(0.5);
 }
-#image-preview-area>.img-container>.img-uploading div:nth-of-type(3){
-    transform: translate(-50%, -50%) rotate(-45deg);
+
+#image-preview-area>.img-container>.img-uploading::before {
+    transform: translate(-50%, -50%) rotate(-40deg);
+    filter: opacity(0.5);
 }
 
 
@@ -177,14 +161,17 @@ img.img-preview {}
 #image-preview-area>.img-container>.img-remove,
 #image-preview-area>.img-container>.img-success,
 #image-preview-area>.img-container>.img-error {
+
+    right: 20px;
+    top: 20px;
+
     padding: 0;
     display: inline-block;
     font-size: 17px;
     text-align: center;
     line-height: 19px;
     padding-top: 2px;
-    color: var(--foreground-rgb);
-    transition: 0.1s linear;
+    color: var(--photo-upload-foreground);
 }
 
 #image-preview-area>.img-container:hover>.img-remove:hover,
@@ -213,7 +200,7 @@ img.img-preview {}
 #image-preview-area>.img-container>.img-success:hover,
 #image-preview-area>.img-container>.img-error:hover,
 #image-preview-area>.img-container>.img-remove {
-    background-color: var(--background-rgb);
+    background-color: var(--photo-upload-background);
 }
 
 
@@ -222,6 +209,7 @@ img.img-preview {}
 #image-preview-area>.img-container>.img-remove {
     opacity: 0;
 }
+
 #image-preview-area>.img-container:hover>.img-remove {
     opacity: 0.5;
 }
@@ -230,8 +218,9 @@ img.img-preview {}
 /* "Error" Status Icon */
 
 #image-preview-area>.img-container>.img-error {
-    background-color: darkred;
+    background-color: var(--photo-upload-error-color);
 }
+
 /* #image-preview-area>.img-container>.img-error > div:first-of-type:before {
     content: '✖';
 } */
@@ -241,8 +230,9 @@ img.img-preview {}
 /* "Success" Status Icon */
 
 #image-preview-area>.img-container>.img-success {
-    background-color: var(--background-end-rgb);
+    background-color: var(--photo-upload-success-icon);
 }
+
 #image-preview-area>.img-container>.img-success::after {
     content: '✔';
 }
@@ -251,24 +241,281 @@ img.img-preview {}
 
 
 
+
+
+
+/************************************************************* 
+*   STYLING FOR {OPTIONAL} "Add Star" & "Add Caption" Features
+**************************************************************/
+
+
+
+
+/* Star Image Icon/Buton */
+#image-preview-area>.img-container>.star {
+    left: -5px;
+    top: 20px;
+    margin: 0;
+    text-align: center;
+    z-index: 11;
+    color: var(--photo-upload-foreground);
+    font-size: 35px;
+    line-height: 24px;
+    opacity: 0;
+}
+
+#image-preview-area>.img-container>.star::before {
+    position: absolute;
+    top: -1px;
+    left: -4px;
+    content: '★';
+    font-size: 45px;
+    filter: blur(2px);
+    color: var(--photo-upload-background);
+}
+
+#image-preview-area>.img-container>.star::after {
+    position: absolute;
+    opacity: 1;
+    top: 0;
+    left: 0;
+    content: '★';
+}
+#image-preview-area>.img-container:hover>.star {
+    color: var(--photo-upload-star-hover-color);
+    opacity: 1;
+}
+
+#image-preview-area>.img-container>.star.is-starred {
+    opacity: 0.8;
+}
+
+
+
+/* Caption Icon/Buton */
+#image-preview-area>.img-container>.caption {
+    right: 25px;
+    bottom: 5px;
+    margin: 0;
+
+    width: 30px;
+    height: 20px;
+    border-radius: 3px;
+
+    font-size: 18px;
+    line-height: 20px;
+
+
+    text-align: center;
+    color: var(--photo-upload-background);
+
+    opacity: 0;
+    background-color: var(--photo-upload-foreground);
+    box-shadow: 1px 3px 3px var(--photo-upload-preview-area-background);
+}
+#image-preview-area>.img-container>.caption::before {
+    content: '+';
+}
+#image-preview-area>.img-container>.caption:is(.is-captioned)::before {
+    content: '✔';
+}
+#image-preview-area>.img-container>.caption::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 5px;
+    height: 0px;
+    width: 0;
+    /* border: solid red 5px; */
+    border-top: 0px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 10px solid var(--photo-upload-foreground);
+}
+
+#image-preview-area>.img-container:hover>.star,
+#image-preview-area>.img-container:hover>.caption {
+    opacity: 0.5;
+}
+#image-preview-area>.img-container:hover>.star.is-starred {
+    opacity: 1;
+}
+
+#image-preview-area>.img-container:hover>.star:hover,
+#image-preview-area>.img-container:hover>.caption:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+#image-preview-area>.img-container:hover>.star.is-starred:hover {
+    opacity: 0.5;
+}
+
+/* Text descriptors on the overlay / within the img-preview box... */
+#image-preview-area>.img-container:has(>.caption)::before,
+#image-preview-area>.img-container:has(>.star)::before {
+
+    display: inline-block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    z-index: 11;
+    color: var(--photo-upload-foreground);
+    font-size: 22px;
+    line-height: 24px;
+    font-weight: bolder;
+    text-align: center;
+    transition: 0.2s linear;
+    opacity: 0.2;
+}
+#image-preview-area>.img-container:has(>.caption:hover)::before {
+    content: 'Add Caption';
+    opacity: 1;
+}
+#image-preview-area>.img-container:has(>.caption:is(.is-captioned):hover)::before {
+    content: 'Change Caption';
+    opacity: 1;
+}
+#image-preview-area>.img-container:has(>.star:hover)::before {
+    content: 'Set as Cover';
+    opacity: 1;
+}
+#image-preview-area>.img-container:has(>.star.is-starred:hover)::before {
+    content: 'Remove Cover';
+    opacity: 1;
+}
+
+
+
+/* 
+*   Photo Caption Input
+*/
+
+div#add-photo-caption {
+    position: absolute;
+    /* visibility: hidden; */
+    width: calc(100% - 1em);
+    height: calc(100% - 1em);
+    padding: 0.5em 3em;
+    border-radius: var(--photo-upload-border-radius);
+    z-index: 99;
+    opacity: 1;
+    text-align: left;
+    background-color: var(--photo-upload-preview-area-background);
+    background-image: var(--photo-upload-preview-area-bg-gradient);
+}
+div#add-photo-caption > label:has(+ textarea:not(:placeholder-shown)) {
+    opacity: 1;
+}
+div#add-photo-caption > textarea {
+    width: 100%;
+    height: 3em;
+    max-height: 90%;
+    opacity: 1;
+    color: var(--photo-upload-background);
+    background-color: var(--photo-upload-foreground);
+}
+div#add-photo-caption > button {
+    margin: 1em auto;
+    float: right;
+    background-color: var(--photo-upload-foreground-20);
+}
+div#add-photo-caption > button:hover {
+    background-color: var(--photo-upload-background);
+}
+
+
+
+
+/* add an overlay w/hover effect... */
+#image-preview-area>.img-container:has(> .caption)>.overlay,
+#image-preview-area>.img-container:has(> .star)>.overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    transition: 0.2s linear;
+    background-color: var(--photo-preview-overlay-color); /* defined at head of doc */
+    opacity: 0;
+}
+#image-preview-area>.img-container:has(> .caption):hover>.overlay,
+#image-preview-area>.img-container:has(> .star):hover>.overlay {
+    opacity: 0.5;
+}
+
+
+/* make the image black-&-white beneath the overlay... */
+#image-preview-area>.img-container:has(> .caption):hover>img,
+#image-preview-area>.img-container:has(> .star):hover>img {
+    -webkit-filter: grayscale(100%);  /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+
+
+
+
+
+#image-preview-area>.img-container:has(>.img-remove:hover ~ .overlay)::before,
+#image-preview-area>.img-container:has(>.img-success:hover ~ .overlay)::before,
+#image-preview-area>.img-container:has(>.img-error:hover ~ .overlay)::before {
+    content: 'Remove';
+    opacity: 1;
+}
+
+#image-preview-area>.img-container>.img-success:has(~.overlay),
+#image-preview-area>.img-container>.img-remove:has(~.overlay) {
+    background-color: var(--photo-upload-foreground);
+    transition: 0.2s linear;
+}
+
+#image-preview-area>.img-container>.img-success:has(~.overlay)::after {
+    color: var(--photo-upload-success-icon);
+    transition: 0.2s linear;
+}
+#image-preview-area>.img-container>.img-remove:has(~.overlay)::after {
+    color: var(--photo-upload-background);
+    transition: 0.2s linear;
+}
+#image-preview-area>.img-container>.img-error:hover:has(~.overlay) {
+    background-color: var(--photo-upload-foreground);
+    transition: 0.2s linear;
+}
+#image-preview-area>.img-container>.img-error:hover:has(~.overlay)::after {
+    color: var(--photo-upload-background);
+    transition: 0.2s linear;
+}
+
+
+
+
+
+
+
+
 @keyframes upload-icon-spin {
     from {
-      transform: translate(50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(50%, -50%) rotate(360deg);
-      -webkit-transform: translate(50%, -50%) rotate(360deg);
-    }
-  }
-  @-webkit-keyframes upload-icon-spin {
-    from{
         transform: translate(50%, -50%) rotate(0deg);
     }
+
     to {
-      transform: translate(50%, -50%) rotate(360deg);
-      -webkit-transform: translate(50%, -50%) rotate(360deg);
+        transform: translate(50%, -50%) rotate(360deg);
+        -webkit-transform: translate(50%, -50%) rotate(360deg);
     }
-  }
+}
+
+@-webkit-keyframes upload-icon-spin {
+    from {
+        transform: translate(50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(50%, -50%) rotate(360deg);
+        -webkit-transform: translate(50%, -50%) rotate(360deg);
+    }
+}
 
 
 

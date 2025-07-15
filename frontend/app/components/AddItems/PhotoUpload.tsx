@@ -12,24 +12,33 @@ export interface ImageURL {
     url: string | null;
     data?: JSON | null;
     ogName?: string;
+    caption?: string;
+    starred?: boolean;
 }
 
 export interface UploadFile extends File {
     status: null | "uploading" | "success" | "error" | "removed";
     tries: null | number;
+    starred?: boolean;
+    caption?: string;
 }
 
 export interface PhotoUploadProps {
     imageFiles: UploadFile[];
     setImageFiles: React.Dispatch<React.SetStateAction<UploadFile[]>>;
     options?: {
-        uploadAPI: string;
-        imageURLs: ImageURL[];
-        setImageURLs: React.Dispatch<React.SetStateAction<ImageURL[]>>;
-        resImageURLKey?: string; // Defaults to look for ['URL'] key in the API's response
-        renameTo?: string;
-        delay?: number;         // Delay before auto-uploading, in seconds. Default to 60.
-        maxRetries?: number;    // Defaults to 3
+        addCaptions?: boolean;  // Defaults to false
+        addStar?: boolean;      // Defaults to false
+        autoUpload?: {
+            uploadAPI: string;
+            imageURLs: ImageURL[];
+            setImageURLs: React.Dispatch<React.SetStateAction<ImageURL[]>>;
+            resImageURLKey?: string; // Defaults to look for ['URL'] key in the API's response
+            renameTo?: string;
+            delay?: number;         // Delay before auto-uploading, in seconds. Default to 60.
+            maxRetries?: number;    // Defaults to 3
+        }
+
     }
 }
 
@@ -45,16 +54,22 @@ export interface PhotoUploadProps {
  *
  * @component
  * @param {PhotoUploadProps} props - The props for the PhotoUpload component.
+ * 
  * @param {UploadFile[]} props.imageFiles - Array of image files to be managed and uploaded.
  * @param {React.Dispatch<React.SetStateAction<UploadFile[]>>} props.setImageFiles - State setter for imageFiles.
- * @param {Object} [props.options] - Optional configuration for auto-uploading.
- * @param {string} props.options.uploadAPI - API endpoint for uploading images.
- * @param {ImageURL[]} props.options.imageURLs - Array of URL results from uploaded images.
- * @param {React.Dispatch<React.SetStateAction<ImageURL[]>>} props.options.setImageURLs - State setter for imageURLs.
- * @param {string} [props.options.resImageURLKey] - Optional key to extract image URL from API response. Defaults to look for a top-level 'URL' key.
- * @param {string} [props.options.renameTo] - Optional base name for renaming uploaded files.
- * @param {number} [props.options.delay=60] - Optoinal delay (in seconds) before auto-uploading. Defaults to 60.
- * @param {number} [props.options.maxRetries=3] - Optional maximum number of upload retries per file. Defaults to 3.
+ * @param {Object} [props.options] - Optional configurations.
+ * 
+ * @param {boolean} props.options.addCaptions - Option to enable Add Captions feature to all images. Defaults to false.
+ * @param {boolean} props.options.addStar - Option to enable Add Star feature to a single (banner) image. Defaults to false.
+ * @param {boolean} props.options.autoUpload - Optional configuration for auto-uploading.
+ * 
+ * @param {string} props.options.autoUpload.uploadAPI - API endpoint for uploading images.
+ * @param {ImageURL[]} props.options.autoUpload.imageURLs - Array of URL results from uploaded images.
+ * @param {React.Dispatch<React.SetStateAction<ImageURL[]>>} props.options.autoUpload.setImageURLs - State setter for imageURLs.
+ * @param {string} [props.options.autoUpload.resImageURLKey] - Optional key to extract image URL from API response. Defaults to look for a top-level 'URL' key.
+ * @param {string} [props.options.autoUpload.renameTo] - Optional base name for renaming uploaded files.
+ * @param {number} [props.options.autoUpload.delay=60] - Optoinal delay (in seconds) before auto-uploading. Defaults to 60.
+ * @param {number} [props.options.autoUpload.maxRetries=3] - Optional maximum number of upload retries per file. Defaults to 3.
  *
  * @returns {JSX.Element} The rendered PhotoUpload component.
  *
@@ -68,6 +83,8 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     // State variables...
     const [tempImageFiles, setTempImageFiles] = useState(null);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [addingCaption, setAddingCaption] = useState<number | null>(null);
+    const [photoCaption, setPhotoCaption] = useState<string>('');
 
     // State variables for (optional) auto-uploading functions...
     const [isCurrentlyUploading, setIsCurrentlyUploading] = useState<boolean>(false);
@@ -78,7 +95,8 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
     // Destructure {options} param...
     if (options) {
-        var { uploadAPI, imageURLs, setImageURLs, resImageURLKey, renameTo, delay, maxRetries } = options;
+        var { addCaptions, addStar, autoUpload } = options;
+        if (autoUpload) var { uploadAPI, imageURLs, setImageURLs, resImageURLKey, renameTo, delay, maxRetries } = autoUpload;
         maxRetries = maxRetries ? maxRetries : 3;
     }
 
@@ -94,6 +112,83 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
      *  Handle faux 'Add Images' button click...
      */
     const addImages = () => document.getElementById("filefield").click();
+
+
+    /**
+     *  Handle 'Star Photo' icon click...
+     * 
+     *  @param index - of the file in imageFiles[] to star
+     */
+    const starImage = async (index) => {
+        console.log('star cliked on image ', index);
+
+        setImageFiles((prevImageFiles) => {
+            let updatedImageFiles = [...prevImageFiles];
+
+            if (updatedImageFiles[index].starred) {
+                console.log('unstarring image ', index)
+                updatedImageFiles[index].starred = false;
+            } else {
+                for (let f = 0; f < updatedImageFiles.length; f++) updatedImageFiles[f].starred = (f == index) ? true : false;
+            }
+
+
+            return [...updatedImageFiles];
+        })
+
+    }
+
+
+    /**
+     *  Handle 'Add Caption' button click...
+     * 
+     *  @param index - of the file in imageFiles[] to add caption
+     */
+    const attachCaption = async () => {
+
+        const specialCharRegex = /[^a-zA-Z0-9\s'.#?!]/g;
+        let tempPhotoCaption = photoCaption.trim().replace(specialCharRegex, '');
+
+        console.log('Attaching caption to image ', addingCaption, ' : ', tempPhotoCaption);
+
+        setImageFiles((prevImageFiles) => {
+            let updatedImageFiles = [...prevImageFiles];
+
+            if (tempPhotoCaption === '') {
+                delete (updatedImageFiles[addingCaption].caption);
+            } else {
+                updatedImageFiles[addingCaption].caption = tempPhotoCaption;
+            }
+
+            // if this image has already been uploaded, add the caption to imageURLs[] as well...
+            if (updatedImageFiles[addingCaption].status == 'success') {
+                if (updatedImageFiles[addingCaption].name == imageURLs[addingCaption].name || updatedImageFiles[addingCaption].name == imageURLs[addingCaption].ogName) {
+                    setImageURLs((prevImageURLs) => {
+                        let newImageURLs = [...prevImageURLs];
+
+                        if (tempPhotoCaption === '') {
+                            delete (newImageURLs[addingCaption].caption);
+                        } else {
+                            newImageURLs[addingCaption].caption = tempPhotoCaption;
+                        }
+
+                        return [...newImageURLs];
+                    });
+                }
+            }
+
+            return [...updatedImageFiles];
+        })
+
+        // null out the value of addingCaption (hide it)
+        setAddingCaption(null);
+
+        // clear the caption field...
+        let captionInput = document.getElementById('photo-caption') as HTMLTextAreaElement;
+        captionInput.value = '';
+    }
+
+
 
 
     /**
@@ -204,6 +299,23 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     }, [tempImageFiles])
 
 
+    useEffect(() => {
+
+        // check if image already has a caption
+        if (imageFiles.length > 0 && addingCaption !== null) {
+
+            if (imageFiles[addingCaption].caption) {
+
+                let captionInput = document.getElementById('photo-caption') as HTMLTextAreaElement;
+                captionInput.value = imageFiles[addingCaption].caption;
+            }
+        }
+
+    }, [addingCaption])
+
+
+
+
 
 
 
@@ -232,7 +344,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
             console.log('cueImagesForUpload() -- Failed safety check...');
             return;
         }
-        
+
 
         // get the most recent state to check on each file status, then setState()...
         setImageFiles((prevImageFiles) => {
@@ -256,8 +368,8 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                 else if (updatedImageFiles[f].status == 'success' || updatedImageFiles[f].status == 'removed' || updatedImageFiles[f].status == 'uploading') {
                 }
                 // check to make sure the index isn't already in there...
-                else if ( imageCue.includes(f) ) {
-                    
+                else if (imageCue.includes(f)) {
+
                 }
 
                 else {
@@ -299,6 +411,9 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
             url: '',
             data: null
         }
+        if (imageFile.starred) imageURL.starred = true;
+        if (imageFile.caption) imageURL.caption = imageFile.caption;
+        
         setIsCurrentlyUploading(true);
 
         // create payload container
@@ -448,7 +563,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
      *      - uploadImage()
      */
     useEffect(() => {
-        
+
         if (uploadAPI && imageFiles.length > 0) {
 
             let isSentToUpload = false;
@@ -487,7 +602,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
      *      - uploadImage()
     */
     useEffect(() => {
-        
+
         // set the first-in-cue file to 'uploading'
         if (imageCue.length > 0) {
             setImageFiles((prevImageFiles) => {
@@ -546,10 +661,25 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
                 <div id="image-preview-area" style={{ display: 'none' }}>
 
+
+                    {(addingCaption !== null) && <div id="add-photo-caption">
+                        <label htmlFor="photo-caption">Photo Caption:</label>
+                        <textarea
+                            // type="textarea" 
+                            name="photo-caption"
+                            id="photo-caption"
+                            onChange={(e) => setPhotoCaption(e.target.value)}
+                            placeholder="Add caption here"
+                        />
+                        <button onClick={attachCaption}>Add Caption</button>
+                    </div>}
+
                     {imageFiles.map((file, index) => {
                         const imgSrc = URL.createObjectURL(file);
 
                         let status = file.status ? file.status : 'remove';
+                        let starred = file.starred ? 'is-starred' : '';
+                        let captioned = file.caption ? 'is-captioned' : '';
 
                         return (
                             <div className="img-container" key={"img-container-" + index}>
@@ -559,12 +689,11 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                                     alt="preview"
                                     className="img-preview"
                                 />
-                                <div className="icon star"></div>
-                                <div className={`icon img-${status}`} key={index} onClick={() => removeImage(index)}>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
+                                {addStar && <div className={`icon star ${starred}`} key={`star-${index}`} onClick={() => starImage(index)}></div>}
+                                <div className={`icon img-${status}`} key={`remove-${index}`} onClick={() => removeImage(index)}></div>
+                                {addCaptions && <div className={`icon caption ${captioned}`} key={`caption-${index}`} onClick={() => setAddingCaption(index)}></div>}
+                                {(addCaptions || addStar) && <div className="overlay" key={`overlay-${index}`}></div>}
+
                             </div>
                         );
                     })}
