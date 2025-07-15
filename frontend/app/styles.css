@@ -128,6 +128,7 @@ button:hover {
 input[type="text"]:not(.tag-input-field), 
 input[type="email"]:not(.tag-input-field),
 input[type="password"]:not(.tag-input-field), 
+textarea,
 #tag-input {
     display: block;
     /* margin: 0 auto; */
@@ -143,7 +144,7 @@ input[type="password"]:not(.tag-input-field),
     transition: 0.3s ease-in-out;
     outline: none;
 }
-input:not(.tag-input-field):focus {
+input:not(.tag-input-field):focus, textarea:focus {
     background: var(--background-rgba-60);
     /* border: 1px var(--background-start-rgb) solid; */
     outline: none;
@@ -162,7 +163,8 @@ label, .item-tags>h3 {
     transition: 0.5s ease-in-out;
     opacity: 0;
 }
-label:has(+ input:not(:placeholder-shown)) {
+label:has(+ input:not(:placeholder-shown)),
+label:has(+ textarea:not(:placeholder-shown)) {
     opacity: 0.6;
 }
 
