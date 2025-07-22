@@ -74,7 +74,7 @@ export interface PhotoUploadProps {
  * @returns {JSX.Element} The rendered PhotoUpload component.
  *
  * @todo
- *  - check against duplicate files being selected/input
+ *  - Update .starred? on imageURLs[] if star change happens & images have already been uploaded...
  *  - [Future] - add Drag-n-Drop
  */
 
@@ -413,7 +413,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         }
         if (imageFile.starred) imageURL.starred = true;
         if (imageFile.caption) imageURL.caption = imageFile.caption;
-        
+
         setIsCurrentlyUploading(true);
 
         // create payload container
