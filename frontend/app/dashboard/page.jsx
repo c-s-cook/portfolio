@@ -12,7 +12,13 @@ export default function Dashboard() {
             <h1>The Dashboard!</h1>
             <p>Here is all the info and access</p>
             <ul>
-              <li><Link href="./dashboard/addItem">Add Item</Link></li>
+              <li>
+                <Link href="./dashboard/add-project">
+                  <button>
+                    Add Project
+                  </button>
+                  
+                </Link></li>
             </ul>
             
           </div>

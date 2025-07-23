@@ -11,7 +11,12 @@ import Background from './components/Background'
 
 export const dynamic = 'force-dynamic'
 
-const quicksand = Quicksand({ subsets: ['latin'] })
+const quicksand = Quicksand({ 
+  subsets: ['latin'], 
+  variable: '--font-quicksand',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+})
 
 export const metadata = {
   title: 'Christopher Cook | WebDev Portfolio',

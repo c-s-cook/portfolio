@@ -6,7 +6,10 @@
 import Editor from './Editor'
 
 import { useEffect, useRef, useState } from 'react';
-import './AddItem.css'
+import '../AddItems.css'
+
+
+
 
 
 
@@ -25,6 +28,10 @@ export default function AddItem() {
   let portfolio: String
   let certificate: String
 
+
+  //  Test img for styling
+  let testImg = "D:/Photos/70TH4521.JPG"
+  
 
   // Use a ref to access the quill instance directly
   const quillRef = useRef();
@@ -50,7 +57,9 @@ export default function AddItem() {
       imageFileList.innerHTML = '<p>Found the List Div</p>';
       const imagePreview = document.getElementById("image-preview")
 
-      console.log("Before loop...", imageFiles)
+      // console.log("Before loop...", imageFiles)
+
+      let tempArray = [...imageFilesValidated];
 
       for (let f=0; f < imageFiles.length; f++){
         if(imageFiles[f].type !== 'image/jpeg' && imageFiles[f].type !== 'image/png'){
@@ -58,29 +67,16 @@ export default function AddItem() {
         } else {
           console.log('Attempting to update/add this...', imageFiles[f])
 
-          imageFilesValidated.push(imageFiles[f])
-
+          
+          tempArray.push(imageFiles[f]);
+          
+          
         }
       }
+      setImageFilesValidated(tempArray);
 
-      console.log(imageFilesValidated);
-      
-      imagePreview.innerHTML = '';
-
-      imageFilesValidated.map((file, index) => {
-        console.log(file.name, index)
-        let imgSrc = URL.createObjectURL(file)
-        imagePreview.innerHTML += `<img src="${imgSrc}" id="img-preview-${index}" key="${index}" alt="preview" class="img-preview" />`
-      })
-
-      
-
-
-      // imageFilesValidated.map((file, index) => (
-      //   console.log(file.name, index)
-      // ))
-      
-      console.log("After loop...", imageFiles, imageFilesValidated)
+      // console.log(imageFilesValidated);      
+      console.log("After loop...", tempArray)
     }
  
     
@@ -104,7 +100,15 @@ export default function AddItem() {
   }, [type])
 
 
-  const logContent = () => {
+  const removeImage = (index) => {
+    console.log("removing image from array at index: ", index);
+    let tempArray = [...imageFilesValidated]
+    tempArray.splice(index, 1)
+    setImageFilesValidated(tempArray)
+  }
+
+  const logContent = (e) => {
+    e.preventDefault();
     setContent(quillRef.current!.root.innerHTML)
     console.log(content)
   }
@@ -117,11 +121,11 @@ export default function AddItem() {
   return (
     <>
       <section>
-        <div className="content">   
+        <div className="content add-item">   
 
           <h1>Add New Item</h1>
 
-          <form id="add-item">
+          <form id="add-item-form">
 
             <h3>Item type:</h3>
             <input type="radio" id="portfolio" name="item-type" value="portfolio" onChange={(e)=>setType(e.target.value)} />
@@ -130,8 +134,7 @@ export default function AddItem() {
             <input type="radio" id="certificate" name="item-type" value="certificate" onChange={(e)=>setType(e.target.value)} />
             <label htmlFor="certificate">Certificate</label>
 
-            
-            <label>Title:</label>
+            <h3>Title:</h3>
             <input 
               type="text" 
               value={title}
@@ -139,7 +142,7 @@ export default function AddItem() {
             />
 
             <div id="certificate-url">
-              <label>Certificate URL:</label>
+              <h3>Certificate URL:</h3>
               <input 
                 type="text" 
                 value={url}
@@ -148,19 +151,39 @@ export default function AddItem() {
             </div>
 
             <div id="image-files">
-              <label>Project Images:</label>
+              <h3>Project Images:</h3>
               <input 
                 type="file" 
                 name="filefield" 
                 id="filefield"
                 onChange={(e) => setImageFiles(e.target.files)} 
+                title="Add Images"
                 multiple 
                 accept="image/png, image/jpeg"
               />
               <div id="image-file-errors"></div>
               <div id="image-file-list"></div>
-              <div id="image-preview"></div>
+              <div id="image-preview-area">
 
+                {imageFilesValidated.map((file, index) => {
+                  const imgSrc = URL.createObjectURL(file);
+                  
+                  return (
+                    <div className="img-container" key={"img-container-"+index}>
+                      <img
+                        src={imgSrc}
+                        key={"img"+index}
+                        alt="preview"
+                        className="img-preview"
+                      />
+                      <div className="img-remove" key={"remove"+index} onClick={() => removeImage(index)}>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
               
             </div>
 
@@ -177,7 +200,7 @@ export default function AddItem() {
             <h3>Tags:</h3>
             <input type="text" />
 
-            <button onClick={logContent}>Log Content</button>
+            <button onClick={(e) => logContent(e)}>Log Content</button>
           </form>
 
 
