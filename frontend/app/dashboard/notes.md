@@ -8,6 +8,14 @@ API GATEWAY -> S3 BUCKET:
 
 
 
+NEXT 13 FILE HANDLING API --  helpd when AI models were stumped...
+https://www.codeconcisely.com/posts/nextjs-file-upload/
+
+
+
+STYLING FILE INPUT BTN:
+https://www.luisgonzalezdev.com/articles/styling-an-input-type-file-button-a-comprehensive-guide
+
 
 IMAGE upload:
 https://dev.to/nikolasbarwicki/how-to-display-a-preview-of-an-image-upload-in-react-5h8m

@@ -1,6 +1,6 @@
 "use client"
 
-import { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css'; // for snow theme
@@ -27,7 +27,44 @@ const quicksand = Quicksand({
 
 
 
-// Editor is an uncontrolled React component
+/** Quill Rich Text Editor Component
+ * 
+ * @component
+ * 
+ * @param {React.Dispatch<React.Ref<HTMLDivElement>>} quillRef - a React useRef() instance for the quill <div>
+ * @param {React.Dispatch<React.SetStateAction<string>>} setRichTextContent - state setter for a <string> of HTML (which is not passed to component, but declared & used by a parent)
+ * 
+ * @example
+ * import { useState, useRef, useEffect } from "react";
+ * import QuillRichText from "../components/Quill/QuillRichText";
+ * 
+ * const ExampleParentComponent = () => {
+ * 
+ *    const [richTextContent, setRichTextContent] = useState('');
+ * 
+ *    const quillRef = useRef();
+ * 
+ *    useEffect(() => {
+*        if(quillRef.current) setRichTextContent(quillRef.current.root.innerHTML);
+ *    });
+ * 
+ *    return (
+ *      <>
+ *          <QuillRichText
+ *              ref={quillRef}
+ *              setRichTextContent={setRichTextContent}
+ *          />
+ *      </>
+ *    )
+ * }
+ * 
+ * 
+ * 
+ * @todo
+ *  - make extraFonts[] as passed param and programatically add the className to the quill <div> wrapper
+ *  - add responsive styling
+ * 
+ */
 const QuillRichText = forwardRef(
   ({ setRichTextContent }, quillref) => {
 
@@ -127,6 +164,8 @@ const QuillRichText = forwardRef(
       <>
         <div className={
           // add (inject) Next's font css variables by listing them in this parent container DIV
+          //  TO-DO:
+          //    - make this a for loop for each item in 
           `${lobster.variable}
            ${quicksand.variable}
         `}>

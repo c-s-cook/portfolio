@@ -84,6 +84,7 @@ section > .content.no-background {
 section .with-background {
     background-color: var(--background-rgba-20);
     border-radius: 20px;
+    padding: 1.5em;
 }
 
 section .bg-grad {
