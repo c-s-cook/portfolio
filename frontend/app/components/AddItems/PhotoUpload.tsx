@@ -419,23 +419,37 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // create payload container
         const formData = new FormData();
 
+        // a regex for replacing ' - ' with '_'...
+
+
+        
+
+        // clean spaces out of the filename...
+        var cleanedName = imageFile.name.replace(/[\s-]+/g, '_');
+        console.log('ogName: ', imageFile.name, ' || cleanedName: ', cleanedName);
+
         // handle optional file renaming
         if (renameTo) {
 
             // base filename from options
             var newFileName = renameTo;
+
             // append the index number (+1), padded to 3 digits
             newFileName += `-${String((f + 1)).padStart(3, '0')}`;
-            // append the file extension
-            newFileName += `.${imageFile.name.split('.').pop().toLowerCase()}`;  // split by . and take the last element (instead of [1]/second) just in case their were extra periods in the name
+
+            // append the file extension ....nah. Just gonna put the whole ogFileName on the end to reduce the chance of duplicate-name errors
+            // newFileName += `.${imageFile.name.split('.').pop().toLowerCase()}`;  // split by . and take the last element (instead of [1]/second) just in case their were extra periods in the name
+
+            // append the og filename...
+            newFileName += `-${cleanedName}`;
 
             formData.append('imageFile', imageFile, newFileName);
             imageURL.name = newFileName;
-            imageURL.ogName = imageFile.name;
         } else {
-            formData.append('imageFile', imageFile);
-            imageURL.name = imageFile.name;
+            formData.append('imageFile', imageFile, cleanedName);
+            imageURL.name = cleanedName;
         }
+        imageURL.ogName = imageFile.name;
 
 
         // send to API end-point...
@@ -478,7 +492,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                     return [...updatedImageURLs]
                 })
 
-                console.log(`File ${f} uploaded successfully`);
+                console.log(`File ${f} uploaded successfully to --> ${imageURL.url}`);
 
 
                 imageFile.status = 'success';

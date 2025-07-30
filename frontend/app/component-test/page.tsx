@@ -6,7 +6,7 @@ import TagsInput from "../components/AddItems/TagsInput";
 
 import { useState, useRef, useEffect } from "react";
 import QuillRichText from "../components/Quill/QuillRichText";
-import Editor from "../dashboard/add-project/Editor";
+
 
 const ComponentTest = () => {
 
@@ -30,22 +30,22 @@ const ComponentTest = () => {
 
     // let imageURLs: ImageURL[] = [];
 
-    // let photoUploadProps: PhotoUploadProps = {
-    //     imageFiles: imageFiles,
-    //     setImageFiles: setImageFiles,
-    //     options: {
-    //         addStar: true,
-    //         addCaptions: true,
-    //         autoUpload: {
-    //             uploadAPI: '../api/img',
-    //             imageURLs: imageURLs,
-    //             setImageURLs: setImageURLs,
-    //             renameTo: 'test-07-11-25',
-    //             maxRetries: 3,
-    //             delay: 60,
-    //         }
-    //     }
-    // }
+    let photoUploadProps: PhotoUploadProps = {
+        imageFiles: imageFiles,
+        setImageFiles: setImageFiles,
+        options: {
+            addStar: true,
+            addCaptions: true,
+            autoUpload: {
+                uploadAPI: '../api/img',
+                imageURLs: imageURLs,
+                setImageURLs: setImageURLs,
+                renameTo: 'test-07-11-25',
+                maxRetries: 3,
+                delay: 10,
+            }
+        }
+    }
 
 
     return (
@@ -55,18 +55,27 @@ const ComponentTest = () => {
 
 
                     {/* <TagsInput tags={tags} setTags={setTags}  /> */}
-                    {/* <PhotoUpload {...photoUploadProps} /> */}
+                    <PhotoUpload {...photoUploadProps} />
 
 
 
-                    <QuillRichText
-                        ref={quillRef}
-                        setRichTextContent={setContent}
-                    />
+                    {/* <QuillRichText ref={quillRef} setRichTextContent={setContent} /> */}
                     <br />
                     <br />
                     <br />
-                    <div>{content}</div>
+                    <div>{JSON.stringify(imageURLs)}</div>
+                    <br />
+                    <br />
+                    {imageURLs.map((imageURL, index) => {
+
+                        return (
+                            <div>
+                                <img src={imageURL.url} alt="" key={index} style={{width: "250px", height: "auto"}} />
+                            </div>
+                            
+                            
+                        )
+                    })}
 
                 </div>
             </section>
