@@ -51,20 +51,21 @@
 
 
 .ql-toolbar.ql-snow {
-    border: 1px solid var(--foreground-rgba-60);
-    border-radius: 10px 10px 0 0;
-    background-color: var(--background-rgba-20);
-    padding: 0.5em 2em;
+    border: 0px solid transparent !important;
+    /* border-radius: 10px 10px 0 0;
+    background-color: var(--background-rgba-20); */
+    padding: 0.5em 0.5em;
 }
 
 
 /* Rich Text Container */
 .ql-container.ql-snow {
-    border: 1px solid var(--foreground-rgba-60);
-    border-radius: 0 0 10px 10px;
-    height: 10em;
-    background-color: var(--background-rgba-20);
-    padding: 0.5em 2em;
+    border: 0px solid transparent !important;
+    border-radius: var(--border-radius);
+    min-height: 10em;
+    background-color: var(--background-rgba-40);
+    background-image: var(--content-bg-grad);
+    padding: 0.5em 0.5em;
 }
 
 

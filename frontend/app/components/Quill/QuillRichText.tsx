@@ -78,18 +78,19 @@ const QuillRichText = forwardRef(
     ]
 
     const toolbarOptions = [
-      [{ 'font': extraFonts }, 'bold', 'italic', 'underline'],        // custom fonts & toggled buttons
-      [{ 'align': [] }],
+      [{ 'font': extraFonts }],        // custom fonts & toggled buttons
+      ['bold', 'italic', 'underline'],
+      [ 'align' , { 'align': 'center'}, { 'align': 'right'}],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
       ['blockquote', 'code-block'],
       ['link'],
 
       [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
       [{ 'More': 'More' }],
       //[{ 'break': '' }],                             // 
 
       [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-      [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
       [{ 'direction': 'rtl' }],                         // text direction
 
       [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
