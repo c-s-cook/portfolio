@@ -3,11 +3,12 @@ import type { NextRequest } from 'next/server'
 // import 'dotenv/config'
 // import jwt from 'jsonwebtoken'
 import { jwtVerify } from 'jose'
+import { verify } from 'crypto'
 
  
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-    console.log("dashboard middleware test")
+    // console.log("dashboard middleware test")
 
     const token = request.cookies.get('jwt')?.value
 
@@ -15,11 +16,11 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url))
     } else {
         
-        console.log('jwt token is: ', token)
+        // console.log('jwt token is: ', token)
 
         // check if token exists & is verified
         if(token){
-            console.log('made it in the middleware IF...')
+            // console.log('made it in the middleware IF...')
 
             // jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
             //     if(err){
@@ -36,6 +37,7 @@ export async function middleware(request: NextRequest) {
                   token,
                   new TextEncoder().encode(process.env.JWT_SECRET)
                 )
+                // console.log('middleware verified = ', verified.payload.jti, verified.payload.jti.email, verified.payload.jti.info);
                 return NextResponse.next()
               } catch (err) {
                 console.log(err.message);

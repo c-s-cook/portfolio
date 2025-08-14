@@ -60,8 +60,8 @@ export default function Navbar({ user, navLinks }) {
       text: "Pricing"
     },
     {
-      href: "/",
-      text: "ConTRACTs"
+      href: "/dashboard",
+      text: "Dashboard"
     }
   ];
   

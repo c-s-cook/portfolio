@@ -154,7 +154,7 @@ input:not(.tag-input-field):focus::placeholder {
     opacity: 0.3;
 }
 
-label, .item-tags>h3 {
+label, .item-tags>h3, .add-item h3 {
     
     font-size: 0.7em;
     font-weight: bold;
@@ -168,6 +168,7 @@ label:has(+ input:not(:placeholder-shown)),
 label:has(+ textarea:not(:placeholder-shown)) {
     opacity: 0.6;
 }
+
 
 /* input[type='text'] + label, 
 input[type='email'] + label, 

@@ -70,11 +70,13 @@ const maxAge: number = 1 * 24 * 60 * 60
 // creat JWT
 const createToken = async (id) => {
 
+  const expire = process.env.ENVIRONMENT == 'DEV' ? '80 min' : '20 min';
+
   const token:string = await new SignJWT({})
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(id)
     .setIssuedAt()
-    .setExpirationTime('20 min')
+    .setExpirationTime(expire)
     .sign(new TextEncoder().encode(process.env.JWT_SECRET))
 
   return token
@@ -137,7 +139,15 @@ const isSignup = async (email:string , password:string) => {
 const isLogin = async (email:string, password:string) => {
   try{
     const user = await User.login(email, password);
-    const token = await createToken(user._id);
+
+    let jwtUserInfo = {
+      _id: user._id,
+      email: email,
+      admin: process.env.ENVIRONMENT == 'DEV' ? true : false
+    }
+    if (user.admin) jwtUserInfo['admin'] = user.admin;
+
+    const token = await createToken(jwtUserInfo);
     cookies().set({
       name: 'jwt',
       value: token, 
@@ -270,7 +280,7 @@ export async function GET(req: NextApiRequest) {
 export async function POST(req: NextApiRequest) {
 
   const body = await req.json()
-  console.log('req body: ', body)
+  
   const { email, password, userId, verificationToken } = body;
   const authType:AuthType = body.authType;
 

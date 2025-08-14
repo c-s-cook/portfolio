@@ -33,6 +33,7 @@ export interface PhotoUploadProps {
             uploadAPI: string;
             imageURLs: ImageURL[];
             setImageURLs: React.Dispatch<React.SetStateAction<ImageURL[]>>;
+            startUpload: boolean;
             resImageURLKey?: string; // Defaults to look for ['URL'] key in the API's response
             renameTo?: string;
             delay?: number;         // Delay before auto-uploading, in seconds. Default to 60.
@@ -66,9 +67,10 @@ export interface PhotoUploadProps {
  * @param {string} props.options.autoUpload.uploadAPI - API endpoint for uploading images.
  * @param {ImageURL[]} props.options.autoUpload.imageURLs - Array of URL results from uploaded images.
  * @param {React.Dispatch<React.SetStateAction<ImageURL[]>>} props.options.autoUpload.setImageURLs - State setter for imageURLs.
+ * @param {boolean} props.options.autoUpload.startUpload - A stateful boolean that, when updated to True, will initiate an upload, if the delay timer yet kicked it off.
  * @param {string} [props.options.autoUpload.resImageURLKey] - Optional key to extract image URL from API response. Defaults to look for a top-level 'URL' key.
  * @param {string} [props.options.autoUpload.renameTo] - Optional base name for renaming uploaded files.
- * @param {number} [props.options.autoUpload.delay=60] - Optoinal delay (in seconds) before auto-uploading. Defaults to 60.
+ * @param {number} [props.options.autoUpload.delay=60] - Optional delay (in seconds) before auto-uploading. Defaults to 60.
  * @param {number} [props.options.autoUpload.maxRetries=3] - Optional maximum number of upload retries per file. Defaults to 3.
  *
  * @returns {JSX.Element} The rendered PhotoUpload component.
@@ -96,7 +98,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     // Destructure {options} param...
     if (options) {
         var { addCaptions, addStar, autoUpload } = options;
-        if (autoUpload) var { uploadAPI, imageURLs, setImageURLs, resImageURLKey, renameTo, delay, maxRetries } = autoUpload;
+        if (autoUpload) var { uploadAPI, imageURLs, setImageURLs, startUpload, resImageURLKey, renameTo, delay, maxRetries } = autoUpload;
         maxRetries = maxRetries ? maxRetries : 3;
     }
 
@@ -232,6 +234,36 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
 
     /**
+     *  check to see if imageUrls is longer than imageFiles (like from a loaded Auto-Save)...
+     */
+    if (imageURLs.length > imageFiles.length) {
+
+        // display the image preview area
+        document.getElementById("image-preview-area").style.display = "flex";
+
+        for (let i = 0; i < imageURLs.length; i++) {
+            let filename = imageURLs[i].ogName || imageURLs[i].name;
+
+            if (!imageFiles[i]) {
+                const tempFile = new File(["lie...but we shouldn't ever access this"], filename, {
+                    type: "text/plain",
+                });
+                tempFile.status = 'success';
+                tempFile.tries = 1;
+                imageFiles[i] = tempFile;
+            }
+            else if (filename !== imageFiles[i].name) {
+                console.log(`Possible mismatch: imageURLs[${i}]: ${filename}  |  imageFiles[${i}]: ${imageFiles[i].name}`)
+
+            }
+
+        }
+
+    }
+
+
+
+    /**
      *  applies Error Message fade-in and fade-out
      */
     useEffect(() => {
@@ -243,6 +275,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
         }
     }, [errorMessage])
+
 
 
     /**
@@ -304,10 +337,12 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // check if image already has a caption
         if (imageFiles.length > 0 && addingCaption !== null) {
 
-            if (imageFiles[addingCaption].caption) {
+            if (imageFiles[addingCaption].caption || imageURLs[addingCaption].caption) {
 
-                let captionInput = document.getElementById('photo-caption') as HTMLTextAreaElement;
-                captionInput.value = imageFiles[addingCaption].caption;
+                let tempCaption = imageFiles[addingCaption].caption || imageURLs[addingCaption].caption;
+                setPhotoCaption(tempCaption);
+            } else {
+                setPhotoCaption('');
             }
         }
 
@@ -422,7 +457,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // a regex for replacing ' - ' with '_'...
 
 
-        
+
 
         // clean spaces out of the filename...
         var cleanedName = imageFile.name.replace(/[\s-]+/g, '_');
@@ -565,6 +600,17 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     }, [])
 
 
+
+    /******* startUpload
+     * 
+     */
+    useEffect(() => {
+
+        if (startUpload) cueImagesForUpload();
+
+    }, [startUpload])
+
+
     /*****  imageFiles[]
      * 
      *  Sends a file with 'uploading' status to be uploaded,
@@ -682,18 +728,40 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                             // type="textarea" 
                             name="photo-caption"
                             id="photo-caption"
+                            value={photoCaption}
                             onChange={(e) => setPhotoCaption(e.target.value)}
                             placeholder="Add caption here"
                         />
-                        <button onClick={attachCaption}>Add Caption</button>
+                        <button onClick={attachCaption}>Set Caption</button>
                     </div>}
 
                     {imageFiles.map((file, index) => {
-                        const imgSrc = URL.createObjectURL(file);
 
-                        let status = file.status ? file.status : 'remove';
-                        let starred = file.starred ? 'is-starred' : '';
-                        let captioned = file.caption ? 'is-captioned' : '';
+                        let imgSrc, status, starred, captioned;
+
+                        // check if the file has been uploaded...
+                        if (file.status === 'success') {
+                            imgSrc = imageURLs[index].url;
+
+                            status = 'success';
+                            starred = imageURLs[index].starred ? 'is-starred' : '';
+                            captioned = imageURLs[index].caption ? 'is-captioned' : '';
+                        }
+
+                        // validate that the file variable is of type Blob
+                        else if ((file instanceof Blob) && file.type !== 'text/plain') {
+                            imgSrc = URL.createObjectURL(file);
+
+                            status = file.status ? file.status : 'remove';
+                            starred = file.starred ? 'is-starred' : '';
+                            captioned = file.caption ? 'is-captioned' : '';
+                        }
+                        else {
+                            console.error(`File at index ${index} is not a valid Blob. Skipping rendering.`);
+                            return null;
+                        }
+
+
 
                         return (
                             <div className="img-container" key={"img-container-" + index}>

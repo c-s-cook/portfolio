@@ -63,7 +63,7 @@ const TagsInput = ({ tags, setTags }: TagsInputProps) => {
         // Add a new tag to the tags[], DOM will update upon change...
         const addTag = (tag: string): void => {
 
-            const sanitizedTag = tag.trim().replace(/[^a-zA-Z0-9 ']/g, '');
+            const sanitizedTag = tag.trim().replace(/[^a-zA-Z0-9 .']/g, '');
 
             if (sanitizedTag) {
                 console.log("stanitized! -> ", sanitizedTag);
@@ -116,7 +116,7 @@ const TagsInput = ({ tags, setTags }: TagsInputProps) => {
     return (
         <>
             <div className="item-tags">
-                <h3>Tags:</h3>
+                <h3>Tags: <span className="error-msg"></span></h3>
                 <div id="tag-input">
                     <span id="set-tags">
                         {tags.map((tag) => addTagBox(tag))}

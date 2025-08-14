@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
     { href: "/",        text: "Main" },
     { href: "/about",   text: "About?" },
     { href: "/",        text: "Costs" },
-    { href: "/",        text: "Comminucations" }
+    { href: "/dashboard",        text: "Dashboard" }
   ];
 
 
