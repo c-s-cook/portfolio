@@ -35,3 +35,14 @@ export interface PreviewCardProps {
     project: Project | Certification,
     slideinterval: number
 }
+
+export interface UniqueTag {
+    tag: string,
+    count: number
+}
+
+export interface Portfolio {
+    projects: Array<Project>,
+    certifications: Array<Certification>,
+    uniqueTags: Array<UniqueTag>
+}

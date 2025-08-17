@@ -17,6 +17,7 @@
 
   /* Content backing */
   --background-rgb: rgb(0, 0, 0);
+  --background-rgba-80: rgba(0, 0, 0, 0.8);
   --background-rgba-60: rgba(0, 0, 0, 0.6);
   --background-rgba-40: rgba(0, 0, 0, 0.4);
   --background-rgba-20: rgba(0, 0, 0, 0.2);

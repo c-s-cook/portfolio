@@ -2,10 +2,13 @@
 
 import PhotoUpload from "../components/AddItems/PhotoUpload";
 import type { PhotoUploadProps, ImageURL } from "../components/AddItems/PhotoUpload";
+
 import TagsInput from "../components/AddItems/TagsInput";
 
 import { useState, useRef, useEffect } from "react";
 import QuillRichText from "../components/Quill/QuillRichText";
+
+
 
 
 const ComponentTest = () => {
@@ -15,15 +18,21 @@ const ComponentTest = () => {
     const [imageURLs, setImageURLs] = useState<ImageURL[]>([]);
 
     const [content, setContent] = useState('');
-    
+
+
+
+
 
 
     // Use a ref to access the quill instance directly
     const quillRef = useRef();
 
+
+
+
     // Run for EVERY change in the DOM
     useEffect(() => {
-        if(quillRef.current) setContent(quillRef.current.root.innerHTML); // This is how to get the HTML formatted
+        if (quillRef.current) setContent(quillRef.current.root.innerHTML); // This is how to get the HTML formatted
     });
 
 
@@ -54,14 +63,12 @@ const ComponentTest = () => {
                 <div className="content with-background bg-grad">
 
 
-                    {/* <TagsInput tags={tags} setTags={setTags}  /> */}
-                    <PhotoUpload {...photoUploadProps} />
+                    <TagsInput tags={tags} setTags={setTags} />
+                    {/* <PhotoUpload {...photoUploadProps} /> */}
 
 
 
                     {/* <QuillRichText ref={quillRef} setRichTextContent={setContent} /> */}
-                    <br />
-                    <br />
                     <br />
                     <div>{JSON.stringify(imageURLs)}</div>
                     <br />
@@ -70,10 +77,10 @@ const ComponentTest = () => {
 
                         return (
                             <div>
-                                <img src={imageURL.url} alt="" key={index} style={{width: "250px", height: "auto"}} />
+                                <img src={imageURL.url} alt="" key={index} style={{ width: "250px", height: "auto" }} />
                             </div>
-                            
-                            
+
+
                         )
                     })}
 
