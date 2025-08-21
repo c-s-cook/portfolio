@@ -2,21 +2,15 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
+import type { Project, Certification } from "../../frontend/lib/types"
+
 // DynamoDB table name
 export const TABLE_NAME = process.env.TABLE_NAME || "portfolio-items";
 
 export const client = new DynamoDBClient({});
 export const ddbDocClient = DynamoDBDocumentClient.from(client);
 
-export interface Project {
-  type: string;
-  id: number;
-  title: string;
-  body: string;
-  tags: string[];
-  thumbnails: any[];
-  [key: string]: any;
-}
+
 
 export const handler = async (
   event: APIGatewayProxyEvent
@@ -30,15 +24,15 @@ export const handler = async (
     }
 
     // console.log("body: ", event.body);
-    const project: Project = (typeof(event.body) == 'object') ? event.body : JSON.parse(event.body);
+    const portfolioitem: Project | Certification = (typeof(event.body) == 'object') ? event.body : JSON.parse(event.body);
 
     // If id is 0, find the highest id for this type and increment
-    if (project.id === 0) {
+    if (portfolioitem.id === 0) {
       const queryCmd = new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: "#type = :typeVal",
         ExpressionAttributeNames: { "#type": "type", "#id": "id" },
-        ExpressionAttributeValues: { ":typeVal": project.type },
+        ExpressionAttributeValues: { ":typeVal": portfolioitem.type },
         ProjectionExpression: "#id",
         ScanIndexForward: false, // descending order
         Limit: 1,
@@ -48,22 +42,24 @@ export const handler = async (
       const highestId = queryResult.Items && queryResult.Items.length > 0
         ? queryResult.Items[0].id
         : 0;
-      project.id = highestId + 1;
+      portfolioitem.id = highestId + 1;
     }
 
     // Put the new project into the table
     const putCmd = new PutCommand({
       TableName: TABLE_NAME,
-      Item: project,
+      Item: portfolioitem,
     });
 
     await ddbDocClient.send(putCmd);
 
-    console.log("Succes: Proj Saved");
+    let type = portfolioitem.type == 'PROJ' ? 'Project' : 'Certification';
+
+    console.log(`Succes: ${type} Saved`);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Project saved", project }),
+      body: JSON.stringify({ message: `${type} saved`, portfolioitem }),
     };
   } catch (error: any) {
     return {

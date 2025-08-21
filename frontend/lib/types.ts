@@ -27,7 +27,7 @@ export interface Project extends PortfolioItem {
 
 export interface Certification extends Project {
     certUrl: string,
-    date: Date,
+    date: Date | string,
 }
 
 export interface PreviewCardProps {

@@ -64,7 +64,7 @@ const TagsInput = ({ tags, setTags }: TagsInputProps) => {
 
     // reusable addTag logic (sanitizes, checks duplicates, updates tags state)
     const addTag = (raw: string) => {
-        const sanitizedTag = raw.trim().replace(/[^a-zA-Z0-9 .']/g, '');
+        const sanitizedTag = raw.trim().replace(/[^a-zA-Z0-9 ./']/g, '');
 
         if (!sanitizedTag) return;
 

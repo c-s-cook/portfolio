@@ -17,10 +17,17 @@ export default function Dashboard() {
                   <button>
                     Add Project
                   </button>
-                  
-                </Link></li>
+                </Link>
+              </li>
+              <li>
+                <Link href="./dashboard/add-certification">
+                  <button>
+                    Add Certificate
+                  </button>
+                </Link>
+              </li>
             </ul>
-            
+
           </div>
         </div>
       </section>

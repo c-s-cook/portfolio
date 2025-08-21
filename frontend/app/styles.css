@@ -129,6 +129,7 @@ button:hover {
 input[type="text"]:not(.tag-input-field), 
 input[type="email"]:not(.tag-input-field),
 input[type="password"]:not(.tag-input-field), 
+input[type="date"]:not(.tag-input-field), 
 textarea,
 #tag-input {
     display: block;
@@ -168,6 +169,15 @@ label:has(+ input:not(:placeholder-shown)),
 label:has(+ textarea:not(:placeholder-shown)) {
     opacity: 0.6;
 }
+
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    /* background-color: var(--background-rgba-80); */
+}
+
+
+
 
 
 /* input[type='text'] + label, 
