@@ -4,7 +4,7 @@ import { Quicksand } from 'next/font/google'
 
 
 import Navbar from './components/Navbars/Navbar'
-import Background from './components/Background'
+import Background from './components/Background/Background'
 
 
 

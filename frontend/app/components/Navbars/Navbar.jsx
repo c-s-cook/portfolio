@@ -13,7 +13,7 @@ import HamburgerX02 from './Hamburgers/HamburgerX02'
 import HamburgerX03 from './Hamburgers/HamburgerX03'
 import HamburgerX04 from './Hamburgers/HamburgerX04'
 import { useState } from 'react'
-import Background from '../Background'
+import Background from '../Background/Background'
 import Logo from '../Logo/Logo'
 
 

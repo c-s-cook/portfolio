@@ -85,6 +85,7 @@ section .with-background {
     background-color: var(--background-rgba-20);
     border-radius: 20px;
     padding: 1.5em;
+    border: 1px var(--foreground-rgba-20) solid;
 }
 
 section .bg-grad {

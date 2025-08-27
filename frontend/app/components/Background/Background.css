@@ -1,0 +1,55 @@
+#background {
+    /* overflow: hidden; */
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: -99;
+    /* add a blur effect to this element */
+    /* filter: blur(20px); */
+}
+
+#background div {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%
+}
+
+#background div:nth-of-type(1) {
+    background: linear-gradient(45deg, var(--background-start-rgb), var(--background-end-rgb));
+}
+
+#background div:nth-of-type(2) {
+    /* background: linear-gradient(45deg, 
+        var(--background-start-rgb), 
+        var(--background-start-rgba-75), 
+        var(--background-start-rgba-50), 
+        var(--background-start-rgba-25), 
+        transparent
+    ); */
+
+}
+
+#background div:nth-of-type(3) {
+
+    background-image: var(--content-bg-grad);
+
+}
+
+#background div:nth-of-type(4) {
+
+    /* background-image: radial-gradient(closest-side at 25% 35%, transparent, rgba(0, 0, 0, 0.4)); */
+
+}
+
+#background div:nth-of-type(4) svg {
+    -webkit-filter: grayscale(100%);   /* Safari 6.0 - 9.0 */
+    /* filter: grayscale(100%); */
+    /* opacity: 0.5; */
+
+    mix-blend-mode: multiply;
+
+}

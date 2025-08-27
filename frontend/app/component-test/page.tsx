@@ -60,29 +60,20 @@ const ComponentTest = () => {
     return (
         <>
             <section>
-                <div className="content with-background bg-grad">
+                <div className="content ">
 
 
-                    <TagsInput tags={tags} setTags={setTags} />
+                    {/* <TagsInput tags={tags} setTags={setTags} /> */}
                     {/* <PhotoUpload {...photoUploadProps} /> */}
 
 
 
                     {/* <QuillRichText ref={quillRef} setRichTextContent={setContent} /> */}
                     <br />
-                    <div>{JSON.stringify(imageURLs)}</div>
+                    {/* <div>{JSON.stringify(imageURLs)}</div> */}
                     <br />
                     <br />
-                    {imageURLs.map((imageURL, index) => {
 
-                        return (
-                            <div>
-                                <img src={imageURL.url} alt="" key={index} style={{ width: "250px", height: "auto" }} />
-                            </div>
-
-
-                        )
-                    })}
 
                 </div>
             </section>

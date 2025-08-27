@@ -108,9 +108,10 @@ export default function LoginPage() {
     <>
     <section>
         <div className="content">
-            <form onSubmit={handleSubmit} id='login-form' className='with-background bg-grad'>
+            
+            <form onSubmit={handleSubmit} id='login-form' className='auth with-background bg-grad'>
 
-              
+              <h3>Log In:</h3>
 
               <label htmlFor="email">Email:</label>
               <input type="email" name="email" id="email" placeholder="Email" required />

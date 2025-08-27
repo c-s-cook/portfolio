@@ -5,6 +5,13 @@
     animation: fade-in-up 0.5s ease-in-out;
 }
 
+.content form.auth h3 {
+    text-transform: uppercase;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.2em;
+}
+
 .content form input {
     width: 100%;
 }
