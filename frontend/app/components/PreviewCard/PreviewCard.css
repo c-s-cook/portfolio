@@ -4,6 +4,7 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-items: flex-start;
+    padding: 2em 0 !important;
 
 }
 
@@ -11,8 +12,8 @@
 
     max-width: 300px;
     max-height: 900px;
-    margin: 1em;
-    margin-bottom: 3em;
+    margin: 0.5em;
+    margin-bottom: 4em;
     padding: 2em;
     
     transition: 0.5s ease;
@@ -115,9 +116,13 @@
     position: absolute;
     /* visibility: visible; */
     opacity: 0;
+    padding: 0;
     padding-bottom: 2em;
     margin: 0.5em 2em 2em auto;
     right: 0%;
+    border: none;
+    background: none;
+
     /* bottom: 0%; */
     
     transition: 0.3s ease;

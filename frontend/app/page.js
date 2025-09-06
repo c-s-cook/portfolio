@@ -49,7 +49,7 @@ export default function Home() {
         <section>
           <div className="content extra-long">
             
-            <h2 className={satisfy.className}>About me 2...</h2>
+            <h2 className={satisfy.className}>Projects</h2>
            
             
             <div className="body preview-deck">
