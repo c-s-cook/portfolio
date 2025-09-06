@@ -3,40 +3,37 @@
 @tailwind utilities;
 
 :root {
-  
-  --border-rgb: rgb(30, 30, 30);
+
+  --border-rgb: rgb(225, 225, 225);
 
   /* Text */
-  --foreground-rgb: rgb(225, 225, 225);
-  --foreground-rgba-60: rgba(255, 255, 255, 0.6);
-  --foreground-rgba-50: rgba(255, 255, 255, 0.5);
-  --foreground-rgba-40: rgba(255, 255, 255, 0.4);
-  --foreground-rgba-20: rgba(255, 255, 255, 0.2);
-  --foreground-rgba-05: rgba(255, 255, 255, 0.05);
+  --foreground-rgb: rgb(0, 0, 0);
+  --foreground-rgba-60: rgba(0, 0, 0, 0.6);
+  --foreground-rgba-50: rgba(0, 0, 0, 0.5);
+  --foreground-rgba-40: rgba(0, 0, 0, 0.4);
+  --foreground-rgba-20: rgba(0, 0, 0, 0.2);
+  --foreground-rgba-05: rgba(0, 0, 0, 0.05);
 
 
   /* Content backing */
-  --background-rgb: rgb(0, 0, 0);
-  --background-rgba-80: rgba(0, 0, 0, 0.8);
-  --background-rgba-60: rgba(0, 0, 0, 0.6);
-  --background-rgba-40: rgba(0, 0, 0, 0.4);
-  --background-rgba-20: rgba(50, 50, 50, 0.2);
-  
-  --content-bg-grad: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+  --background-rgb: rgb(255, 255, 255);
+  --background-rgba-80: rgba(255, 255, 255, 0.8);
+  --background-rgba-60: rgba(255, 255, 255, 0.6);
+  --background-rgba-40: rgba(255, 255, 255, 0.4);
+  --background-rgba-20: rgba(205, 205, 205, 0.2);
+
+  --content-bg-grad: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
 
 
-  /* Main Background Color Gradient */
-  --background-start-rgb: rgb(59, 0, 110);
-  --background-start-rgba-75: rgba(59, 0, 110, 0.75);
-  --background-start-rgba-50: rgba(59, 0, 110, 0.5);
-  --background-start-rgba-25: rgba(59, 0, 110, 0.25);
+  /* Main Background Color Gradients */
+  --background-color-grad-start: rgb(122, 74, 163);
+  --background-color-grad-end: rgb(167, 222, 167);
 
-  --background-mid-rgb: rgb(37, 43, 62);
+  --background-overlay-gradient: linear-gradient(rgba(205, 205, 205, 0), rgba(205, 205, 205, 0.9));
 
-  --background-end-rgb: rgb(7, 67, 7);
-
-  --light-grad-start-rgb: rgb(197, 168, 222);
-  --light-grad-end-rgb: rgb(167, 222, 167);
+  /* Logo or Foreground Color Gradient */
+  --light-grad-start-rgb: rgb(59, 0, 110);
+  --light-grad-end-rgb: rgb(7, 67, 7);
 
 
   /* Misc. Global Vars */
@@ -46,17 +43,44 @@
 
 
 
-/* @media (prefers-color-scheme: dark) {
-    :root {
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
-    }
-} */
+@media (prefers-color-scheme: dark) {
+  :root {
+
+    --border-rgb: rgb(30, 30, 30);
+
+    /* Text */
+    --foreground-rgb: rgb(225, 225, 225);
+    --foreground-rgba-60: rgba(255, 255, 255, 0.6);
+    --foreground-rgba-50: rgba(255, 255, 255, 0.5);
+    --foreground-rgba-40: rgba(255, 255, 255, 0.4);
+    --foreground-rgba-20: rgba(255, 255, 255, 0.2);
+    --foreground-rgba-05: rgba(255, 255, 255, 0.05);
+
+
+    /* Content backing */
+    --background-rgb: rgb(0, 0, 0);
+    --background-rgba-80: rgba(0, 0, 0, 0.8);
+    --background-rgba-60: rgba(0, 0, 0, 0.6);
+    --background-rgba-40: rgba(0, 0, 0, 0.4);
+    --background-rgba-20: rgba(50, 50, 50, 0.2);
+
+    --content-bg-grad: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+
+
+    /* Main Background Color Gradients */
+    --background-color-grad-start: rgb(51, 0, 102);
+    --background-color-grad-end: rgb(0, 51, 0);
+
+    --background-overlay-gradient: linear-gradient(rgba(55, 55, 55, 0), rgba(0, 0, 0, 0.7));
+
+    --light-grad-start-rgb: rgb(197, 168, 222);
+    --light-grad-end-rgb: rgb(167, 222, 167);
+  }
+}
 
 body {
   color: var(--foreground-rgb);
-  
+
 }
 
 
@@ -64,30 +88,33 @@ body {
 
 @keyframes fade-in-up {
   from {
-      opacity: 0;
-      translate: 0px 50px;
+    opacity: 0;
+    translate: 0px 50px;
   }
+
   to {
-      opacity: 1;
-      translate: 0px 0px;
+    opacity: 1;
+    translate: 0px 0px;
   }
 }
 
 @keyframes fadeIn {
   from {
-      opacity: 0;
+    opacity: 0;
   }
+
   to {
-      opacity: 1;
+    opacity: 1;
   }
 }
 
 @keyframes fadeOut {
   from {
-      opacity: 1;
+    opacity: 1;
   }
+
   to {
-      opacity: 0;
+    opacity: 0;
   }
 }
 
@@ -96,11 +123,13 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
   }
 }
+
 @-webkit-keyframes spin {
   to {
     -webkit-transform: rotate(360deg);

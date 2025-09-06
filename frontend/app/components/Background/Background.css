@@ -7,7 +7,8 @@
     height: 100%;
     z-index: -99;
     /* add a blur effect to this element */
-    /* filter: blur(20px); */
+    /* filter: blur(5px); */
+    /* transform: scale(1.1); */
 }
 
 #background div {
@@ -19,12 +20,21 @@
 }
 
 #background div:nth-of-type(1) {
-    background: linear-gradient(45deg, var(--background-start-rgb), var(--background-end-rgb));
+    /* background: linear-gradient(45deg, var(--background-color-grad-start), var(--background-color-grad-end)); */
+    background-image: url('/img/backgroundGradient_light.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+    #background div:nth-of-type(1) {
+        background-image: url('/img/backgroundGradient_dark.svg');
+    }
 }
 
 #background div:nth-of-type(2) {
     /* background: linear-gradient(45deg, 
-        var(--background-start-rgb), 
+        var(--background-color-grad-start), 
         var(--background-start-rgba-75), 
         var(--background-start-rgba-50), 
         var(--background-start-rgba-25), 
@@ -35,7 +45,7 @@
 
 #background div:nth-of-type(3) {
 
-    background-image: var(--content-bg-grad);
+    /* background-image: var(--background-overlay-gradient); */
 
 }
 
@@ -48,7 +58,7 @@
 #background div:nth-of-type(4) svg {
     -webkit-filter: grayscale(100%);   /* Safari 6.0 - 9.0 */
     /* filter: grayscale(100%); */
-    /* opacity: 0.5; */
+    opacity: 0.0;
 
     mix-blend-mode: multiply;
 
