@@ -11,8 +11,8 @@ import Background from './components/Background/Background'
 
 export const dynamic = 'force-dynamic'
 
-const quicksand = Quicksand({ 
-  subsets: ['latin'], 
+const quicksand = Quicksand({
+  subsets: ['latin'],
   variable: '--font-quicksand',
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
@@ -24,12 +24,12 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  
+
   const navLinks = [
-    { href: "/",        text: "Main" },
-    { href: "/about",   text: "About?" },
-    { href: "/",        text: "Costs" },
-    { href: "/dashboard",        text: "Dashboard" }
+    { href: "/", text: "Main" },
+    { href: "/about", text: "About?" },
+    { href: "/", text: "Costs" },
+    { href: "/dashboard", text: "Dashboard" }
   ];
 
 
@@ -39,11 +39,14 @@ export default function RootLayout({ children }) {
       {/* INSERT JavaScript file for hideNavBar here with defer */}
       <body className={quicksand.className}>
         <Background />
-        <main className='scrollsnap'>
+        <main className='scrollsnap-container'>
           <Navbar navLinks={navLinks} />
           {children}
-          <footer>Copyright 2024 Christopher Cook. All rights reserved.</footer>
+          <footer className='scrollsnap'>
+            Copyright 2024 Christopher Cook. All rights reserved.
+          </footer>
         </main>
+
       </body>
     </html>
   )
