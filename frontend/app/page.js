@@ -20,39 +20,62 @@ export default function Home() {
 
   let prvi = 1;
 
+  // Adding IntersectionObservers for any <section> with .content.extra-long
+  // which would otherwise overflow the vertical height of the window. So
+  // the observer toggles scrollsnap
   useEffect(() => {
 
-    let sections = document.querySelectorAll('section');
-    if (sections.length > 0) {
+    let scrollnapContainer = document.querySelector('.scrollsnap-container');
+    let sections = document.querySelectorAll('section:has(>.content.extra-long)');
+    if (scrollnapContainer && sections.length > 0) {
+
+      let numSteps = 20;
+      let buildThresholdsList = () => {
+        const thresholds = [];
+
+        for (let i = 1.0; i <= numSteps; i++) {
+          const ratio = i / numSteps;
+          thresholds.push(ratio);
+        }
+
+        thresholds.push(0);
+        return thresholds;
+      }
+
+      // console.log('found scrollsnapContainer & these sections:', sections);
 
 
-      let scrollsnapOn = (entries) => entries.forEach((entry) => entry.target.classList.add('scrollsnap'));
 
-      let scrollsnapOff = (entries) => {
+      let prevRatio = 0.0;
+      let isSnapping = true;
+
+      let scrollsnapToggle = (entries) => {
         entries.forEach((entry) => {
-          entry.target.classList.remove('scrollsnap');
+
+          if (entry.intersectionRatio < prevRatio && entry.intersectionRatio <= 0.45) {
+            isSnapping = true;
+            scrollnapContainer.style.scrollSnapType = "y mandatory";
+          }
+          else if (entry.intersectionRatio < prevRatio && isSnapping) {
+            isSnapping = false;
+            scrollnapContainer.style.scrollSnapType = "none";
+          }
+
+          prevRatio = entry.intersectionRatio;
         })
       }
 
-      let observerOnOptions = {
+      let observerToggleOptions = {
         root: null,
-        rootMargin: "20px",
-        threshold: 0.0,
+        rootMargin: "-10% 0% -10% 0%",
+        threshold: buildThresholdsList(),
       }
 
-      let observerOffOptions = {
-        root: null,
-        rootMargin: "0% 0% 10% 0%",
-        threshold: 0.5,
-      }
 
-      let observerOn = new IntersectionObserver(scrollsnapOn, observerOnOptions);
-      let observerOff = new IntersectionObserver(scrollsnapOff, observerOffOptions);
+      let observerToggle = new IntersectionObserver(scrollsnapToggle, observerToggleOptions);
 
       for (let section of sections) {
-        section.classList.toggle('scrollsnap');
-        // observerOn.observe(section);
-        // observerOff.observe(section);
+        observerToggle.observe(section);
       }
     }
 
@@ -70,13 +93,13 @@ export default function Home() {
 
 
 
-      <section className=''>
+      <section className='scrollsnap'>
         <div className="content no-background">
           <Logo />
         </div>
       </section>
 
-      <section className=''>
+      <section className='scrollsnap'>
         <div className="content with-background">
 
           <h2 className={satisfy.className}>About me...</h2>
@@ -90,7 +113,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className=''>
+      <section className='scrollsnap'>
         <div className="content extra-long">
 
           <h2 className={satisfy.className}>Projects</h2>
@@ -115,7 +138,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className=''>
+      <section className='scrollsnap'>
         <div className="content">
 
           <h2 className={satisfy.className}>About me 3...</h2>
@@ -129,7 +152,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className=''>
+      <section className='scrollsnap'>
         <div className="content">
 
           <h2 className={satisfy.className}>About me 4...</h2>

@@ -1,4 +1,3 @@
-
 /* .scrollsnap { */
 .scrollsnap-container {
     position: absolute;
@@ -10,6 +9,7 @@
     scroll-snap-type: y mandatory;
     scroll-snap-stop: always;
     overflow-y: scroll;
+    scroll-padding: 0em 0em 0em 0em;
     /* border: 3px dashed red; */
 }
 
@@ -17,16 +17,17 @@ section {
     /* border: 2px dotted greenyellow; */
 
     min-height: 100vh;
-    max-width: 80%;
+    max-width: 100vw;
     margin: 0 auto;
     position: relative;
     padding: 5em 5em;
 }
+
 section.scrollsnap {
     scroll-snap-align: start;
 
     /* border: 2px dotted rgb(255, 47, 241); */
-    
+
     /* padding-top: 3em;
     margin: 3em auto;
     max-width: 70vw;
@@ -48,9 +49,9 @@ footer.scrollsnap {
 }
 
 
-section > .content {
+section>.content {
 
-    position:absolute;
+    position: absolute;
     /* position:relative; */
     margin-left: auto;
     margin-right: auto;
@@ -62,12 +63,14 @@ section > .content {
     /* padding-top: 3em; */
     margin: 2em auto;
     max-width: 1000px;
-    width: 100%;
+    width: calc(100% - 10rem);
     margin-bottom: 10em;
     
-    
+    padding: 1.5em;
+
+
     /* border: 1px dashed cyan; */
-    
+
 }
 
 section .body {
@@ -80,14 +83,13 @@ section .body {
     font-size: 1.5em;
 }
 
-section > .content.no-background {
+section>.content.no-background {
     background-color: transparent;
 }
 
 section .with-background {
     background-color: var(--background-rgba-20);
     border-radius: 20px;
-    padding: 1.5em;
     border: 1px var(--foreground-rgba-20) solid;
 }
 
@@ -95,12 +97,14 @@ section .bg-grad {
     background-image: var(--content-bg-grad);
 }
 
-section > .content.extra-long {
+section>.content.extra-long {
     position: relative;
     top: auto;
     left: auto;
-    transform: translate(0,0);
-    margin-bottom: 35vh;
+    width: 100%;
+    padding: 0em;
+    transform: translate(0, 0);
+    /* margin-bottom: 35vh; */
 }
 
 section .centered {
@@ -117,10 +121,11 @@ button {
     background-color: var(--background-rgba-60);
     border: 1px solid var(--foreground-rgba-20);
     border-radius: 8px;
-    
+
     text-transform: uppercase;
     transition: 0.2s ease-in-out;
 }
+
 button:hover {
     color: var(--foreground-rgb);
     border: 1px solid var(--foreground-rgba-60);
@@ -130,10 +135,10 @@ button:hover {
 
 
 /* FORMS & INPUTS */
-input[type="text"]:not(.tag-input-field), 
+input[type="text"]:not(.tag-input-field),
 input[type="email"]:not(.tag-input-field),
-input[type="password"]:not(.tag-input-field), 
-input[type="date"]:not(.tag-input-field), 
+input[type="password"]:not(.tag-input-field),
+input[type="date"]:not(.tag-input-field),
 textarea,
 #tag-input {
     display: block;
@@ -142,7 +147,7 @@ textarea,
     /* margin-top: 1.5em; */
     line-height: 1em;
     max-height: 2em;
-    
+
     color: var(--foreground-rgb);
     background-color: var(--background-rgba-40);
     border-radius: 8px;
@@ -150,17 +155,22 @@ textarea,
     transition: 0.3s ease-in-out;
     outline: none;
 }
-input:not(.tag-input-field):focus, textarea:focus {
+
+input:not(.tag-input-field):focus,
+textarea:focus {
     background: var(--background-rgba-60);
     /* border: 1px var(--background-start-rgb) solid; */
     outline: none;
 }
+
 input:not(.tag-input-field):focus::placeholder {
     opacity: 0.3;
 }
 
-label, .item-tags>h3, .add-item h3 {
-    
+label,
+.item-tags>h3,
+.add-item h3 {
+
     font-size: 0.7em;
     font-weight: bold;
     text-transform: uppercase;
@@ -169,6 +179,7 @@ label, .item-tags>h3, .add-item h3 {
     transition: 0.5s ease-in-out;
     opacity: 0;
 }
+
 label:has(+ input:not(:placeholder-shown)),
 label:has(+ textarea:not(:placeholder-shown)) {
     opacity: 0.6;
@@ -220,13 +231,15 @@ input[type=password] + label {
         
     } */
 
-    .scrollsnap > section {
-        max-width: 90%;
-        padding: 5em 0em;
+    section {
+        max-width: 100vw;
+        padding: 0em 0em;
+        margin-bottom: 20vh;
     }
 
-    section > .content {
-        max-width: 90vw;
+    section>.content {
+        width: calc(100vw - 2rem);
+        max-width: 95vw;
         /* padding: 1em; */
         margin: auto auto;
     }
@@ -235,13 +248,24 @@ input[type=password] + label {
         padding: 0em;
     }
 
-    section > .content.long {
+    section.scrollsnap:has(>.content.extra-long) {
+        scroll-snap-align: center;
+        /* background-color: rgba(255, 166, 0, 0.299); */
+
+    }
+
+    section>.content.extra-long {
         position: relative;
-        top: auto;
-        left: auto;
-        transform: translate(0,0);
+
+        width: 95vw;
+        max-width: 100vw;
+        top: 0;
+        left: 0;
+        padding-top: 6rem;
+        /* transform: translate(0,0); */
+        margin-bottom: 40vh;
     }
 
 
-  
+
 }

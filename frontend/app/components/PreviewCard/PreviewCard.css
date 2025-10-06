@@ -16,6 +16,9 @@
     margin-bottom: 4em;
     padding: 2em;
     
+}
+*:has(> .preview-card),
+.preview-card {
     transition: 0.5s ease;
 }
 
@@ -156,6 +159,12 @@
         /* background-color: aqua; */
         background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
     }
+
+    *:has(>.preview-card) {
+        /* padding-bottom: 30em; */
+        /* background-color: chartreuse; */
+    }
+
 
 
     .preview-card .thumbnails {

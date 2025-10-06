@@ -31,7 +31,7 @@ const defaultProject: Project = {
     ],
     body: "",
     snippet: "This is a snippet of text that should get cut off if there is too much and too lengthy a run of words here. Hopefully I can use a cut-off item for a read more element.",
-    tags: [ "React", "MongoDB", "Kubernetes", "Node.js" ]
+    tags: ["React", "MongoDB", "Kubernetes", "Node.js"]
 }
 
 /**
@@ -46,26 +46,26 @@ const defaultProject: Project = {
 const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps): ReactElement => {
 
     const ref = useRef(null);
-    
+
 
     const shuffleThumbs = (card: HTMLBodyElement) => {
-        
 
-        let thumbs:Element = card.getElementsByClassName("thumbnails")[0];
+
+        let thumbs: Element = card.getElementsByClassName("thumbnails")[0];
 
         // Attempting Re-ordering...
-        if (thumbs.firstChild.style.left != "0%"){
+        if (thumbs.firstChild.style.left != "0%") {
             let reordered = thumbs.firstChild;
             reordered.style.zIndex = "-1";
             thumbs.removeChild(thumbs.firstChild);
             thumbs.appendChild(reordered);
-            thumbs.lastChild.style.left = `${(thumbs.children.length - 1) * 100}%`;            
+            thumbs.lastChild.style.left = `${(thumbs.children.length - 1) * 100}%`;
         }
 
         // Sliding the thumbnails over...
-        for(let i=0; i < thumbs.children.length; i++){
+        for (let i = 0; i < thumbs.children.length; i++) {
             thumbs.children[i].style.zIndex = "0";
-            thumbs.children[i].style.left = `${(i-1) * 100}%`;
+            thumbs.children[i].style.left = `${(i - 1) * 100}%`;
         }
     }
 
@@ -75,19 +75,19 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
         let shuffleInterval;
 
         const startShuffle = (e: UIEvent) => {
-            e.preventDefault();  
+            e.preventDefault();
             shuffleThumbs(e.target as HTMLBodyElement);
-            
-            if(!shuffleInterval){ 
-                shuffleInterval = setInterval(shuffleThumbs, slideinterval*1000, e.target); 
+
+            if (!shuffleInterval) {
+                shuffleInterval = setInterval(shuffleThumbs, slideinterval * 1000, e.target);
             }
         }
-    
+
         const stopShuffle = (e: UIEvent) => {
             e.preventDefault();
-            
+
             clearInterval(shuffleInterval);
-            shuffleInterval = null;    
+            shuffleInterval = null;
         }
 
         const card = ref.current;
@@ -98,11 +98,18 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
         // IntersectionObserver for Phone /responsive layout
 
         const toggleActiveCard = (entries) => {
-            if(entries[0].isIntersecting){
+            if (entries[0].isIntersecting) {
                 card.classList.add("active");
             } else {
                 card.classList.remove("active");
             }
+            let activeCards = document.querySelectorAll('.preview-card.active');
+            // console.log(entries[0]);
+            // console.log('active cards = ', activeCards.length);
+            // console.log('card em = ', parseFloat(getComputedStyle(entries[0].target).fontSize));
+            // console.log('parent parent em = ', parseFloat(getComputedStyle(entries[0].target.parentElement.parentElement).fontSize));
+            entries[0].target.parentElement.parentElement.style.marginBottom = `-${activeCards.length * 9}em`;
+            // console.log(entries[0].target.parentElement.parentElement.style.marginBottom);
         }
 
         let cardObserverOptions = {
@@ -111,56 +118,68 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
             threshold: 0,
         };
 
-        const observer = new IntersectionObserver(toggleActiveCard, cardObserverOptions);
-        observer.observe(card);
+
+        
+        let mobileObservation = (screenWidth) => {
+            if (screenWidth.matches) {
+                const observer = new IntersectionObserver(toggleActiveCard, cardObserverOptions);
+                observer.observe(card);
+            }
+        }
+
+        let screenWidth = window.matchMedia("(max-width: 768px)");
+        mobileObservation(screenWidth);
+
+        // Attach listener function on state changes
+        screenWidth.addEventListener("change", () => mobileObservation(screenWidth));
 
 
     }, [])
-    
+
     project = !project ? defaultProject : project;
-    
-    return ( 
+
+    return (
         <>
-        <Link href="/">
-        <div ref={ref} className="preview-card with-background" id={"preview-card-" + cardID}>
-        <div className="thumbnails">
-                { project.thumbnails.map((img, index) => {
-                    return (
-                        <Image
-                            src={img.src}
-                            width={500}
-                            height={500}
-                            alt={img.alt}
-                            key={index}
-                            style={{
-                                zIndex: `${(index*-1)}`,
-                                left: `${index*100}%`
-                            }}
-                        />
-                    )
+            <Link href="/">
+                <div ref={ref} className="preview-card with-background" id={"preview-card-" + cardID}>
+                    <div className="thumbnails">
+                        {project.thumbnails.map((img, index) => {
+                            return (
+                                <Image
+                                    src={img.src}
+                                    width={500}
+                                    height={500}
+                                    alt={img.alt}
+                                    key={index}
+                                    style={{
+                                        zIndex: `${(index * -1)}`,
+                                        left: `${index * 100}%`
+                                    }}
+                                />
+                            )
 
-                })}
+                        })}
 
-            </div>
-            
-            <h3>{project.title}</h3>
-            <div className="preview-snippet">
-                <p >{project.snippet}</p>
-            </div>
-            <div className="tags">
-                <ul>
-                    { project.tags.map((tag, index) => {
-                        return <li key={index}>{tag}</li>
-                    })}
+                    </div>
 
-                </ul>
-            </div>  
-            <button>READ MORE</button>
-            
-        </div>
-        </Link>
+                    <h3>{project.title}</h3>
+                    <div className="preview-snippet">
+                        <p >{project.snippet}</p>
+                    </div>
+                    <div className="tags">
+                        <ul>
+                            {project.tags.map((tag, index) => {
+                                return <li key={index}>{tag}</li>
+                            })}
+
+                        </ul>
+                    </div>
+                    <button>READ MORE</button>
+
+                </div>
+            </Link>
         </>
-     );
+    );
 }
- 
+
 export default PreviewCard;
