@@ -8,7 +8,7 @@ import { User } from '../../../models/User'
 import { SignJWT } from 'jose'
 import { sendMail } from '../../../lib/sendMail'
 import type { AuthType } from '../../../lib/types'
- 
+
 type ResponseData = {
   message: string
 }
@@ -18,37 +18,38 @@ type ResponseData = {
 //  handle errors
 const handleErrors = (err) => {
   // console.log(err.message, err.code);
-  let errors = {email: '', password: ''};
+  let errors = { email: '', password: '', code: null };
 
   // incorrect email
-  if(err.message === 'incorrect email'){
+  if (err.message === 'incorrect email') {
     errors.email = 'That email is not yet registered';
   }
 
   // incorrect password
-  if(err.message === 'incorrect password'){
+  if (err.message === 'incorrect password') {
     errors.password = 'Invalid password';
   }
 
   // unverified email
-  if(err.message === 'not verified'){
+  if (err.message === 'not verified') {
     errors.password = 'Please verify your email account.';
   }
 
   // bad verification token
-  if(err.message === 'Incorrect verification token.'){
+  if (err.message === 'Incorrect verification token.') {
     errors.password = 'Incorrect verification token. If you requested a new verification link, this may be an older token.';
   }
 
   // duplicate error code
-  if(err.code === 11000) {
+  if (err.code === 11000) {
     errors.email = 'That email is already registered.';
+    errors.code = 11000;
     return errors;
   }
 
   // validate errors
-  if(err.message.includes('user validation failed')) {
-    Object.values(err.errors).forEach(({properties}) => {
+  if (err.message.includes('user validation failed')) {
+    Object.values(err.errors).forEach(({ properties }) => {
       // console.log(properties);
       errors[properties.path] = properties.message;
     });
@@ -72,7 +73,7 @@ const createToken = async (id) => {
 
   const expire = process.env.ENVIRONMENT == 'DEV' ? '80 min' : '20 min';
 
-  const token:string = await new SignJWT({})
+  const token: string = await new SignJWT({})
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(id)
     .setIssuedAt()
@@ -99,11 +100,11 @@ const returnResponse = (statusCode: number = 400, payload: Object, headers?: JSO
 //
 //  SIGN-UP
 // 
-const isSignup = async (email:string , password:string) => {
-  try{
-    const user = await User.create({email, password});
+const isSignup = async (email: string, password: string) => {
+  try {
+    const user = await User.create({ email, password });
     const verificationLink = `http://localhost:3000/verification/${user.id}/${user.verificationToken}`;
-    
+
     sendMail({
       to: `${email}`,
       from: '"Christopher Cook" <no-reply@verify.brainroot.tv>',
@@ -123,10 +124,10 @@ const isSignup = async (email:string , password:string) => {
 
 
   }
-  catch(err){
+  catch (err) {
     const errors = handleErrors(err);
     console.log("sign up errors: ", errors)
-    
+
     return returnResponse(400, errors);
   }
 }
@@ -136,8 +137,8 @@ const isSignup = async (email:string , password:string) => {
 //
 //  LOG-IN 
 // 
-const isLogin = async (email:string, password:string) => {
-  try{
+const isLogin = async (email: string, password: string) => {
+  try {
     const user = await User.login(email, password);
 
     let jwtUserInfo = {
@@ -150,19 +151,19 @@ const isLogin = async (email:string, password:string) => {
     const token = await createToken(jwtUserInfo);
     cookies().set({
       name: 'jwt',
-      value: token, 
-      maxAge: maxAge*1000,
+      value: token,
+      maxAge: maxAge * 1000,
       sameSite: 'strict',
       secure: true,
       httpOnly: true
     })
 
     return returnResponse(201, { user: user._id })
-  } 
-  catch(err) {
+  }
+  catch (err) {
     const errors = handleErrors(err);
     console.log("log in errors: ", errors)
-    
+
     return returnResponse(400, errors);
   }
 }
@@ -178,7 +179,7 @@ const isLogout = async () => {
   cookies().delete('jwt')
   cookies().delete('authPost')
 
-  return returnResponse(200, {message: message})
+  return returnResponse(200, { message: message })
 }
 
 
@@ -186,25 +187,25 @@ const isLogout = async () => {
 // 
 //  VERIFY
 // 
-const isVerify = async (userId:string, verificationToken:string) => {
+const isVerify = async (userId: string, verificationToken: string) => {
   try {
     const user = await User.verify(userId, verificationToken);
     const token = await createToken(user._id);
     cookies().set({
       name: 'jwt',
-      value: token, 
-      maxAge: maxAge*1000,
+      value: token,
+      maxAge: maxAge * 1000,
       sameSite: 'strict',
       secure: true,
       httpOnly: true
-    })  
+    })
 
-    return returnResponse(201, {message: 'Successfully verified.', user: user._id});
+    return returnResponse(201, { message: 'Successfully verified.', user: user._id });
 
-  } catch(err) {
+  } catch (err) {
     const errors = handleErrors(err);
     console.log("verification errors: ", errors)
-    
+
     return returnResponse(400, errors);
   }
 }
@@ -214,7 +215,7 @@ const isVerify = async (userId:string, verificationToken:string) => {
 // 
 //  RE-VERIFY
 // 
-const isReverify = async ( email:string ) => {
+const isReverify = async (email: string) => {
   try {
     const user = await User.reverify(email);
     const verificationLink = `http://localhost:3000/verification/${user._id}/${user.verificationToken}`;
@@ -231,16 +232,91 @@ const isReverify = async ( email:string ) => {
               </p>`
     })
 
-    return returnResponse(201, {message: 'Successfully resent.'});
-  } 
-  catch(err) {
+    return returnResponse(201, { message: 'Successfully resent.' });
+  }
+  catch (err) {
     const errors = handleErrors(err);
     console.log("re-verification errors: ", errors)
-    
+
     return returnResponse(400, errors);
   }
 }
 
+
+
+// 
+//  REQUEST RESET
+// 
+const isResetRequest = async (email: string) => {
+  try {
+    const user = await User.resetRequest(email);
+    const verificationLink = `http://localhost:3000/reset/${user._id}/${user.resetToken}/${user.resetTime.getTime()}`;
+
+    sendMail({
+      to: `${email}`,
+      from: '"Christopher Cook" <no-reply@verify.brainroot.tv>',
+      subject: 'Password Reset Request for my dev site!',
+      text: `To reset your password, please click the following link: ${verificationLink}`,
+      html: `<h1>Password Reset</h1>
+              <p>A request was made to reset your account password.</p>
+              
+              <p>You can reset your password by clicking on the following link: ${verificationLink}
+              </p>
+              
+              <p>If you did not request to reset your password, or are now having serious regrets about initiating this process, please ingore this email.</p>
+              `
+    })
+
+    return returnResponse(201, { message: 'Reset link successfully sent.' });
+  }
+  catch (err) {
+    const errors = handleErrors(err);
+    console.log("password reset errors: ", errors)
+
+    return returnResponse(400, errors);
+  }
+}
+
+
+// 
+//  RESET CHECK
+// 
+const isResetCheck = async (userId: string, resetToken: string, resetTime: Date) => {
+
+  if (Date.now() > resetTime.getTime()) throw Error('The link has expired.')
+
+  try {
+    const user = await User.resetCheck(userId, resetToken);
+    return returnResponse(201, { message: 'Reset link is valid.' });
+  }
+  catch (err) {
+    const errors = handleErrors(err);
+    console.log("password reset errors: ", errors)
+
+    return returnResponse(400, errors);
+  }
+}
+
+
+// 
+//  RESET PASSWORD
+// 
+const isReset = async (userId: string, password: string, resetToken: string, resetTime: Date) => {
+
+  if (Date.now() > resetTime.getTime()) throw Error('The link has expired.')
+
+  try {
+    const user = await User.resetPassword(userId, password, resetToken);
+
+    return returnResponse(201, { message: 'Password reset.' });
+  }
+  catch (err) {
+    const errors = handleErrors(err);
+    console.log("password reset errors: ", errors)
+
+    return returnResponse(400, errors);
+  }
+}
 
 
 
@@ -262,7 +338,7 @@ export async function GET(req: NextApiRequest) {
   cookies().delete('jwt')
   cookies().delete('authPost')
 
-  return returnResponse(400, {message: message})
+  return returnResponse(400, { message: message })
 }
 
 
@@ -280,9 +356,9 @@ export async function GET(req: NextApiRequest) {
 export async function POST(req: NextApiRequest) {
 
   const body = await req.json()
-  
-  const { email, password, userId, verificationToken } = body;
-  const authType:AuthType = body.authType;
+
+  const { email, password, userId, verificationToken, resetToken, resetTime, resetCheck } = body;
+  const authType: AuthType = body.authType;
 
 
   // delete old versions of cookies
@@ -291,9 +367,9 @@ export async function POST(req: NextApiRequest) {
 
 
   // confirm that req comes from one of the specific pages
-  if (!authType) return returnResponse(400, {error: 'Error. Where did this come from?'});
+  if (!authType) return returnResponse(400, { error: 'Error. Where did this come from?' });
 
-  
+
   // database connection
   const dbURI = process.env.MONGO_URI;
   mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -301,10 +377,10 @@ export async function POST(req: NextApiRequest) {
     .catch((err) => console.log(err));
 
   //  call auth logic based on authType
-  switch(authType) {
+  switch (authType) {
     case "SIGN-UP":
       return await isSignup(email, password);
-    
+
     case "LOG-IN":
       return await isLogin(email, password);
 
@@ -313,12 +389,19 @@ export async function POST(req: NextApiRequest) {
 
     case "VERIFY":
       return await isVerify(userId, verificationToken);
-    
+
     case "RE-VERIFY":
       return await isReverify(email);
 
+    case "REQUEST-RESET":
+      return await isResetRequest(email);
+
+    case "RESET":
+      if (resetCheck) return await isResetCheck(userId, resetToken, resetTime);
+      else return await isReset(userId, password, resetToken, resetTime);
+
     default:
-      return returnResponse(400, {error: 'Error. Should not have made it this far in the swith stmt...'});
+      return returnResponse(400, { error: 'Error. Should not have made it this far in the switch stmt...' });
 
   }
 }

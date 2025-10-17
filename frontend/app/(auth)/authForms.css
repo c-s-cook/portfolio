@@ -1,7 +1,12 @@
+.content.auth {
+    max-width: 500px;
+    padding: 4em 5em;
+    animation: fade-in-up 0.5s ease-in-out;
+}
+
 .content form {
     margin: 10px auto;
-    padding: 4em 5em;
-    max-width: 500px;
+    /* max-width: 500px; */
     animation: fade-in-up 0.5s ease-in-out;
 }
 
@@ -24,8 +29,10 @@
     position: relative;
     margin: 0px auto;
     margin-top: 2em;
+    margin-bottom: 0em;
     display: block;
     text-align: center;
+
 }
 
 /* .content form input {
@@ -54,7 +61,8 @@
     margin-top: 5px;
 }
 
-.content form button:hover, .error button:hover {
+.content form button:hover,
+.error button:hover {
     background-color: rgba(255, 255, 255, 0.75);
     color: var(--background-start-rgb);
 }
@@ -62,5 +70,27 @@
 .content .error {
     padding-top: 5px;
     min-height: 2em;
+    color: red;
+    font-weight: bolder;
 }
 
+.auth .hide {
+    display: none;
+    transition: fadeIn;
+}
+
+.auth a {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+    .content.auth {
+        
+        padding: 1em 2em;
+    }
+
+    .content form {
+        padding: 1em 0em;
+    }
+}

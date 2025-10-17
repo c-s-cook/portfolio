@@ -2,6 +2,31 @@ import { Schema, model, models } from 'mongoose';
 import { isEmail } from 'validator'
 import bcrypt from 'bcrypt'
 
+
+interface IUser {
+    email: string;
+    password: string;
+    isVerified: boolean;
+    verificationToken: string;
+    resetToken: string;
+    resetTime: Date | null;
+}
+interface IUserModel extends IUser {
+    login(email: string, password: string): Promise<IUser>;
+    verify(id: string, token: string): Promise<IUser>;
+    reverify(email: string): Promise<IUser>;
+    resetRequest(email: string): Promise<IUser>;
+    resetCheck(userId: string, resetToken: string): Promise<IUser>;
+    resetPassword(email: string, newPassword: string, token: string): Promise<IUser>;
+}
+
+
+
+
+
+
+
+
 //  defining the schema for a user
 const userSchema = new Schema({
     email: {
@@ -9,7 +34,7 @@ const userSchema = new Schema({
         required: [true, 'Please enter an email.'],
         unique: true,
         lowercase: true,
-        validate: [isEmail, 'Please enter a valid email.']
+        validate: [isEmail, 'Please enter a valid email. ']
     },
     password: {
         type: String,
@@ -24,6 +49,16 @@ const userSchema = new Schema({
         type: String,
         // required: [true, 'Still missing a verification token'],
         default: ''
+    },
+    resetToken: {
+        type: String,
+        // required: [true, 'Still missing a password reset token'],
+        default: ''
+    },
+    resetTime: {
+        type: Date,
+        // required: [true, 'Still missing a password reset token'],
+        default: null
     }
 });
 
@@ -32,13 +67,13 @@ const userSchema = new Schema({
 const generateRandomString = (length) => {
     let result = '';
     const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  };
+};
 
 
 
@@ -58,12 +93,12 @@ userSchema.pre('save', async function (next) {
 });
 
 //  static method to log in a user
-userSchema.statics.login = async function(email, password) {
+userSchema.statics.login = async function (email, password) {
     const user = await this.findOne({ email });
-    if(user){
+    if (user) {
         const auth = await bcrypt.compare(password, user.password);
-        if(auth){
-            if(user.isVerified){
+        if (auth) {
+            if (user.isVerified) {
                 return user;
             }
             throw Error('not verified')
@@ -77,12 +112,12 @@ userSchema.statics.login = async function(email, password) {
 
 
 //  static method to verify a user
-userSchema.statics.verify = async function(id, token) {
-    let user = await this.findById( id ).lean();
-    if(user){
+userSchema.statics.verify = async function (id, token) {
+    let user = await this.findById(id).lean();
+    if (user) {
         console.log('user trying to verify is: ', user)
 
-        if(user.isVerified){
+        if (user.isVerified) {
             console.log(user.email, " is already verified")
             throw Error('User already verified')
         } else if (token == user.verificationToken) {
@@ -91,10 +126,10 @@ userSchema.statics.verify = async function(id, token) {
                 isVerified: true,
                 verificationToken: ''
             },
-            {
-                new: true
-            }).lean();
-            if(user){
+                {
+                    new: true
+                }).lean();
+            if (user) {
                 console.log('user after update is: ', user)
                 return user
             }
@@ -111,16 +146,16 @@ userSchema.statics.verify = async function(id, token) {
 
 
 //  static method to reverify user (generate a new verificationToken)
-userSchema.statics.reverify = async function(email){
+userSchema.statics.reverify = async function (email) {
     let newToken = generateRandomString(64)
     let user = await this.findOneAndUpdate({ email }, {
         isVerified: false,
         verificationToken: newToken
     },
-    {
-        new: true
-    }).lean();
-    if(user){
+        {
+            new: true
+        }).lean();
+    if (user) {
         console.log('user after regened veriToken is: ', user)
         return user
     } else {
@@ -129,8 +164,82 @@ userSchema.statics.reverify = async function(email){
 }
 
 
+//  static method for user to request password reset (generate a new reset token)
+userSchema.statics.resetRequest = async function (email) {
+    let resetToken = generateRandomString(64)
+    let resetTime = new Date(Date.now() + 10 * 60 * 1000);  // setting experation for 10 min in future
+    let user = await this.findOneAndUpdate({ email }, {
+        resetToken: resetToken,
+        resetTime: resetTime
+    },
+        {
+            new: true
+        }).lean();
+    if (user) {
+        console.log('user after new password reset token is: ', user)
+        return user
+    } else {
+        throw Error('Email / User not found.')
+    }
+}
 
-export const User = models.user || model('user', userSchema);
+
+//  static method for validating a reset token
+userSchema.statics.resetCheck = async function(userId: string, resetToken: string) {
+  const user = await this.findOne({ _id: userId, resetToken });
+  if (!user) {
+    throw new Error('Invalid reset token or user.');
+  }
+  return user;
+};
+
+
+//  static method for user to request password reset (generate a new reset token)
+userSchema.statics.resetPassword = async function (email, newPassword, token) {
+
+    let user = await this.findOne({ email });
+    if (user) {
+        if (token != user.resetToken) throw Error('Incorect reset token.');
+        else {
+            const salt = await bcrypt.genSalt();
+            newPassword = await bcrypt.hash(newPassword, salt);
+
+            user = await this.findOneAndUpdate({ email }, {
+                password: newPassword,
+                resetToken: '',
+                resetTime: null
+            }, {
+                new: true
+            }).lean();
+
+            if (user) return user;
+            else throw Error('Issue updating password. Password remains unchanged. (...I hope.)');
+            
+
+        }
+    }
+
+
+
+    // let resetToken = generateRandomString(64)
+    // let user = await this.findOneAndUpdate({ email }, {
+    //     isVerified: false,
+    //     resetToken: resetToken
+    // },
+    // {
+    //     new: true
+    // }).lean();
+    // if(user){
+    //     console.log('user after new password reset token is: ', user)
+    //     return user
+    // } else {
+    //     throw Error('Issue updating with new password reset token.')
+    // }
+}
+
+
+
+export const User = models.user || model<IUser, IUserModel>('user', userSchema);
 // export default User
 
 // module.exports = User;
