@@ -39,13 +39,13 @@ export default function RootLayout({ children }) {
       {/* INSERT JavaScript file for hideNavBar here with defer */}
       <body className={quicksand.className}>
         <Background />
-        <main className='scrollsnap-container'>
+        <div className='scrollsnap-container'>
           <Navbar navLinks={navLinks} />
           {children}
           <footer className='scrollsnap'>
-            Copyright 2024 Christopher Cook. All rights reserved.
+            Copyright 2025 Christopher Cook. All rights reserved.
           </footer>
-        </main>
+        </div>
 
       </body>
     </html>

@@ -458,7 +458,7 @@ export default function AddProject() {
   return (
     <>
       <section>
-        <div className="content with-background add-item extra-long">
+        <div className="content with-background add-item">
 
           <h1>Add New Portfolio Project</h1>
 

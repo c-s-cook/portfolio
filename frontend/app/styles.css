@@ -12,8 +12,13 @@
     scroll-padding: 0em 0em 0em 0em;
     /* border: 3px dashed red; */
 }
+.scrollsnap-container:has( .no-snap) {
+    scroll-snap-type: none;
+}
 
-section {
+
+
+.scrollsnap-container > section {
     /* border: 2px dotted greenyellow; */
 
     min-height: 100vh;
@@ -37,7 +42,15 @@ section.scrollsnap {
     background-color: rgba(0, 0, 0, 0.2); */
 }
 
+.no-snap {
+    min-height: 90vh;
+}
+.no-snap ~ footer {
+    scroll-snap-align: none;
+}
+
 footer.scrollsnap {
+    position: relative;
     scroll-snap-align: end;
     max-width: 80%;
     margin: 0 auto;
@@ -45,7 +58,6 @@ footer.scrollsnap {
     /* border: 1px dotted orange; */
     padding-bottom: 1em;
     bottom: 0;
-
 }
 
 

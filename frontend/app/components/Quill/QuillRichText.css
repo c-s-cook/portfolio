@@ -68,6 +68,11 @@
     padding: 0.5em 0.5em;
 }
 
+.ql-container.ql-snow .ql-editor {
+    min-height: 9em;
+    max-height: 40vh;
+    overflow-y: scroll;
+}
 
 
 
