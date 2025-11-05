@@ -1,0 +1,242 @@
+.content.deck {
+    position: relative;
+
+    transform: translate(0, 0);
+    left: 0;
+    top: 0;
+
+    padding: 0;
+    margin-bottom: 2em;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-gap: 1em;
+}
+
+.deck>.header {
+    width: 100%;
+    /* border: 1px dotted rgb(206, 206, 206); */
+    grid-column-start: span 2;
+    padding: 0.5em;
+}
+
+.deck>.header>h1 {
+    color: var(--background-rgb);
+    font-size: 2em;
+    text-transform: uppercase;
+}
+
+.deck>.card {
+
+    background-color: var(--background-rgb);
+    background-image: var(--background-overlay-gradient);
+    padding: 1em;
+    border-radius: var(--border-radius);
+    box-shadow: var(--foreground-rgba-40) 0px 5px 30px;
+}
+
+.deck>.card h3 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.5em;
+}
+
+
+.deck>.card button {
+    display: inline-block;
+    margin: 0.5em auto;
+    width: 100%;
+    text-align: left;
+    overflow: hidden;
+}
+
+
+.deck>.card.add button {
+    text-align: center;
+    padding: 1em 0;
+}
+
+
+
+
+.deck>.card ul.portfolio-items li {
+    /* border: 1px solid green; */
+    position: relative;
+}
+
+.deck>.card button.portfolio-item {
+    position: relative;
+    display: inline-block;
+    height: 3em;
+    z-index: 10;
+}
+
+.deck>.card button.portfolio-item .title {
+    position: absolute;
+    left: 1em;
+    top: 0;
+    height: 3em;
+    line-height: 3em;
+    /* transform: translateY(-50%); */
+
+    max-height: 3em;
+    max-width: calc(100% - 7em);
+    width: calc(100% - 7em);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+
+}
+
+
+
+
+
+/********* ICONS ***********/
+
+.deck>.card .portfolio-item svg {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2em;
+    display: inline;
+    float: right;
+}
+
+.deck>.card .portfolio-item+.view-icon svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 2em;
+}
+
+.deck>.card .portfolio-item + .view-icon {
+    z-index: 999;
+    opacity: .3;
+    cursor: pointer;
+}
+
+.deck>.card .portfolio-item + .view-icon:hover {
+    opacity: 1;
+}
+
+
+
+.deck>.card ul.portfolio-items li:has( .portfolio-item:hover) .view-icon {
+    opacity: 0;
+}
+
+
+.portfolio-item .edit-icon {
+    opacity: 0;
+}
+
+.portfolio-item:hover .edit-icon {
+    opacity: 1;
+}
+
+
+/* .portfolio-item .title~.edit-icon {
+    z-index: 15;
+    opacity: 0;
+}
+
+.portfolio-item .title:hover~.edit-icon {
+    opacity: 1;
+} */
+
+
+
+.deck>.card ul.portfolio-items li .view-icon {
+    position: absolute;
+
+    right: 0.5em;
+    top: 0em;
+    margin-top: 0.5em;
+    /* transform: translateY(-50%); */
+    height: 3em;
+    width: 3em;
+    display: inline-block;
+    z-index: 99;
+    /* border: 1px magenta dashed; */
+    opacity: 0.2;
+}
+
+.deck>.card ul.portfolio-items li .view-icon:hover {
+    opacity: 1;
+}
+/* 
+.deck>.card ul.portfolio-items li:has(.title:hover) .view-icon {
+    opacity: 0;
+} */
+
+
+
+.deck>.card ul.portfolio-items li .view-icon svg:hover {
+    opacity: 1;
+}
+
+
+
+/********* TOOLTIPS / ACTIONS ***********/
+
+.portfolio-items li:has(.portfolio-item)::after {
+    content: "";
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 0.8em;
+
+    right: 1em;
+    top: 45%;
+    transform: translate(-100%, -50%);
+    color: var(--foreground-rgb);
+    opacity: 0;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    /* transition: 0.3s; */
+}
+
+.portfolio-items li:has(.portfolio-item:hover)::after {
+    content: "Edit";
+    opacity: 1;
+}
+
+.portfolio-items li:has(.view-icon:hover)::after {
+    content: "View";
+    opacity: 1;
+}
+
+
+
+
+
+
+.deck>.card.metrics h4 {
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+    text-decoration: underline;
+    text-transform: uppercase;
+
+}
+
+.deck>.card.metrics span.metric-item {
+    font-weight: bold;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .content.deck {
+        margin-top: 6em;
+    }
+
+    .deck>.card {
+        grid-column-start: span 2;
+    }
+}

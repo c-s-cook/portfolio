@@ -45,6 +45,12 @@ section.scrollsnap {
 .no-snap {
     min-height: 90vh;
 }
+.no-snap > section {
+    /* make section fill its parent */
+    height: 100%;
+    min-height: inherit;
+    box-sizing: border-box;
+}
 .no-snap ~ footer {
     scroll-snap-align: none;
 }
