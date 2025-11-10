@@ -21,6 +21,15 @@ export interface PortfolioItem {
     repoUrl?: string,
 }
 
+export interface ImageURL {
+    name: string;
+    url: string | null;
+    data?: JSON | null;
+    ogName?: string;
+    caption?: string;
+    starred?: boolean;
+}
+
 export interface Project extends PortfolioItem {
     liveUrl?: string,
 };

@@ -1,0 +1,310 @@
+/* Carousel root: full width of parent, constraint 4:3 max height */
+.carousel {
+  width: 100%;
+  max-width: 100%;
+  --carousel-aspect: 4 / 3;
+  position: relative;
+}
+
+/* Use modern aspect-ratio; browsers that don't support it will still work */
+.carousel-viewport {
+  width: 100%;
+  aspect-ratio: var(--carousel-aspect);
+  max-height: calc(100vw * (3 / 4));
+  position: relative;
+  overflow: hidden;
+  background: var(--background-rgba-20);
+  border-radius: var(--border-radius);
+}
+
+/* slide stack */
+.carousel-slides {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* each slide is absolutely stacked and fades in/out */
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 600ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Image fills area while maintaining its aspect ratio; cover for carousel display */
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* arrows */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--foreground-rgba-20);
+  color: var(--background-rgba-40);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 150ms;
+}
+.carousel-arrow:hover { 
+  background: var(--foreground-rgba-60); 
+  border: 2px solid var(--background-rgba-80);
+  color: var(--background-rgb) !important;
+}
+
+.carousel-arrow.left { left: 12px; }
+.carousel-arrow.right { right: 12px; }
+
+/* dots centered bottom */
+.carousel-dots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 6;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--foreground-rgba-20);
+  padding: 0;
+  cursor: pointer;
+}
+.carousel-dot.active {
+  background:  rgba(255, 255, 255, 0.8);
+  /* box-shadow: 0 0 0 3px rgba(0,0,0,0.08) inset; */
+}
+
+/* Caption area below the carousel viewport */
+.carousel-caption-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+  position: relative;
+  /* reserve space to avoid layout shift when captions change */
+  min-height: 2.2rem;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.carousel-caption {
+  position: relative;
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* stacked caption items, fade/translate like slides */
+.carousel-caption-item {
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 600ms ease, transform 600ms ease;
+  color: var(--foreground-rgba-60);
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  pointer-events: none;
+}
+
+.carousel-caption-item.active {
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Lightbox overlay */
+.carousel-lightbox {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: var(--foreground-rgba-80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999; /* higher to ensure it overlays everything */
+  padding: 2rem;
+  overflow: auto;
+
+  /* maximum image height used for positioning thumbs (can be overridden per breakpoint) */
+  --lightbox-image-max: 70vh;
+}
+
+.carousel-lightbox-content {
+  position: relative;
+  width: min(1200px, 95%);
+  max-height: 95%;
+  /* switch to column so caption sits below the image */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+/* allow the image to take more horizontal space while preserving aspect */
+.lightbox-image-wrap {
+  width: 100%;
+  max-width: 100%;
+  /* leave room for caption / controls; use the same variable so thumbs can be positioned relative to the image */
+  max-height: calc(var(--lightbox-image-max) - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-image {
+  width: auto;
+  max-width: 100%;
+  /* use the variable so the image height and thumb placement are consistent */
+  max-height: var(--lightbox-image-max);
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+  background: transparent;
+}
+
+/* Lightbox arrows and close button */
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10001;
+}
+.lightbox-arrow.left { left: 8px; }
+.lightbox-arrow.right { right: 8px; }
+
+.lightbox-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10002;
+}
+
+/* Lightbox thumbs (optional small navigation) */
+.lightbox-thumbs {
+  /* fix thumbnails to the viewport so they don't shift with the content width/height */
+  position: fixed;
+  /* place thumbs just below the centered image: bottom = (100vh - imageMax)/2  minus a small gap */
+  bottom: calc((100vh - var(--lightbox-image-max)) / 2 - 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 100050; /* very high so thumbs remain on top of the lightbox content */
+  max-width: 90%;
+  overflow-x: auto;
+  padding: 6px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lightbox-thumb {
+  width: 56px;
+  height: 40px;
+  border: 2px solid transparent;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.lightbox-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.lightbox-thumb.active { border-color: rgba(255,255,255,0.9); }
+
+/* Lightbox caption: centered below image, no cropping, fade in */
+.lightbox-caption {
+  margin-top: 0.25rem;
+  text-align: center;
+  color: rgba(255,255,255,0.95);
+  font-size: 1rem;
+  line-height: 1.3;
+  max-width: 95%;
+  overflow-wrap: anywhere;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+/* Small screens: adjust UI and enable swipe affordance */
+@media (max-width: 768px) {
+  .carousel-arrow { display: none; } /* use swipe on mobile */
+  .carousel-dots { bottom: 8px; gap: 6px; }
+  .carousel-dot { width: 9px; height: 9px; }
+  .carousel-viewport { aspect-ratio: 4 / 3; }
+  .carousel-lightbox-content { width: 100%; padding: 1rem; }
+  .lightbox-arrow { width: 44px; height: 44px; }
+
+  /* use a slightly smaller max image height on mobile so the thumbs sit appropriately */
+  .carousel-lightbox { --lightbox-image-max: 60vh; }
+
+  .lightbox-thumbs { display: none; }
+}
+
+/* ensure focus outlines for accessibility */
+.carousel-arrow:focus,
+.carousel-dot:focus,
+.lightbox-arrow:focus,
+.lightbox-close:focus,
+.lightbox-thumb:focus {
+  outline: 3px solid rgba(255,255,255,0.2);
+  outline-offset: 2px;
+}

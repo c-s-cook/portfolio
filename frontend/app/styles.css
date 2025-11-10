@@ -214,23 +214,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 
-
-
-
 /* input[type='text'] + label, 
 input[type='email'] + label, 
 input[type=password] + label, 
 textarea + label {
-    
-    
-
+ 
     opacity: 0;
 
     transform: translateY(-1em);
     top: calc(-3.5em / 0.7);
 
-    
-    
 }
 input:not(:placeholder-shown) + label {
     opacity: 0.6;
@@ -239,6 +232,17 @@ input:not(:placeholder-shown) + label {
 input[type=password] + label {
     color: orange;
 } */
+
+
+
+
+
+/*******************/
+/** CONTENT PAGES **/
+/*******************/
+
+
+
 
 
 

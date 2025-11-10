@@ -7,6 +7,7 @@ import TagsInput from "../components/AddItems/TagsInput";
 
 import { useState, useRef, useEffect } from "react";
 import QuillRichText from "../components/Quill/QuillRichText";
+import Carousel from "../components/Carousel/Carousel";
 
 
 
@@ -49,7 +50,7 @@ const ComponentTest = () => {
                 uploadAPI: '../api/img',
                 imageURLs: imageURLs,
                 setImageURLs: setImageURLs,
-                renameTo: 'test-07-11-25',
+                renameTo: 'test-11-10-25',
                 maxRetries: 3,
                 delay: 10,
             }
@@ -64,7 +65,9 @@ const ComponentTest = () => {
 
 
                     {/* <TagsInput tags={tags} setTags={setTags} /> */}
-                    {/* <PhotoUpload {...photoUploadProps} /> */}
+                    <PhotoUpload {...photoUploadProps} />
+
+                    <Carousel images={imageURLs} interval={2000} holdOnFeatured={4} />
 
 
 

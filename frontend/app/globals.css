@@ -8,6 +8,7 @@
 
   /* Text */
   --foreground-rgb: rgb(0, 0, 0);
+  --foreground-rgba-80: rgba(0, 0, 0, 0.8);
   --foreground-rgba-60: rgba(0, 0, 0, 0.6);
   --foreground-rgba-50: rgba(0, 0, 0, 0.5);
   --foreground-rgba-40: rgba(0, 0, 0, 0.4);
@@ -50,6 +51,7 @@
 
     /* Text */
     --foreground-rgb: rgb(225, 225, 225);
+    --foreground-rgba-80: rgba(255, 255, 255, 0.8);
     --foreground-rgba-60: rgba(255, 255, 255, 0.6);
     --foreground-rgba-50: rgba(255, 255, 255, 0.5);
     --foreground-rgba-40: rgba(255, 255, 255, 0.4);

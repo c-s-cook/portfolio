@@ -1,0 +1,130 @@
+/*******************/
+/** CONTENT PAGES **/
+/*******************/
+
+.project-page {
+    /* keep section spacing consistent with other pages */
+}
+
+/* Override .content absolute centering for project pages and provide card-like layout */
+.content.with-background.project-content {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: auto;
+    max-width: 1100px;
+    padding: 2rem;
+    margin: 2rem auto;
+}
+
+/* Article layout */
+.project-article {
+    display: block;
+}
+
+/* Header */
+.project-header {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.project-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.05;
+}
+
+/* ensure subcap uses existing small style */
+.project-subcap {
+    margin-top: 0;
+}
+
+/* Thumbnails grid */
+.project-thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.project-thumb {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    object-fit: cover;
+}
+
+/* Body (content area) */
+.project-body {
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+    padding: 0; /* body already has padding via section layout if needed */
+}
+
+/* Actions (buttons) */
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Footer tags */
+.project-footer {
+    margin-top: 1rem;
+}
+
+.project-tags-label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.project-tag {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    margin: 0.25em 0;
+    border-radius: 999px;
+    background: var(--background-rgba-60);
+    color: var(--foreground-rgba-60);
+    font-size: 0.75rem;
+}
+
+/* Loading / error text */
+.loading-text {
+    color: var(--foreground-rgba-50);
+}
+
+.error-text {
+    color: crimson;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .content.with-background.project-content {
+        width: calc(100vw - 2rem);
+        max-width: 95vw;
+        padding: 1.5rem;
+        margin: 1.25rem auto;
+    }
+
+    .project-thumbs {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .project-title {
+        font-size: clamp(1.25rem, 5vw, 1.75rem);
+    }
+}
