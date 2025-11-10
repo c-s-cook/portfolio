@@ -128,14 +128,28 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
             let updatedImageFiles = [...prevImageFiles];
 
             if (updatedImageFiles[index].starred) {
-                console.log('unstarring image ', index)
+                console.log('unstarring image file ', index)
                 updatedImageFiles[index].starred = false;
             } else {
                 for (let f = 0; f < updatedImageFiles.length; f++) updatedImageFiles[f].starred = (f == index) ? true : false;
             }
 
-
             return [...updatedImageFiles];
+        })
+
+        if(imageURLs.length == 0) return; 
+        
+        setImageURLs((prevImageURLs) => {
+            let updatedImageURLs = [...prevImageURLs];
+
+            if (updatedImageURLs[index].starred) {
+                console.log('unstarring image url ', index)
+                updatedImageURLs[index].starred = false;
+            } else {
+                for (let u = 0; u < updatedImageURLs.length; u++) updatedImageURLs[u].starred = (u == index) ? true : false;
+            }
+
+            return [...updatedImageURLs];
         })
 
     }
@@ -337,7 +351,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // check if image already has a caption
         if (imageFiles.length > 0 && addingCaption !== null) {
 
-            if (imageFiles[addingCaption].caption || imageURLs[addingCaption].caption) {
+            if (imageFiles[addingCaption].caption || (imageURLs.length > 0 && imageURLs[addingCaption].caption)) {
 
                 let tempCaption = imageFiles[addingCaption].caption || imageURLs[addingCaption].caption;
                 setPhotoCaption(tempCaption);

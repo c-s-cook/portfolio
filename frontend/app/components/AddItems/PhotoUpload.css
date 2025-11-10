@@ -12,7 +12,7 @@
 
     --photo-upload-background: var(--background-rgb);
 
-    --photo-upload-preview-area-background: var(--background-rgba-60);
+    --photo-upload-preview-area-background: var(--background-rgba-20);
     --photo-upload-preview-area-bg-gradient: var(--content-bg-grad);
     --photo-upload-border-radius: var(--border-radius);
 
@@ -21,7 +21,7 @@
     
     /* Colors for {optional} Add Star & Add Caption elements */
     --photo-upload-star-hover-color: var(--foreground-rgb);
-    --photo-preview-overlay-color: var(--background-start-rgb);
+    --photo-preview-overlay-color: var(--background-rgb);
 
 }
 
@@ -171,7 +171,7 @@ div#image-files {
     text-align: center;
     line-height: 19px;
     padding-top: 2px;
-    color: var(--photo-upload-foreground);
+    color: var(--photo-upload-background);
 }
 
 #image-preview-area>.img-container:hover>.img-remove:hover,
