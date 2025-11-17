@@ -44,6 +44,19 @@
     margin-top: 0;
 }
 
+.content-date {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    line-height: 2em;
+}
+.content-date svg {
+    height: 1.5em;
+    display: inline;
+    float: center;
+    padding-right: 0.5em;
+}
+
 /* Thumbnails grid */
 .content-thumbs {
     display: grid;
