@@ -1,9 +1,9 @@
-import type { Project, Certification } from "./types";
+import type { Project, Certification, Portfolio } from "./types";
 
 
 export default async function getPortfolio() {
 
-    let portfolio = {
+    let portfolio: Portfolio = {
         projects: null,
         certifications: null,
         uniqueTags: null

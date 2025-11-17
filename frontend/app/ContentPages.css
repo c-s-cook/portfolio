@@ -7,7 +7,7 @@
 }
 
 /* Override .content absolute centering for project pages and provide card-like layout */
-.content.with-background.project-content {
+.content.with-background.content {
     position: relative !important;
     top: auto !important;
     left: auto !important;
@@ -19,12 +19,12 @@
 }
 
 /* Article layout */
-.project-article {
+.content-article {
     display: block;
 }
 
 /* Header */
-.project-header {
+.content-header {
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -33,26 +33,26 @@
     margin-top: 1rem;
 }
 
-.project-title {
+.content-title {
     margin: 0;
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     line-height: 1.05;
 }
 
 /* ensure subcap uses existing small style */
-.project-subcap {
+.content-subcap {
     margin-top: 0;
 }
 
 /* Thumbnails grid */
-.project-thumbs {
+.content-thumbs {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.project-thumb {
+.content-thumb {
     width: 100%;
     height: auto;
     border-radius: 12px;
@@ -61,21 +61,21 @@
 }
 
 /* Padding for rest of content */
-.project-body,
-.project-actions,
-.project-footer {
+.content-body,
+.content-actions,
+.content-footer {
     padding: 0 3rem;
 }
 
 
 /* Body (content area) */
-.project-body {
+.content-body {
     margin-bottom: 1.25rem;
     line-height: 1.6;
 }
 
 /* Actions (buttons) */
-.project-actions {
+.content-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -83,49 +83,60 @@
     margin-bottom: 1rem;
 }
 
-.project-actions button {
+.content-actions button {
     font-size: 0.8em;
     line-height: 2em;
     display: inline-block;
     min-width: 200px;
 }
 
-.project-actions button svg {
+.content-actions button svg {
     height: 2em;
     display: inline;
     float: left;
     opacity: 0.5;
 }
 
-.project-actions button:hover svg {
+.content-actions button:hover svg {
     opacity: 1;
 }
 
 /* Footer tags */
-.project-footer {
+.content-footer {
     margin-top: 1rem;
 }
 
-.project-tags-label {
+.content-tags-label {
     display: block;
     margin-bottom: .5rem;
     font-weight: 600;
 }
 
-.project-tags {
+.content-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
 }
 
-.project-tag {
+.content-tag {
     display: inline-block;
     padding: 0.25em 0.6em;
     margin: 0.25em 0;
-    border-radius: 999px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
     background: var(--background-rgba-60);
     color: var(--foreground-rgba-60);
     font-size: 0.75rem;
+}
+
+.tag-box {
+    display: inline-block;
+    padding: 0.25em .5em;
+    margin: 0.75em -0.25em 0.75em 1em;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    text-align: center;
+    transition: 1s ease-in-out;
 }
 
 /* Loading / error text */
@@ -140,11 +151,12 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
 
-    section.project-page {
+    section.project-page,
+    ssection.certification-page {
         padding: 0.5em;
     }
 
-    .content.with-background.project-content {
+    .content.with-background.content-content {
         width: calc(100vw - 2rem);
         max-width: 95vw;
         padding: 1.5rem;
@@ -152,11 +164,11 @@
         margin-top: 3em;
     }
 
-    .project-thumbs {
+    .content-thumbs {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 
-    .project-title {
+    .content-title {
         font-size: clamp(1.25rem, 5vw, 1.75rem);
     }
 }

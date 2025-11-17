@@ -17,7 +17,8 @@ export interface PortfolioItem {
     tags: Array<string>,
     body: string,
     snippet?: string,
-    thumbnails: Array<object>,
+    // thumbnails: Array<object>,
+    thumbnails: ImageURL[],
     repoUrl?: string,
 }
 
