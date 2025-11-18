@@ -8,6 +8,7 @@ import TagsInput from "../components/AddItems/TagsInput";
 import { useState, useRef, useEffect } from "react";
 import QuillRichText from "../components/Quill/QuillRichText";
 import Carousel from "../components/Carousel/Carousel";
+import PreviewDeck from "../components/PreviewDeck/PreviewDesk";
 
 
 
@@ -61,13 +62,15 @@ const ComponentTest = () => {
     return (
         <>
             <section>
-                <div className="content ">
+                <div className="content extra-long">
 
 
                     {/* <TagsInput tags={tags} setTags={setTags} /> */}
-                    <PhotoUpload {...photoUploadProps} />
+                    {/* <PhotoUpload {...photoUploadProps} /> */}
 
-                    <Carousel images={imageURLs} interval={2000} holdOnFeatured={4} />
+                    {/* <Carousel images={imageURLs} interval={2000} holdOnFeatured={4} /> */}
+
+                    <PreviewDeck type="certification"/>
 
 
 

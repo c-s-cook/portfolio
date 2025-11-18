@@ -92,8 +92,12 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
 
         const card = ref.current;
 
-        card.addEventListener('mouseenter', startShuffle);
-        card.addEventListener('mouseleave', stopShuffle, false);
+        if (project.thumbnails.length > 1) {
+            card.addEventListener('mouseenter', startShuffle);
+            card.addEventListener('mouseleave', stopShuffle, false);
+        }
+
+
 
         // IntersectionObserver for Phone /responsive layout
 
@@ -119,7 +123,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
         };
 
 
-        
+
         let mobileObservation = (screenWidth) => {
             if (screenWidth.matches) {
                 const observer = new IntersectionObserver(toggleActiveCard, cardObserverOptions);
@@ -137,19 +141,20 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
     }, [])
 
     project = !project ? defaultProject : project;
+    let type = project.type == 'PROJ' ? 'projects' : 'certifications';
 
     return (
         <>
-            <Link href="/">
+            <Link href={`/${type}/${project.slug}`}>
                 <div ref={ref} className="preview-card with-background" id={"preview-card-" + cardID}>
                     <div className="thumbnails">
                         {project.thumbnails.map((img, index) => {
                             return (
-                                <Image
-                                    src={img.src}
+                                <img
+                                    src={img.url}
                                     width={500}
                                     height={500}
-                                    alt={img.alt}
+                                    alt={img.caption}
                                     key={index}
                                     style={{
                                         zIndex: `${(index * -1)}`,

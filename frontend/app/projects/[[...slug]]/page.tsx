@@ -8,6 +8,7 @@ import type { Project, ImageURL } from "../../../lib/types";
 import '../../ContentPages.css';
 import Carousel from "../../components/Carousel/Carousel";
 import Link from "next/link";
+import PreviewDeck from "../../components/PreviewDeck/PreviewDesk";
 
 const LinkIcon = () => {
 	return (
@@ -74,7 +75,8 @@ export default function ProjectPage() {
 		<section className="project-page">
 			<div className="content with-background bg-grad content">
 				{loading && <p className="loading-text">Loading project…</p>}
-				{error && !loading && <p className="error-text">{error}</p>}
+				{error && slug && !loading && <p className="error-text">{error}</p>}
+				{!slug && error && !loading && <PreviewDeck type={'project'}/>}
 
 				{!loading && !error && project && (
 					<article className="content-article">

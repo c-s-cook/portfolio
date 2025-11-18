@@ -1,0 +1,71 @@
+/* ...existing code... */
+
+.preview-search {
+  width: 90%;
+  padding: 0.6rem 0.9rem;
+  margin: 0 auto;
+  border-radius: 5px;
+  border: 1px dotted var(--foreground-rgba-20);
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0rem;
+  transition:
+    box-shadow 0.15s ease-in-out,
+    transform 0.12s ease,
+    0.3s ease;
+    
+}
+.preview-search svg {
+    color: var(--foreground-rgba-60);
+    height: 1.5em;
+    opacity: 0.5;
+}
+
+.preview-search:hover {
+  border: 1px solid var(--foreground-rgba-40);
+}
+.preview-search:hover svg {
+    opacity: 1;
+}
+
+.preview-search input {
+  width: min(900px, 90%);
+  max-width: 100%;
+  background: transparent;
+  color: var(--foreground-rgb);
+  outline: none;
+}
+
+.preview-search input:focus {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  background: var(--background-rgba-20);
+  transform: translateY(-1px);
+}
+
+.preview-deck {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.preview-card-wrapper {
+  opacity: 0;
+  transform: translateY(12px);
+  animation-name: preview-card-fade-in;
+  animation-duration: 420ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes preview-card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
