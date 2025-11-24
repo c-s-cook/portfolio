@@ -8,7 +8,7 @@ import TagsInput from "../components/AddItems/TagsInput";
 import { useState, useRef, useEffect } from "react";
 import QuillRichText from "../components/Quill/QuillRichText";
 import Carousel from "../components/Carousel/Carousel";
-import PreviewDeck from "../components/PreviewDeck/PreviewDesk";
+import PreviewDeck from "../components/PreviewDeck/PreviewDeck";
 
 
 

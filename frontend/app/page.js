@@ -12,6 +12,7 @@ import { useEffect } from 'react'
 import { Satisfy } from 'next/font/google'
 import Logo from './components/Logo/Logo'
 import PreviewCard from './components/PreviewCard/PreviewCard'
+import PreviewDeck from './components/PreviewDeck/PreviewDeck'
 const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
 
 
@@ -121,10 +122,6 @@ export default function Home() {
 
           <div className="body preview-deck">
 
-
-
-
-
             <PreviewCard cardID={1} />
             <PreviewCard cardID={2} />
             <PreviewCard cardID={3} />
@@ -132,9 +129,10 @@ export default function Home() {
             <PreviewCard cardID={5} />
             <PreviewCard cardID={6} />
 
-
-
           </div>
+
+          {/* <PreviewDeck type={'project'}/> */}
+
         </div>
       </section>
 

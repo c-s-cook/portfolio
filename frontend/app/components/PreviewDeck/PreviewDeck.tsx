@@ -67,63 +67,84 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
   // Apply tag filtering when query or allItems changes
   useEffect(() => {
     if (!allItems) return;
-    const q = query.trim().toLowerCase();
+    // const q = query.trim().toLowerCase();
+    const q = query.split(',');
     if (!q) {
       setItems(allItems);
       return;
     }
-    const filtered = allItems.filter((item) => {
-      const tags = (item as any).tags || [];
-      return tags.some((t: string) => t.toLowerCase().includes(q));
-    });
-    setItems(filtered);
+    // const filtered = allItems.filter((item) => {
+    //   const tags = (item as any).tags || [];
+    //   return tags.some((t: string) => t.toLowerCase().includes(q));
+    // });
+    // setItems(filtered);
+
+    let toBeFiltered = [...allItems];
+    for(let i=0; i < q.length; i++){
+      toBeFiltered = toBeFiltered.filter((item) => {
+        const tags = (item as any).tags || [];
+        return tags.some((t: string) => t.toLowerCase().includes(q[i].trim().toLowerCase()));
+      })
+    }
+    setItems(toBeFiltered);
+
+    
+
+
+    
   }, [query, allItems]);
 
   if (loading) return <div className="preview-deck loading">Loading...</div>;
   if (error) return <div className="preview-deck error">Error: {error}</div>;
-  if (!items || items.length === 0) {
-    const message = query ? 'No items match your search.' : 'No items found.';
-    return (
-      <div className="preview-deck empty">
-        <div className="preview-search">
-          <input
-            aria-label="Search by tag"
-            placeholder="Search tags..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
-        {message}
-      </div>
-    );
-  }
+  // if (!items || items.length === 0) {
+  //   const message = query ? 'No items match your search.' : 'No items found.';
+  //   return (
+  //     <div className="preview-deck empty">
+  //       <div className="preview-search">
+  //         <input
+  //           aria-label="Search by tag"
+  //           placeholder="Search tags..."
+  //           value={query}
+  //           onChange={(e) => setQuery(e.target.value)}
+  //         />
+  //       </div>
+  //       {message}
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div>
+    <>
       <div className="preview-search">
         <input
           aria-label="Filter by tag"
           placeholder="Filter by tags..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          // onClick={(e) => e.target.placeholder='Separate by commas.'}
+          onFocus={(e) => e.target.placeholder='Separate by commas...'}
+          onBlur={(e) => e.target.placeholder='Filter by tags...'}
         />
         <SearchIcon/>
       </div>
-      <div className="preview-deck">
+      <div className="body preview-deck">
+        {!items || items.length === 0 && (
+          <p>No {type} matches found.</p>
+        )}
         {items.map((item, i) => (
-          <div
-            className="preview-card-wrapper"
-            key={String(item.id)}
-            style={{ ['--delay' as any]: `${i * 250}ms` } as React.CSSProperties}
-          >
+          // <div
+          //   className="preview-card-wrapper"
+          //   key={String(item.id)}
+          //   style={{ ['--delay' as any]: `${i * 250}ms` } as React.CSSProperties}
+          // >
             <PreviewCard
               cardID={Number(item.id)}
               project={item as Project & Certification}
               slideinterval={slideInterval}
             />
-          </div>
+          // </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }

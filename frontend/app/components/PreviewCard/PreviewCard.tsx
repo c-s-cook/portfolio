@@ -112,7 +112,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
             // console.log('active cards = ', activeCards.length);
             // console.log('card em = ', parseFloat(getComputedStyle(entries[0].target).fontSize));
             // console.log('parent parent em = ', parseFloat(getComputedStyle(entries[0].target.parentElement.parentElement).fontSize));
-            entries[0].target.parentElement.parentElement.style.marginBottom = `-${activeCards.length * 9}em`;
+            if (entries.length > 0) entries[0].target.parentElement.parentElement.style.marginBottom = `-${activeCards.length * 9}em`;
             // console.log(entries[0].target.parentElement.parentElement.style.marginBottom);
         }
 
@@ -142,6 +142,16 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
 
     project = !project ? defaultProject : project;
     let type = project.type == 'PROJ' ? 'projects' : 'certifications';
+    // Strip HTML tags and return plain text
+    const stripHTML = (html: string = ""): string =>
+        html
+            .replace(/<\/?[^>]+(>|$)/g, "")
+            .replace(/[\r\n]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    // const stripHTML = (html: string = ""): string =>
+    //     html.replace(/<\/?[^>]+(>|$)/g, "");
 
     return (
         <>
@@ -169,7 +179,9 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
 
                     <h3>{project.title}</h3>
                     <div className="preview-snippet">
-                        <p >{project.snippet}</p>
+                        {project.snippet && (<p>{project.snippet}</p>)}
+                        {!project.snippet && project.body && (<p>{stripHTML(project.body.slice(0,100))}</p>)}
+                        {/* <p >{project.snippet}</p> */}
                     </div>
                     <div className="tags">
                         <ul>

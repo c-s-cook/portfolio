@@ -274,11 +274,18 @@ input[type=password] + label {
         
     } */
 
-    section {
+
+    .scrollsnap-container>section {
+        margin-bottom: 20vh;
+        padding: 5em 0em;
+    }
+
+    /* section,
+    section.scrollsnap {
         max-width: 100vw;
         padding: 0em 0em;
         margin-bottom: 20vh;
-    }
+    } */
 
     section:has(.auth) {
         margin-bottom: 0;
