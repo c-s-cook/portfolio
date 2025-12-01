@@ -11,7 +11,7 @@
     scroll-snap-stop: always;
     overflow-y: scroll;
     scroll-padding: 0em 0em 0em 0em;
-    /* border: 3px dashed red; */
+    border: 3px dashed red;
 }
 
 .scrollsnap-container:has(.no-snap) {

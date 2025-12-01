@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "./PreviewCard.css";
 import { ReactElement, useEffect, useRef } from "react";
+import animationEase from "../../../lib/animationEase";
 
 import type { Project, Certification, PreviewCardProps } from "../../../lib/types"
 
@@ -153,10 +154,12 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5 }: PreviewCardProps)
     // const stripHTML = (html: string = ""): string =>
     //     html.replace(/<\/?[^>]+(>|$)/g, "");
 
+
+
     return (
         <>
-            <Link href={`/${type}/${project.slug}`}>
-                <div ref={ref} className="preview-card with-background" id={"preview-card-" + cardID}>
+            <Link href={`/${type}/${project.slug}`} key={"preview-card-link-" + cardID}>
+                <div ref={ref} className="preview-card with-background" id={"preview-card-" + cardID} key={"preview-card-" + cardID} style={{animationDelay: `${animationEase(cardID)}s`}}>
                     <div className="thumbnails">
                         {project.thumbnails.map((img, index) => {
                             return (

@@ -90,14 +90,14 @@ export default function ProjectPage() {
 
 			{/* DISPLAY ALL PROJECT PREVIEW CARDS WHEN NO SLUG */}
 			{!slug && error && !loading && (
-				<div className="content extra-long no-snap">
+				<div className="content no-snap extra-long">
 					<PreviewDeck type={'project'} />
 				</div>
 			)}
 
 			{/* DISPLAY SPECIFIED PROJ */}
 			{!loading && !error && project && (
-				<div className="content with-background bg-grad extra-long">
+				<div className="content with-background bg-grad">
 					<article className="content-article">
 						<header className="content-header">
 							<h1 className="content-title">{project.title}</h1>
