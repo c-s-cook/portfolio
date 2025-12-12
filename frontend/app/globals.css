@@ -17,18 +17,18 @@
 
 
   /* Content backing */
-  --background-rgb: rgb(255, 255, 255);
-  --background-rgba-80: rgba(255, 255, 255, 0.8);
-  --background-rgba-60: rgba(255, 255, 255, 0.6);
-  --background-rgba-40: rgba(255, 255, 255, 0.4);
+  --background-rgb: rgb(220, 220, 220);
+  --background-rgba-80: rgba(220, 220, 220, 0.8);
+  --background-rgba-60: rgba(220, 220, 220, 0.6);
+  --background-rgba-40: rgba(220, 220, 220, 0.4);
   --background-rgba-20: rgba(205, 205, 205, 0.2);
 
   --content-bg-grad: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
 
 
   /* Main Background Color Gradients */
-  --background-color-grad-start: rgb(122, 74, 163);
-  --background-color-grad-end: rgb(167, 222, 167);
+    --background-color-grad-start: rgb(51, 0, 102);
+    --background-color-grad-end: rgb(0, 51, 0);
 
   --background-overlay-gradient: linear-gradient(rgba(205, 205, 205, 0), rgba(205, 205, 205, 0.9));
 
@@ -78,6 +78,10 @@
     --light-grad-start-rgb: rgb(197, 168, 222);
     --light-grad-end-rgb: rgb(167, 222, 167);
   }
+}
+
+*{
+  box-sizing: border-box;
 }
 
 body {

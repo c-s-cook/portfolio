@@ -1,16 +1,21 @@
-THINGS TO DO: updated 2024-09-20
-- X clean up Navbar folder
-- add homepage banner
-- X make Navbar Title sticky
-- X add fullpage scroll via CSS
+FRONTEND:
+ - Custom 404 page
+ - Add timed redirect to 404, Content Error, & Content Not Found page
+ - Login page 'Success' msg before redirect
+ - LogOut button to Navbar
+ - "Guest Mode" banner
+ - Links to Dashboard Portfolio objs
+ - add 'X' to projDeck search
+ - update click displays
+ - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
+ - fix the GD mobile cards
 
 
-
-2024/10/31
-- NextJS 13 doesn't seem to allow jwt / jsonwebtoken pkg
-- need to try this example (but it's a next 15 example...)
-    - https://github.com/vercel/examples/blob/main/edge-middleware/jwt-authentication/lib/auth.ts
-
-
-2025/11/24:
+BACKEND:
 - [VPN DETECTION] https://dev.to/saman_sardari_fecbaad4b5d/how-to-detect-vpns-with-javascript-457p
+- "edit" feature to 
+- Text OTP
+- WS
+- Chat
+- Weather
+- 

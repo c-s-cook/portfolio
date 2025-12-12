@@ -72,7 +72,7 @@ export default function ProjectPage() {
 	}, [slug]);
 
 	return (
-		<section className="project-page no-snap">
+		<section className="project-page">
 
 			{/* LOADING MSG */}
 			{loading && (
@@ -90,7 +90,7 @@ export default function ProjectPage() {
 
 			{/* DISPLAY ALL PROJECT PREVIEW CARDS WHEN NO SLUG */}
 			{!slug && error && !loading && (
-				<div className="content no-snap extra-long">
+				<div className="content extra-long">
 					<PreviewDeck type={'project'} />
 				</div>
 			)}

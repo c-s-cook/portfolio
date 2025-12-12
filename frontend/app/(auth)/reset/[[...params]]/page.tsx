@@ -215,7 +215,7 @@ export default function resetPassword({ params }: { params: { params: Array<stri
 
     return (
         <>
-            <section>
+            <section className='full'>
                 <div className="content auth with-background bg-grad">
 
                     {/* FORM TO REQUEST A RESET LINK */}
@@ -242,7 +242,7 @@ export default function resetPassword({ params }: { params: { params: Array<stri
                     <form id='update-password-form' onSubmit={handleUpdatePassword} className='auth hide'>
 
                         <h3>Update Password:</h3>
-                        <p className='subcap'>Enter the email associated with your account and I'll send you a password reset link.</p>
+                        <p className='subcap'>You have shown yourself to be worthy! ...of updating your password.</p>
 
                         <label htmlFor="password1">Email:</label>
                         <input

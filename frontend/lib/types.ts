@@ -1,6 +1,9 @@
 
 // 
 //  for Auth processes APIs
+
+import { SetStateAction } from "react";
+
 // 
 export type AuthType = "SIGN-UP" | 'LOG-IN' | 'LOG-OFF' | 'VERIFY' | 'RE-VERIFY' | 'REQUEST-RESET' | 'RESET';
 
@@ -23,8 +26,9 @@ export interface PortfolioItem {
 }
 
 export interface ImageURL {
-    name: string;
+    name?: string;
     url: string | null;
+    alt?: string;
     data?: JSON | null;
     ogName?: string;
     caption?: string;
@@ -41,9 +45,20 @@ export interface Certification extends Project {
 }
 
 export interface PreviewCardProps {
+    key: string,
     cardID: number,
     project: Project | Certification,
-    slideinterval: number
+    slideinterval: number,
+    observerOptions?: {
+        updateObserved: Function,
+        observerClasses: string
+    }
+    // addedClasses?: string,
+    // updateObserved?: Function,
+    // activeCards?: string[],
+    // setActiveCards?: React.Dispatch<SetStateAction<string[]>>,
+    // observedCards?: string[],
+    // setObservedCards?: React.Dispatch<SetStateAction<string[]>>,
 }
 
 export interface UniqueTag {

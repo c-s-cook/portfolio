@@ -114,13 +114,17 @@
   padding: 5px 14px;
   border-radius: 8px;
   border: 1px solid transparent;
+  transition: 0.3s ease;
 }
 
 #menu li:hover {
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid white;
-  border-radius: 8px;
-  transition: 0.3s ease;
+  /* border-radius: 8px; */
+}
+#menu li.active{
+  border: 1px solid var(--background-rgba-40);
+  border-radius: var(--border-radius);
 }
 
 
@@ -269,8 +273,8 @@ input[type=checkbox]#checkbox_toggle {
 
   #menu li:hover {
     /* display: inline-block; */
-    background-color: rgba(255, 255, 255, 0.25);
-    border: 1px solid white;
+    background-color: var(--background-rgba-20);
+    border: 1px solid var(--foreground-rgb);
     border-radius: 8px;
     /* transition: 0.3s ease; */
   }

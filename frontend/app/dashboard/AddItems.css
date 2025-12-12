@@ -25,6 +25,10 @@
   text-transform: uppercase;
 }
 
+section:has( .add-item) {
+  /* padding-bottom: 15vh; */
+}
+
 .content.add-item {
   position: relative;
   transform: translate(0%, 0%);

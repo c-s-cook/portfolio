@@ -1,5 +1,30 @@
 /* ...existing code... */
 
+.deckObserverTest{
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  outline: 12px solid fuchsia;
+  outline-offset: -2px;
+}
+
+.deckObserverTest>div{
+  position: absolute;
+  height: 25vh;
+  width: 100vw;
+  outline: 2px solid green;
+}
+.deckObserverTest>div:first-of-type{
+    top: 0;
+}
+.deckObserverTest>div:last-of-type{
+  height: 15vh;
+  bottom: 0 !important;
+}
+
 .preview-search {
   width: 90%;
   padding: 0.6rem 0.9rem;

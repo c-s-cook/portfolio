@@ -86,6 +86,8 @@ export default function LoginPage() {
     })
 
     if (response.status == 201) {
+      
+      submitBtn.textContent = 'SUCCESS!'
       router.push('/dashboard')
 
     } else {
@@ -107,7 +109,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <section>
+      <section className='full'>
         <div className="content auth with-background bg-grad">
 
           <form onSubmit={handleSubmit} id='login-form' className='auth'>

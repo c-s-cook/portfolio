@@ -65,7 +65,7 @@ export default function SignupPage() {
 
   return (
     <>
-      <section>
+      <section className='full'>
         <div className="content auth with-background bg-grad">
 
           <form id='signup-form' onSubmit={handleSubmit} className='auth'>

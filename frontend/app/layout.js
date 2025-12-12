@@ -27,8 +27,8 @@ export default function RootLayout({ children }) {
 
   const navLinks = [
     { href: "/", text: "Main" },
-    { href: "/about", text: "About?" },
-    { href: "/", text: "Costs" },
+    { href: "/projects", text: "Projects" },
+    { href: "/certifications", text: "Certifications" },
     { href: "/dashboard", text: "Dashboard" }
   ];
 
@@ -39,6 +39,10 @@ export default function RootLayout({ children }) {
       {/* INSERT JavaScript file for hideNavBar here with defer */}
       <body className={quicksand.className}>
         <Background />
+        {/* <div className="deckObserverTest">
+          <div></div>
+          <div></div>
+        </div> */}
         <div className='scrollsnap-container'>
           <Navbar navLinks={navLinks} />
           {children}

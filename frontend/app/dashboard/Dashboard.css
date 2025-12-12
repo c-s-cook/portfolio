@@ -19,21 +19,22 @@
     /* border: 1px dotted rgb(206, 206, 206); */
     grid-column-start: span 2;
     padding: 0.5em;
+
 }
 
 .deck>.header>h1 {
-    color: var(--background-rgb);
+    color: var(--foreground-rgb);
     font-size: 2em;
     text-transform: uppercase;
 }
 
 .deck>.card {
 
-    background-color: var(--background-rgb);
+    background-color: var(--background-rgba-20);
     background-image: var(--background-overlay-gradient);
     padding: 1em;
     border-radius: var(--border-radius);
-    box-shadow: var(--foreground-rgba-40) 0px 5px 30px;
+    box-shadow: var(--foreground-rgba-20) 0px 5px 30px;
 }
 
 .deck>.card h3 {
@@ -104,6 +105,7 @@
     height: 2em;
     display: inline;
     float: right;
+    fill: var(--foreground-rgb);
 }
 
 .deck>.card .portfolio-item+.view-icon svg {
@@ -164,6 +166,7 @@
     z-index: 99;
     /* border: 1px magenta dashed; */
     opacity: 0.2;
+    fill: var(--foreground-rgb);
 }
 
 .deck>.card ul.portfolio-items li .view-icon:hover {

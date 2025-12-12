@@ -15,11 +15,12 @@ import HamburgerX04 from './Hamburgers/HamburgerX04'
 import { useState } from 'react'
 import Background from '../Background/Background'
 import Logo from '../Logo/Logo'
+import { usePathname } from 'next/navigation'
 
 
 
 export default function Navbar({ user, navLinks }) {
-
+  const pathname = usePathname();
 
   //  InsersectionObserver for Main Page Logo Banner & Navbar Logo
   // const observeMainLogo = () => {
@@ -121,7 +122,7 @@ export default function Navbar({ user, navLinks }) {
         <div id='menu'>
 
           { links.map((link, index) => (
-            <li key={index}><Link href={link.href} onClick={unCheckbox}>{link.text}</Link></li>
+            <li key={index} className={`${pathname === link.href ? 'active' : ''}`}><Link href={link.href} onClick={unCheckbox}>{link.text}</Link></li>
           ))}
             
           

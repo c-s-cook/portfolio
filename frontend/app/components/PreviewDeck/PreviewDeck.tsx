@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import getPortfolio from '../../../lib/getPortfolio';
 import type { Project, Certification } from '../../../lib/types';
 import PreviewCard from '../PreviewCard/PreviewCard';
@@ -27,6 +27,181 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState<string>('');
+
+  const [activeCards, setActiveCards] = useState<number[]>([]);
+  const [observedCards, setObservedCards] = useState<boolean[]>([]);
+  const [observerClasses, setObserverClasses] = useState<string[]>([]);
+  // const [scrollDirection, setScrollDirection] = useState<string>('DOWN');
+  const scrollDirection = useRef('DOWN');
+
+  // function to pass to PreviewCards for updating Observations...
+  function updateObserved(id: number, seeIt: boolean) {
+
+    setObservedCards((prevCards) => {
+      let newCards = [...prevCards];
+
+      newCards[id] = seeIt;
+
+      // console.log('updated observedCards = ', newCards);
+
+      return [...newCards]
+    })
+  }
+
+  let activeLimit: number = 2;  // max of how many PreviewCards can be active at once
+
+  // on first-load, set the activeCards to the first few, up to the activeLimit
+  // useEffect(() => {
+  //   setActiveCards((prevCards) => {
+  //     let newCards: number[] = [];
+  //     for (let i = 0; i < activeLimit; i++) newCards.push(i)
+  //     return [...newCards]
+  //   })
+  // }, [])
+
+  // Update the record of which PreviewCards are active...
+  let lastCardUpdate = useRef(new Date());
+  useEffect(() => {
+
+    // create logic to check that the lastCardUpdate was more than 700ms ago. If not, set a 500ms delay
+    {
+      const now = Date.now();
+      const elapsed = now - lastCardUpdate.current.getTime();
+
+      if (elapsed < 700) {
+      const delayMs = 500;
+      const timer = setTimeout(() => {
+        // update the last update timestamp and trigger the effect again by nudging observedCards
+        lastCardUpdate.current = new Date();
+        setObservedCards(prev => [...prev]);
+      }, delayMs);
+
+      // cleanup the timer if the effect re-runs / unmounts
+      // return () => clearTimeout(timer);
+      clearTimeout(timer);
+      } else {
+      // mark this as the most recent update time
+      lastCardUpdate.current = new Date();
+      }
+    }
+
+    let tempActiveCards: number[] = [];
+    // console.log('activeCards = ', activeCards);
+
+    // if no cards are currently marked active...
+    if (activeCards.length == 0 || isNaN(activeCards[0])) {
+      for (let i = 0; i < activeLimit; i++) {
+        let a = scrollDirection.current === 'DOWN' ? i : observedCards.length - (1 + i);
+        if (observedCards[a]) tempActiveCards.push(a);
+      }
+      tempActiveCards.sort((a, b) => { return a < b ? -1 : 1 })
+
+      setObserverClasses((prevObserverClasses) => {
+        let newObserverClasses = new Array(observedCards.length).fill('');
+
+        tempActiveCards.forEach((el) => newObserverClasses[el] = 'active');
+        console.log('first load? newObserverClasses: ', newObserverClasses)
+
+        return [...newObserverClasses];
+      })
+
+      setActiveCards([...tempActiveCards]);
+    }
+    // else, check which of the currently active cards are still in observation range...
+    else {
+      for (let i = 0; i < activeLimit; i++) {
+        if ((observedCards[activeCards[i]])) tempActiveCards.push(activeCards[i]);
+      }
+    }
+
+    
+
+    //  if we aren't maxed out...
+    if (tempActiveCards.length !== activeLimit) {
+      console.log('Early tempActiveCards = ', tempActiveCards, ' Length: ', tempActiveCards.length);
+
+      let lastActiveIndex: number;
+
+      // but still have some...
+      if (tempActiveCards.length > 0) {
+        lastActiveIndex = tempActiveCards[tempActiveCards.length - 1];
+      }
+      // else, if we lost all...
+      else {
+        // make an array of currently visible cards...
+        let observedFilteredCards: number[] = [];
+        observedCards.map((el, i) => {
+          if (el) observedFilteredCards.push(i);
+        })
+        console.log('Currently visible cards are: ', observedFilteredCards);
+
+        // THIS LINE IS THE ISSUE. IT ASSUMES LOST - NO LOGIC FOR 'NEVER SET'...
+        lastActiveIndex = scrollDirection.current === 'DOWN' ? observedFilteredCards[observedFilteredCards.length - 1] : observedFilteredCards[0];
+        console.log('We are scrolling ', scrollDirection.current, ' so the lastActiveIndex is: ', lastActiveIndex);
+      }
+
+      // once we know where we left off, add the index of more visible cards..
+      while (tempActiveCards.length < activeLimit) {
+        // if we're scrolling DOWN, add the next index. Else (UP), add the previous
+        lastActiveIndex = scrollDirection.current === 'DOWN' ? lastActiveIndex + 1 : lastActiveIndex - 1;
+
+        // unless is pushes us below 0, or above the length/number of our card deck...
+        if (lastActiveIndex < 0 || lastActiveIndex > observedCards.length) break;
+
+        tempActiveCards.push(lastActiveIndex)
+      }
+
+      console.log('Late tempActiveCards = ', tempActiveCards);
+
+      // now that we've determined which cards are both in our desired visible range, and should be set active,
+      // update the classList array and the activeCards
+      setObserverClasses((prevObserverClasses) => {
+        let newObserverClasses = new Array(observedCards.length).fill('');
+
+        tempActiveCards.forEach((el) => newObserverClasses[el] = 'active');
+        console.log('newObserverClasses: ', newObserverClasses)
+
+        return [...newObserverClasses];
+      })
+
+      setActiveCards([...tempActiveCards]);
+    }
+
+
+
+  }, [observedCards])
+
+  // listener for setting scrollDirection...
+  let lastScrollTop = useRef(0);
+  useEffect(() => {
+    // A variable to store the last known scroll position
+    lastScrollTop.current = window.pageYOffset || document.documentElement.scrollTop;
+
+    window.addEventListener('scroll', () => {
+      const scrollTopPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTopPosition > lastScrollTop.current) {
+        // console.log('Scrolling DOWN');
+        if (scrollDirection.current !== 'DOWN') scrollDirection.current = 'DOWN';
+      } else if (scrollTopPosition < lastScrollTop.current) {
+        // console.log('Scrolling UP');
+        if (scrollDirection.current !== 'UP') scrollDirection.current = 'UP';
+      }
+
+      // Update the last scroll position
+      // Set to 0 to handle going all the way back to the top
+      lastScrollTop.current = scrollTopPosition <= 0 ? 0 : scrollTopPosition;
+    });
+  }, [])
+
+  // const updateObservedRef = useRef(updateObserved);
+  // // keep ref in sync with latest prop
+  // useEffect(() => {
+  //   updateObservedRef.current = updateObserved;
+
+  //   console.log('from Deck bbb: ', typeof updateObserved);
+  // }, []);
+
 
   useEffect(() => {
     let mounted = true;
@@ -64,6 +239,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         setError(String(err));
       })
       .finally(() => {
+
         if (mounted) setLoading(false);
       });
 
@@ -71,6 +247,31 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
       mounted = false;
     };
   }, [type]);
+
+
+  useEffect(() => {
+    if (items && items.length > 0) {
+      setObservedCards((prevCards) => {
+        let newCards = [...prevCards];
+
+        items.map((item, i) => {
+          newCards[i] = false;
+        })
+
+        return [...newCards]
+      });
+      // setActiveCards((prevCards) => {
+      //   let newCards = [...prevCards]
+
+      //   items.map((item, i) => {
+      //     newCards[i] = '';
+      //   })
+      //   return [...newCards]
+      // })
+      // console.log('from Deck: ', typeof updateObserved);
+    }
+  }, [items])
+
 
   // Apply tag filtering when query or allItems changes
   useEffect(() => {
@@ -93,9 +294,6 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
     setItems(toBeFiltered);
 
 
-
-
-
   }, [query, allItems]);
 
   if (loading) return <div className="preview-deck loading">Loading...</div>;
@@ -103,6 +301,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
 
   return (
     <>
+
       <div className="preview-search">
         <input
           aria-label="Filter by tag"
@@ -120,11 +319,17 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
           <p>No {type} matches found.</p>
         )}
         {items.map((item, i) => (
-            <PreviewCard
-              cardID={i}
-              project={item as Project & Certification}
-              slideinterval={slideInterval}
-            />
+
+          <PreviewCard
+            key={`preview-card-${i}`}
+            cardID={i}
+            project={item as Project & Certification}
+            slideinterval={slideInterval}
+            observerOptions={{
+              updateObserved: updateObserved,
+              observerClasses: observerClasses[i]
+            }}
+          />
 
         ))}
       </div>

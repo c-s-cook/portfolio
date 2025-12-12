@@ -3,110 +3,120 @@
     position: absolute;
     top: 0;
     left: 0;
-    max-height: 100vh;
     min-height: 100vh;
-    height: 100vh;
+    /* max-height: 100vh; */
+    /* height: 100vh; */
     width: 100vw;
-    scroll-snap-type: y mandatory;
-    scroll-snap-stop: always;
     overflow-y: scroll;
-    scroll-padding: 0em 0em 0em 0em;
-    border: 3px dashed red;
+
+    /* outline: 3px dashed red; */
+    /* outline-offset: -3px; */
 }
 
-.scrollsnap-container:has(.no-snap) {
-    scroll-snap-type: none;
+.scrollsnap-container:has(>section.scrollsnap) {
+    height: 100vh;
+    max-height: 100vh;
+    scroll-snap-type: y mandatory;
+    scroll-snap-stop: always;
+    scroll-padding: 0em 0em 0em 0em;
 }
+
+/* .scrollsnap-container:has(.no-snap) {
+    scroll-snap-type: none;
+} 
+
+.no-snap {
+    min-height: 90vh;
+}
+
+.no-snap>section {
+    /* make section fill its parent */
+/*
+    height: 100%;
+    min-height: inherit;
+    box-sizing: border-box;
+}
+*/
 
 
 
 .scrollsnap-container>section {
     /* border: 2px dotted greenyellow; */
 
-    min-height: 100vh;
-    max-width: 100vw;
-    margin: 0 auto;
-    position: relative;
-    padding: 5em 5em;
+
 }
 
 section.scrollsnap {
     scroll-snap-align: start;
+    min-height: 100vh;
 
-    /* border: 2px dotted rgb(255, 47, 241); */
-
-    /* padding-top: 3em;
-    margin: 3em auto;
-    max-width: 70vw;
-    padding: 2em;
-    border-radius: 20px;
-    
-    background-color: rgba(0, 0, 0, 0.2); */
-}
-
-.no-snap {
-    min-height: 90vh;
-}
-
-section:not(.scrollsnap) {
-    min-height: 20vh;
-}
-
-.no-snap>section {
-    /* make section fill its parent */
-    height: 100%;
-    min-height: inherit;
-    box-sizing: border-box;
-}
-
-.no-snap~footer,
-section:not(.scrollsnap)~footer {
-    scroll-snap-align: none;
     position: relative;
-    /* bottom: 0; */
-    /* left: 50%; */
-    /* transform: translateX(-50%); */
-    margin: 0 auto;
-    border: 2px green solid;
+    outline: 2px dotted greenyellow;
+}
 
+section.scrollsnap,
+section.full {
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+    width: 100vw;
+    margin: 0 auto;
+    padding: 5em 5em;
+    /* overflow-x: hidden; */
 
 }
 
-footer.scrollsnap {
+section.full {
+
+    min-height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* outline: 2px dotted rgb(255, 47, 227); */
+    outline-offset: -2px;
+
+}
+
+section:not(.scrollsnap):not(.full) {
     position: relative;
-    scroll-snap-align: end;
-    max-width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    /* border: 1px dotted orange; */
-    padding-bottom: 1em;
-    bottom: 0;
+    /* min-height: 20vh; */
+    /* height:min-content; */
 }
+
+section:not(.scrollsnap):not(.full)>.content:last-of-type {
+    margin-bottom: 15vh;
+}
+
+
+
 
 
 section>.content {
-
-    position: absolute;
-    /* position:relative; */
+    position: relative;
     margin-left: auto;
     margin-right: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     /* transform-origin: top center; */
 
     /* padding-top: 3em; */
     margin: 2em auto;
     max-width: 1000px;
     width: calc(100% - 10rem);
-    margin-bottom: 10em;
+    /* margin-bottom: 10em; */
 
     padding: 1.5em;
 
-
     /* border: 1px dashed cyan; */
-
 }
+
+section.scrollsnap>.content,
+section.full>.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* overflow-x: hidden; */
+}
+
 
 section .body {
     padding: 2em;
@@ -123,9 +133,11 @@ section>.content.no-background {
 }
 
 section .with-background {
-    background-color: var(--background-rgba-20);
+    background-color: var(--background-rgba-40);
     border-radius: 20px;
-    border: 1px var(--foreground-rgba-20) solid;
+    /* border: 1px var(--foreground-rgba-20) solid; */
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 section .bg-grad {
@@ -149,6 +161,32 @@ section .centered {
 .content p.subcap {
     font-size: 0.7em;
 }
+
+
+
+
+section:not(.scrollsnap)~footer {
+    scroll-snap-align: none;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    /* margin: 0 auto; */
+    /* border: 2px green solid; */
+}
+
+footer.scrollsnap {
+    position: relative;
+    scroll-snap-align: end;
+    max-width: 1000px;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 2em;
+    text-align: center;
+    border-top: 1px solid var(--foreground-rgb);
+    padding-bottom: 1em;
+}
+
 
 
 
@@ -276,8 +314,16 @@ input[type=password] + label {
 
 
     .scrollsnap-container>section {
-        margin-bottom: 20vh;
-        padding: 5em 0em;
+        /* margin-bottom: 20vh; */
+        padding: 3em 0em;
+    }
+
+    section.scrollsnap,
+    section.full {
+        height: calc(100vh - 4em);
+        max-height: 100vh;
+        /* margin: 0 auto;
+        padding: 5em 5em; */
     }
 
     /* section,
@@ -304,6 +350,7 @@ input[type=password] + label {
 
     section.scrollsnap:has(>.content.extra-long) {
         scroll-snap-align: center;
+        overflow-y: scroll;
         /* background-color: rgba(255, 166, 0, 0.299); */
 
     }
@@ -320,7 +367,17 @@ input[type=password] + label {
         margin-bottom: 40vh;
     }
 
+    .content p.subcap {
+        font-size: 0.7em;
+        padding-bottom: 0.7em;
+    }
 
+    section:not(.scrollsnap)~footer {
+        bottom: 4em;
+    }
+    footer.scrollsnap{
+        margin-bottom: 4em;
+    }
 
 
 

@@ -25,6 +25,7 @@ export default function Home() {
   // which would otherwise overflow the vertical height of the window. So
   // the observer toggles scrollsnap
   useEffect(() => {
+    return
 
     let scrollnapContainer = document.querySelector('.scrollsnap-container');
     let sections = document.querySelectorAll('section:has(>.content.extra-long)');
@@ -44,8 +45,6 @@ export default function Home() {
       }
 
       // console.log('found scrollsnapContainer & these sections:', sections);
-
-
 
       let prevRatio = 0.0;
       let isSnapping = true;
