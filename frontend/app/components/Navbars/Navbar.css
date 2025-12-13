@@ -235,7 +235,7 @@ input[type=checkbox]#checkbox_toggle {
     position: fixed;
     overflow: hidden;
     transform-origin: top right;
-    background: linear-gradient(45deg, var(--background-color-grad-start), var(--background-color-grad-end));
+    /* background: linear-gradient(45deg, var(--background-color-grad-start), var(--background-color-grad-end)); */
     right: 10px;
     top: 10px;
     margin: 0px auto;
@@ -245,9 +245,28 @@ input[type=checkbox]#checkbox_toggle {
     padding: 0em 0;
     z-index: 10;
     border-radius: 50%;
-    border: 1px solid transparent;
+    border: 0px solid transparent;
     opacity: 0;
     /* transition: 0.3s ease; */
+  }
+
+  #menu>#nav-menu-background{
+    position: absolute;
+    
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -99;
+    opacity: 0;
+    transition: 0.2s;
+  }
+  #menu>#nav-menu-background>#background{
+    overflow: hidden;
+    position: relative;
+    /* opacity: 0.9; */
+    transform: scale(-1);
   }
 
   #menu.visible {
@@ -285,13 +304,14 @@ input[type=checkbox]#checkbox_toggle {
     display: inline-block;
     overflow: hidden;
     border-radius: 8px;
-    border: 1px solid white;
+    border: 1px solid  var(--foreground-rgba-40);
     padding: 3em 0;
     opacity: 1;
     visibility: visible;
     right: 10px;
     width: calc(96vw - var(--scrollbar-width));
     height: auto;
+    /* box-shadow: 0 2px 6px rgba(0,0,0,0.5); */
     transition: 0.3s ease;
   }
 
@@ -302,7 +322,10 @@ input[type=checkbox]#checkbox_toggle {
 
   input[type=checkbox]#checkbox_toggle:checked~#menu li {
     opacity: 1;
+  }
 
+  input[type=checkbox]#checkbox_toggle:checked~#menu #nav-menu-background {
+    opacity: 1;
   }
 
 

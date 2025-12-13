@@ -124,7 +124,10 @@ export default function Navbar({ user, navLinks }) {
           { links.map((link, index) => (
             <li key={index} className={`${pathname === link.href ? 'active' : ''}`}><Link href={link.href} onClick={unCheckbox}>{link.text}</Link></li>
           ))}
-            
+          
+          <div id="nav-menu-background">
+            <Background/>
+          </div>
           
 
           {/* <li><Link href="/" onClick={unCheckbox}>Home</Link></li>

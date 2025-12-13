@@ -9,7 +9,7 @@ export default function Background() {
       <div></div>
       <div></div>
       <div>
-          <svg
+          {/* <svg
             viewBox="0 0 900 900"
             xmlns='http://www.w3.org/2000/svg'>
 
@@ -25,7 +25,7 @@ export default function Background() {
               width='100%'
               height='100%'
               filter='url(#noiseFilter)' />
-          </svg>
+          </svg> */}
       </div>
     </div>
   )

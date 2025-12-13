@@ -1,14 +1,16 @@
 FRONTEND:
  - Custom 404 page
  - Add timed redirect to 404, Content Error, & Content Not Found page
- - Login page 'Success' msg before redirect
+ - X  -  Login page 'Success' msg before redirect
  - LogOut button to Navbar
  - "Guest Mode" banner
  - Links to Dashboard Portfolio objs
  - add 'X' to projDeck search
  - update click displays
  - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
- - fix the GD mobile cards
+ - X! - fix the GD mobile cards
+ - update auth form bg color
+ - X - fix mobile menu background
 
 
 BACKEND:
