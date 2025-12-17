@@ -30,7 +30,7 @@
   padding: 0.6rem 0.9rem;
   margin: 0 auto;
   border-radius: 5px;
-  border: 1px dotted var(--foreground-rgba-20);
+  border: 1px dotted var(--foreground-rgba-40);
   display: flex;
   justify-content: center;
   margin-bottom: 0rem;
@@ -45,10 +45,20 @@
   background: var(--background-rgba-60);
   border: 1px solid var(--foreground-rgba-60);
 }
+
 .preview-search svg {
     fill: var(--foreground-rgb);
     height: 1.5em;
     opacity: 0.5;
+}
+.preview-search > .clear-icon {
+  cursor:pointer;
+  font-size: 1.5em;
+  line-height: 1em;
+  opacity: 0.6;
+}
+.preview-search > .clear-icon:hover {
+  opacity: 1;
 }
 
 .preview-search:hover {
@@ -65,12 +75,18 @@
   color: var(--foreground-rgb);
   outline: none;
 }
+.preview-search > input::placeholder,
+.preview-search > input:focus::placeholder {
+  color: var(--foreground-rgba-40);
+  opacity: 1;
+}
 
-.preview-search input:focus {
+.preview-search > input:focus {
   /* box-shadow: 0 6px 18px rgba(0,0,0,0.06); */
   /* background: var(--background-rgba-20); */
   background-color: transparent;
   transform: translateY(-1px);
+  outline: none !important;
 }
 
 /* .preview-deck {

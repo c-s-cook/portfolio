@@ -5,11 +5,11 @@ FRONTEND:
  - LogOut button to Navbar
  - "Guest Mode" banner
  - Links to Dashboard Portfolio objs
- - add 'X' to projDeck search
+ - X  -  add 'X' to projDeck search
  - update click displays
  - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
  - X! - fix the GD mobile cards
- - update auth form bg color
+ - X - update auth form bg color
  - X - fix mobile menu background
 
 

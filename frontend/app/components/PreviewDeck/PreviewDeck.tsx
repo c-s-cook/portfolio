@@ -69,19 +69,19 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
       const elapsed = now - lastCardUpdate.current.getTime();
 
       if (elapsed < 700) {
-      const delayMs = 500;
-      const timer = setTimeout(() => {
-        // update the last update timestamp and trigger the effect again by nudging observedCards
-        lastCardUpdate.current = new Date();
-        setObservedCards(prev => [...prev]);
-      }, delayMs);
+        const delayMs = 500;
+        const timer = setTimeout(() => {
+          // update the last update timestamp and trigger the effect again by nudging observedCards
+          lastCardUpdate.current = new Date();
+          setObservedCards(prev => [...prev]);
+        }, delayMs);
 
-      // cleanup the timer if the effect re-runs / unmounts
-      // return () => clearTimeout(timer);
-      clearTimeout(timer);
+        // cleanup the timer if the effect re-runs / unmounts
+        // return () => clearTimeout(timer);
+        clearTimeout(timer);
       } else {
-      // mark this as the most recent update time
-      lastCardUpdate.current = new Date();
+        // mark this as the most recent update time
+        lastCardUpdate.current = new Date();
       }
     }
 
@@ -114,7 +114,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
       }
     }
 
-    
+
 
     //  if we aren't maxed out...
     if (tempActiveCards.length !== activeLimit) {
@@ -304,15 +304,22 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
 
       <div className="preview-search">
         <input
-          aria-label="Filter by tag"
+          aria-label="Filter by tags"
           placeholder="Filter by tags..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           // onClick={(e) => e.target.placeholder='Separate by commas.'}
-          onFocus={(e) => e.target.placeholder = 'Separate by commas...'}
-          onBlur={(e) => e.target.placeholder = 'Filter by tags...'}
+          onFocus={(e) => {
+            e.target.placeholder = 'Separate by commas...';
+            e.target.ariaLabel = 'Separate by commas';
+          }}
+          onBlur={(e) => {
+            e.target.placeholder = 'Filter by tags...';
+            e.target.ariaLabel = 'Filter by tags';
+          }}
         />
-        <SearchIcon />
+        {!query && <SearchIcon />}
+        {query && <div className="clear-icon" onClick={() => setQuery('')}>&#10006;</div>}
       </div>
       <div className="body preview-deck">
         {!items || items.length === 0 && (
