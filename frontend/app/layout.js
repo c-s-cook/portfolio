@@ -1,6 +1,7 @@
 import './globals.css'
 import './styles.css'
 import { Quicksand } from 'next/font/google'
+import { cookies } from 'next/headers'
 
 
 import Navbar from './components/Navbars/Navbar'
@@ -32,6 +33,8 @@ export default function RootLayout({ children }) {
     { href: "/dashboard", text: "Dashboard" }
   ];
 
+  // check for login
+  let isLoggedin = cookies().get('jwt')?.value ? true : false;
 
 
   return (
@@ -40,7 +43,7 @@ export default function RootLayout({ children }) {
       <body className={quicksand.className}>
         <Background />
         <div className='scrollsnap-container'>
-          <Navbar navLinks={navLinks} />
+          <Navbar isLoggedIn={isLoggedin} navLinks={navLinks} />
           {children}
           <footer className='scrollsnap'>
             Copyright 2025 Christopher Cook. All rights reserved.

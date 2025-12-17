@@ -19,8 +19,9 @@ import { usePathname } from 'next/navigation'
 
 
 
-export default function Navbar({ user, navLinks }) {
+export default function Navbar({ isLoggedIn = true, navLinks }) {
   const pathname = usePathname();
+  // if (isLoggedIn) console.log('yup, is logged in...');
 
   //  InsersectionObserver for Main Page Logo Banner & Navbar Logo
   // const observeMainLogo = () => {
@@ -124,6 +125,9 @@ export default function Navbar({ user, navLinks }) {
           { links.map((link, index) => (
             <li key={index} className={`${pathname === link.href ? 'active' : ''}`}><Link href={link.href} onClick={unCheckbox}>{link.text}</Link></li>
           ))}
+          {isLoggedIn && <li>
+            <Link href={'/logout'} onClick={unCheckbox}>Logout</Link>
+          </li>}
           
           <div id="nav-menu-background">
             <Background/>
