@@ -148,6 +148,7 @@ export default function Navbar({ isLoggedIn = true, navLinks }) {
       </div>
     </nav>
     <span id="nav-divider"></span>
+    <div id="demo-mode">DEMO MODE</div>
     </>
   )
 }

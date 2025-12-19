@@ -2,7 +2,7 @@ FRONTEND:
  - Custom 404 page
  - Add timed redirect to 404, Content Error, & Content Not Found page
  - X  -  Login page 'Success' msg before redirect
- - LogOut button to Navbar
+ - X  -  LogOut button to Navbar
  - "Guest Mode" banner
  - Links to Dashboard Portfolio objs
  - X  -  add 'X' to projDeck search
