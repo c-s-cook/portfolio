@@ -1,11 +1,12 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import type { Portfolio, Project, Certification } from "../../../lib/types";
 import getPortfolio from "../../../lib/getPortfolio";
 
 type Props = {
-    onSelect?: (projectId: number) => void;
+    
 };
 
 
@@ -30,7 +31,7 @@ const EditIcon = () => {
 }
 
 
-const ListCertifications: React.FC<Props> = ({ onSelect }) => {
+const ListCertifications: React.FC<Props> = () => {
     const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -77,19 +78,24 @@ const ListCertifications: React.FC<Props> = ({ onSelect }) => {
         <ul className="portfolio-items">
             {certifications.map((c) => (
                 <li key={c.id}>
-                    <button type="button" className="portfolio-item" onClick={() => onSelect?.(c.id)}>
-                        <div className="title">
-                            {c.title}
-                        </div>
-                        <EditIcon />
-                    </button>
+                    <Link href={`./dashboard/add-certification/${c.id}/edit`}>
+                        <button type="button" className="portfolio-item">
+                            <div className="title">
+                                {c.title}
+                            </div>
+                            <EditIcon />
+                        </button>
+                    </Link>
 
-                    <ViewIcon />
+                    <Link href={`./certifications/${c.slug}`}>
+                        <ViewIcon />
+                    </Link>
                 </li>
             ))}
+           
 
-            <li key="17">
-                <button type="button" className="portfolio-item" onClick={() => onSelect?.(17)}>
+            {/* <li key="17">
+                <button type="button" className="portfolio-item">
                     <div className="title">
                         "This is a Very long title here to see what happens..."
                     </div>
@@ -97,7 +103,7 @@ const ListCertifications: React.FC<Props> = ({ onSelect }) => {
                 </button>
 
                 <ViewIcon />
-            </li>
+            </li> */}
         </ul>
     );
 };

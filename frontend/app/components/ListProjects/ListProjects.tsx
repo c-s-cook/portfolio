@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import type { Portfolio, Project } from "../../../lib/types";
 import getPortfolio from "../../../lib/getPortfolio";
 
@@ -76,27 +77,21 @@ const ListProjects: React.FC<Props> = ({ onSelect }) => {
         <ul className="portfolio-items">
             {projects.map((p) => (
                 <li key={p.id}>
-                    <button type="button" className="portfolio-item" onClick={() => onSelect?.(p.id)}>
-                        <div className="title">
-                            {p.title}
-                        </div>
-                        <EditIcon />
-                    </button>
+                    <Link href={`./dashboard/add-project/${p.id}/edit`}>
+                        <button type="button" className="portfolio-item">
+                            <div className="title">
+                                {p.title}
+                            </div>
+                            <EditIcon />
 
-                    <ViewIcon />
+                        </button>
+                    </Link>
+
+                    <Link href={`./projects/${p.slug}`}>
+                        <ViewIcon />
+                    </Link>
                 </li>
             ))}
-
-            <li key="17">
-                <button type="button" className="portfolio-item" onClick={() => onSelect?.(17)}>
-                    <div className="title">
-                        "This is a Very long title here to see what happens..."
-                    </div>
-                    <EditIcon />
-                </button>
-
-                <ViewIcon />
-            </li>
         </ul>
     );
 };
