@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
     const token = request.cookies.get('jwt')?.value
 
     if(!token){
+        console.log('No JWT token found.');
         return NextResponse.redirect(new URL('/login', request.url))
     } else {
         
@@ -54,6 +55,7 @@ export async function middleware(request: NextRequest) {
 
                 console.log("deleteing JWT cookie...")
                 response.cookies.delete('jwt')
+                response.cookies.delete('user')
 
                 return response
                 

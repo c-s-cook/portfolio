@@ -30,6 +30,7 @@
 
 #nav-logo,
 #nav-divider,
+#demo-mode,
 #menu {
   transition: 0.8s ease-in-out;
 }
@@ -41,6 +42,7 @@
 #navbar:hover #menu,
 #nav-logo.visible,
 #nav-divider.visible,
+#demo-mode.visible,
 #menu.visible {
   visibility: visible;
   opacity: 1;
@@ -93,13 +95,14 @@ div#demo-mode {
   width: calc(100vw - 6rem);
   max-width: 1000px;
 
-  font-size: 0.7em;
+  font-size: 0.8em;
   line-height: 1.5em;
-  height: 1.5em;
+  height: 1.7em;
   text-transform: uppercase;
   text-align: center;
 
-  background: linear-gradient(90deg, transparent, var(--foreground-rgba-20), var(--foreground-rgba-80), var(--foreground-rgba-20), transparent);
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--background-rgba-20), var(--background-rgba-80), var(--background-rgba-20), transparent);
   color: red;
   margin: -2rem auto 2em auto;
   z-index: 99;
@@ -197,7 +200,7 @@ div#demo-mode {
 
 /* CHECKBOX HACK */
 
-input[type=checkbox]#checkbox_toggle {
+input[type=checkbox]#nav_checkbox_toggle {
   display: none;
 }
 
@@ -327,7 +330,7 @@ input[type=checkbox]#checkbox_toggle {
 
 
 
-  input[type=checkbox]#checkbox_toggle:checked~#menu {
+  input[type=checkbox]#nav_checkbox_toggle:checked~#menu {
     display: inline-block;
     overflow: hidden;
     border-radius: 8px;
@@ -342,16 +345,16 @@ input[type=checkbox]#checkbox_toggle {
     transition: 0.3s ease;
   }
 
-  input[type=checkbox]#checkbox_toggle + label {
+  input[type=checkbox]#nav_checkbox_toggle + label {
     opacity: 1;
     font-size: 0.5em;
   }
 
-  input[type=checkbox]#checkbox_toggle:checked~#menu li {
+  input[type=checkbox]#nav_checkbox_toggle:checked~#menu li {
     opacity: 1;
   }
 
-  input[type=checkbox]#checkbox_toggle:checked~#menu #nav-menu-background {
+  input[type=checkbox]#nav_checkbox_toggle:checked~#menu #nav-menu-background {
     opacity: 1;
   }
 

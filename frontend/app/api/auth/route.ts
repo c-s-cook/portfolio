@@ -144,7 +144,7 @@ const isLogin = async (email: string, password: string) => {
     let jwtUserInfo = {
       _id: user._id,
       email: email,
-      admin: process.env.ENVIRONMENT == 'DEV' ? true : false
+      // admin: process.env.ENVIRONMENT == 'DEV' ? true : false
     }
     if (user.admin) jwtUserInfo['admin'] = user.admin;
 
@@ -156,6 +156,18 @@ const isLogin = async (email: string, password: string) => {
       sameSite: 'strict',
       secure: true,
       httpOnly: true
+    })
+
+    cookies().set({
+      name: 'user',
+      value: JSON.stringify({
+        email: email.split('@')[0],
+        admin: jwtUserInfo.admin
+      }),
+      maxAge: maxAge * 1000,
+      sameSite: 'strict',
+      secure: true,
+      httpOnly: false
     })
 
     return returnResponse(201, { user: user._id })
@@ -178,6 +190,7 @@ const isLogout = async () => {
 
   cookies().delete('jwt')
   cookies().delete('authPost')
+  cookies().delete('user')
 
   return returnResponse(200, { message: message })
 }
@@ -190,7 +203,17 @@ const isLogout = async () => {
 const isVerify = async (userId: string, verificationToken: string) => {
   try {
     const user = await User.verify(userId, verificationToken);
-    const token = await createToken(user._id);
+
+    if (!user) throw Error('User not found.');
+
+    let jwtUserInfo = {
+      _id: user._id,
+      email: user.email,
+      // admin: process.env.ENVIRONMENT == 'DEV' ? true : false
+    }
+    if (user.admin) jwtUserInfo['admin'] = user.admin;
+
+    const token = await createToken(jwtUserInfo);
     cookies().set({
       name: 'jwt',
       value: token,
@@ -198,6 +221,18 @@ const isVerify = async (userId: string, verificationToken: string) => {
       sameSite: 'strict',
       secure: true,
       httpOnly: true
+    })
+
+    cookies().set({
+      name: 'user',
+      value: JSON.stringify({
+        email: user.email.split('@')[0],
+        admin: jwtUserInfo.admin
+      }),
+      maxAge: maxAge * 1000,
+      sameSite: 'strict',
+      secure: true,
+      httpOnly: false
     })
 
     return returnResponse(201, { message: 'Successfully verified.', user: user._id });
@@ -318,7 +353,18 @@ const isReset = async (userId: string, password: string, resetToken: string, res
   }
 }
 
+// 
+//  TEST AUTH / LOG-IN
+// 
+const authTest = async () => {
 
+  const token = cookies().get('jwt')?.value;
+  if (token) {
+
+  }
+
+
+}
 
 
 
@@ -337,6 +383,7 @@ export async function GET(req: NextApiRequest) {
 
   cookies().delete('jwt')
   cookies().delete('authPost')
+  cookies().delete('user')
 
   return returnResponse(400, { message: message })
 }
@@ -364,6 +411,7 @@ export async function POST(req: NextApiRequest) {
   // delete old versions of cookies
   cookies().delete('jwt')
   cookies().delete('authPost')
+  cookies().delete('user')
 
 
   // confirm that req comes from one of the specific pages
@@ -399,6 +447,9 @@ export async function POST(req: NextApiRequest) {
     case "RESET":
       if (resetCheck) return await isResetCheck(userId, resetToken, resetTime);
       else return await isReset(userId, password, resetToken, resetTime);
+
+    case "AUTH-CHECK":
+
 
     default:
       return returnResponse(400, { error: 'Error. Should not have made it this far in the switch stmt...' });

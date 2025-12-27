@@ -29,6 +29,7 @@ const Logo = ({forNavBar}) => {
         const navLogo = document.getElementById('nav-logo');
         const navMenu = document.getElementById('menu');
         const navDivider = document.getElementById('nav-divider');
+        const demoModeBar = document.getElementById('demo-mode');
         let mainLogoVisible = mainLogoGet ? true : false;
 
         const toggleNavbarVisible = () => {
@@ -36,10 +37,12 @@ const Logo = ({forNavBar}) => {
                 navLogo.classList.remove('visible');
                 navMenu.classList.remove('visible');
                 navDivider.classList.remove('visible');
+                if(demoModeBar) demoModeBar.classList.remove('visible');
             } else {
                 navLogo.classList.add('visible');
                 navMenu.classList.add('visible');
                 navDivider.classList.add('visible');
+                if(demoModeBar) demoModeBar.classList.add('visible');
             }
         }
         toggleNavbarVisible();

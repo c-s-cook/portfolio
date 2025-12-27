@@ -72,14 +72,15 @@ export default function LoginPage() {
     const authType: AuthType = 'LOG-IN'
 
     const errorMsg = document.getElementById('error-msg')
-    errorMsg.textContent = ' '
+    if (errorMsg) errorMsg.textContent = ' '
 
     const submitBtn: HTMLButtonElement = document.getElementById('submit-btn') as HTMLButtonElement
     submitBtn.disabled = true;
     submitBtn.textContent = 'SENDING...'
     submitBtn.classList.add('disabled')
 
-    const response = await fetch('./api/auth', {
+    // use absolute API path to avoid resolving to a nested route
+    const response = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, authType }),
@@ -88,7 +89,9 @@ export default function LoginPage() {
     if (response.status == 201) {
       
       submitBtn.textContent = 'SUCCESS!'
-      router.push('/dashboard')
+      // await navigation to ensure it completes before any further code runs
+      await router.push('/dashboard')
+      return
 
     } else {
       // Handle errors
@@ -98,11 +101,18 @@ export default function LoginPage() {
       submitBtn.textContent = 'LOG IN'
       submitBtn.classList.remove('disabled')
 
-      if (err.password.includes('Please verify')) {
-        const verifyMsg = resendVerification(email)
-        createRoot(errorMsg).render(verifyMsg)
+      if (err && typeof err.password === 'string' && err.password.includes('Please verify')) {
+        const verifyMsg = resendVerification(String(email))
+        if (errorMsg) {
+          // guard against null before rendering into the DOM node
+          createRoot(errorMsg).render(verifyMsg)
+        } else {
+          console.warn('error-msg element not found to render verification prompt')
+        }
       } else {
-        errorMsg.textContent = err.email + err.password + err.message
+        if (errorMsg) {
+          errorMsg.textContent = (err.email || '') + (err.password || '') + (err.message || '')
+        }
       }
     }
   }

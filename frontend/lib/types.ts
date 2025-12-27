@@ -5,7 +5,7 @@
 import { SetStateAction } from "react";
 
 // 
-export type AuthType = "SIGN-UP" | 'LOG-IN' | 'LOG-OFF' | 'VERIFY' | 'RE-VERIFY' | 'REQUEST-RESET' | 'RESET';
+export type AuthType = "SIGN-UP" | 'LOG-IN' | 'LOG-OFF' | 'VERIFY' | 'RE-VERIFY' | 'REQUEST-RESET' | 'RESET' | 'AUTH-CHECK';
 
 
 
