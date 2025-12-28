@@ -11,6 +11,7 @@ FRONTEND:
  - X! - fix the GD mobile cards
  - X - update auth form bg color
  - X - fix mobile menu background
+ - Remove console logs from PreviewCard/Deck
 
 
 BACKEND:

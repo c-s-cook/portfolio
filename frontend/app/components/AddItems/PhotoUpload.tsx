@@ -21,6 +21,7 @@ export interface UploadFile extends File {
     tries: null | number;
     starred?: boolean;
     caption?: string;
+    isBlob?: boolean;
 }
 
 export interface PhotoUploadProps {
@@ -528,8 +529,17 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                         imageURL.data = data;
                     }
                 } else if (data.URL) {
-                    imageURL.url = data.URL;
+                    // check for 'blob' flag to use local blob
+                    if (data.URL == 'blob') {
+
+                        imageURL.url = URL.createObjectURL(imageFile);
+                        console.log(`Using local blob URL for file #${f}:`, imageURL.url);
+                        imageFile.isBlob = true;
+                    } else {
+                        imageURL.url = data.URL;
+                    }
                 } else {
+
                     console.warn(`Coudn't find obvious 'URL' key within API response for file #${f}. Placing full API response into imageURLs[${f}].data...`);
                     imageURL.url = null;
                     imageURL.data = data;
@@ -778,7 +788,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
 
                         return (
-                            <div className="img-container" key={"img-container-" + index}>
+                            <div className={`img-container ${file.isBlob ? 'is-blob' : ''}`} key={"img-container-" + index}>
                                 <img
                                     src={imgSrc}
                                     key={"img" + index}

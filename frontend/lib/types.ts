@@ -23,6 +23,7 @@ export interface PortfolioItem {
     // thumbnails: Array<object>,
     thumbnails: ImageURL[],
     repoUrl?: string,
+    isDemo?: boolean
 }
 
 export interface ImageURL {

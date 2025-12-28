@@ -83,6 +83,10 @@ div#image-files {
     overflow: hidden;
     animation: fadeIn 0.5s ease-in-out 1s forwards;
 }
+#image-preview-area>.img-container.is-blob {
+    outline: 2px dashed red;
+}
+
 
 #image-preview-area>.img-container img.img-preview {
     position: relative;

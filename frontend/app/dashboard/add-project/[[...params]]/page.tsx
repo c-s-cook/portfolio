@@ -6,18 +6,18 @@
 // import Editor from './Editor'
 
 import { useEffect, useRef, useState } from 'react';
-import '../AddItems.css'
-import TagsInput from '../../components/AddItems/TagsInput';
-import QuillRichText from '../../components/Quill/QuillRichText';
+import { useRouter, useParams } from 'next/navigation';
+import '../../AddItems.css'
 
-import PhotoUpload from '../../components/AddItems/PhotoUpload';
+import TagsInput from '@components/AddItems/TagsInput';
+import QuillRichText from '@components/Quill/QuillRichText';
+import PhotoUpload from '@components/AddItems/PhotoUpload';
+import type { PhotoUploadProps, ImageURL, UploadFile } from '@components/AddItems/PhotoUpload';
 
-import getPortfolio from '../../../lib/getPortfolio';
+import getPortfolio from '@lib/getPortfolio';
+import type { Project } from '@lib/types';
 
-import type { PhotoUploadProps, ImageURL, UploadFile } from '../../components/AddItems/PhotoUpload';
-import type { Project } from '../../../lib/types';
 
-import { useRouter } from 'next/navigation';
 
 
 
@@ -27,6 +27,17 @@ import { useRouter } from 'next/navigation';
 
 
 export default function AddProject() {
+  // read catch-all params (array) and join into single slug string
+  //    params[0] = project id
+  //    params[1] should be the action (e.g. 'edit')
+  const params = useParams()?.params;
+  let paramId: number | undefined = undefined;
+  let actionType: string | undefined = 'add';
+
+  if (params && params.length > 0) {
+    paramId = Number(params[0]);
+    if (paramId && !isNaN(paramId) && params[1]) actionType = params[1];
+  }
 
   const [title, setTitle] = useState('');       // project title
   const [slug, setSlug] = useState('');         // slug for URL
@@ -67,14 +78,16 @@ export default function AddProject() {
 
   let date = new Date();
   let dateString = String(date.getFullYear()) + "-" + String(date.getMonth() + 1) + "-" + String(date.getDate());
-  let projectCount = useRef(0);
-  let portfolio = useRef();
-  let projectSlugs = useRef([]);
+  let projectCount = useRef<number>(0);
+  let portfolio = useRef<any | null>(null);
+  let projectSlugs = useRef<string[]>([]);
 
-
+  const loadPortfolio = async () => {
+    portfolio.current = await getPortfolio();
+  }
 
   const getProjectCount = async () => {
-    portfolio.current = await getPortfolio();
+    // portfolio.current = await getPortfolio();
 
     if (portfolio.current && !portfolio.current.error) {
       // set the projectCount & project ID...
@@ -127,42 +140,64 @@ export default function AddProject() {
 
 
   // Run ONCE at DOM load
-  useEffect(() => {
-
-    getProjectCount();
-
-    // check for auto-saved tempProject...
-    let tempProject = localStorage.getItem('tempProject')
-    if (tempProject) {
-      console.log('found auto-save...');
-      canAutoSave.current = false;
-
-      const loadAutoSave = async () => {
-        tempProject = await JSON.parse(tempProject);
-
-        setTimeout(() => {
-
-          setTitle(tempProject.title);
-          setSlug(tempProject.slug);
-          quillRef.current.root.innerHTML = tempProject.body;
-          setTags(tempProject.tags);
-          setImageURLs(tempProject.thumbnails);
-          setRepoUrl(tempProject.repoUrl);
-          setLiveUrl(tempProject.liveUrl);
-
-
-          setTimeout(() => { canAutoSave.current = true }, 1000);
-          console.log('LOADED auto-save...');
-
-        }, 750)
-
-      }
-      loadAutoSave();
-
-
-    }
-
-  }, [])
+    useEffect(() => {
+  
+      (async () => {
+        await loadPortfolio();
+  
+        if (typeof paramId === 'number' && actionType === 'edit') {
+          let projectData = portfolio.current.projects.find((p: Project) => p.id === paramId);
+          if (projectData) {
+            setTitle(projectData.title);
+            setSlug(projectData.slug);
+            if (quillRef.current && (quillRef.current as any).root) {
+              (quillRef.current as any).root.innerHTML = projectData.body;
+            }
+            setTags(projectData.tags);
+            setImageURLs(projectData.thumbnails);
+            setRepoUrl(projectData.repoUrl);
+            setLiveUrl(projectData.liveUrl);
+          }
+        }
+        else {
+          await getProjectCount();
+  
+          // check for auto-saved tempProject...
+          let localProject: string | null = localStorage.getItem('tempProject')
+          if (localProject) {
+            console.log('found auto-save...');
+            canAutoSave.current = false;
+  
+            const loadAutoSave = async () => {
+              let tempProject: Project = await JSON.parse(localProject);
+  
+              setTimeout(() => {
+  
+                setTitle(tempProject.title);
+                setSlug(tempProject.slug);
+                if (quillRef.current && (quillRef.current as any).root) {
+                  (quillRef.current as any).root.innerHTML = tempProject.body;
+                }
+                setTags(tempProject.tags);
+                // ensure each thumbnail has the required 'name' property for the PhotoUpload ImageURL type
+                setImageURLs((tempProject.thumbnails ?? []).map((t: any) => ({ ...t, name: t.name ?? 'image' })) as ImageURL[]);
+                setRepoUrl(tempProject.repoUrl);
+                setLiveUrl(tempProject.liveUrl);
+  
+  
+                setTimeout(() => { canAutoSave.current = true }, 1000);
+                console.log('LOADED auto-save...');
+  
+              }, 750)
+  
+            }
+            loadAutoSave();
+  
+          }
+        }
+      })();
+  
+    }, [])
 
 
   // Run for EVERY change in the DOM
@@ -279,20 +314,31 @@ export default function AddProject() {
 
     const postNewProject = async () => {
       // send the newProject object to the 'api/portfolio' api with a POST call in a try/catch block
+      console.log('Posting project:', newProject);
       try {
         const response = await fetch('../api/portfolio', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Action-Type': actionType
           },
           body: JSON.stringify(newProject),
         });
 
-        if (!response.ok) {
-          throw new Error(`${response}`);
+        const data = await response.json();
+        console.log('API response:', data);
+
+        if (data.error && data.error === 'Unauthorized') {
+          // user is logged in, but not an admin
+          // flag the portfolio item as a demo
+          newProject.isDemo = true;
+          console.log('Flagging project as demo:', newProject);
+        }
+        else if (!response.ok) {
+          throw new Error(`${data}`);
         }
 
-        const data = await response.json();
+        
 
         // And there was much rejoicing...
         console.log('Success:', data);
@@ -300,11 +346,18 @@ export default function AddProject() {
         isPublishingRef.current = false;
 
         // update the portfolio...
-        portfolio.current.projects.push(newProject);
+        if (actionType === 'add') portfolio.current.projects.push(newProject);
+        else if (actionType === 'edit') {
+          const index = portfolio.current.projects.findIndex((proj) => proj.id === newProject.id);
+          if (index !== -1) {
+            portfolio.current.projects[index] = newProject;
+          }
+        }
         localStorage.setItem('portfolio', JSON.stringify(portfolio.current));
 
         // clear the auto-save data...
         localStorage.removeItem('tempProject');
+        console.log('Auto-save data cleared.');
 
 
         // All done here. send them on their way...
@@ -441,6 +494,7 @@ export default function AddProject() {
 
 
     if (!isPublishingRef.current && Object.values(publishingChecks.current).includes('flagged')) {
+      setErrorText('Some items have been flagged. Please review before proceeding.');
       pubBtn.disabled = false;
       pubBtn.innerText = 'Proceed';
     }
@@ -449,6 +503,7 @@ export default function AddProject() {
       pubBtn.innerText = 'Publish';
     }
     else if (publishingChecks.current.images !== 'uploading') {
+      console.log('All checks passed, posting project...');
       postNewProject();
     }
 
@@ -460,7 +515,7 @@ export default function AddProject() {
       <section>
         <div className="content with-background add-item">
 
-          <h1>Add New Portfolio Project</h1>
+          <h1>{actionType == 'edit' ? 'Edit' : 'Add New'} Portfolio Project</h1>
 
           <form id="add-item-form">
 
@@ -511,7 +566,7 @@ export default function AddProject() {
 
             <div className="submit-btn">
 
-              <button id='publish' onClick={(e) => validateForm(e)}>Publish</button>
+              <button id='publish' onClick={(e) => validateForm(e)}>{actionType == 'edit' ? 'Update' : 'Publish'}</button>
               <p className="errorMsg">{errorText}</p>
             </div>
           </form>
