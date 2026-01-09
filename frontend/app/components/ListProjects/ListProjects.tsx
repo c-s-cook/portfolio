@@ -77,7 +77,7 @@ const ListProjects: React.FC<Props> = ({ onSelect }) => {
         <ul className="portfolio-items">
             {projects.map((p) => (
                 <li key={p.id}>
-                    <Link href={`./dashboard/add-project/${p.id}/edit`}>
+                    <Link href={`./dashboard/publish/project/edit?proj=${p.id}`}>
                         <button type="button" className="portfolio-item">
                             <div className="title">
                                 {p.title}

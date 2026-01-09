@@ -78,7 +78,7 @@ const ListCertifications: React.FC<Props> = () => {
         <ul className="portfolio-items">
             {certifications.map((c) => (
                 <li key={c.id}>
-                    <Link href={`./dashboard/add-certification/${c.id}/edit`}>
+                    <Link href={`./dashboard/publish/certification/edit?cert=${c.id}`}>
                         <button type="button" className="portfolio-item">
                             <div className="title">
                                 {c.title}
