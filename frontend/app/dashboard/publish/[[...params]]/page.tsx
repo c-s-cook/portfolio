@@ -24,7 +24,7 @@
  * // Navigate to: /dashboard/publish/certification/edit?cert=123
  * 
  * @dependencies
- * - React hooks: useState, useEffect, useReducer, useRef
+ * - React hooks: useState, useEffect, useRef
  * - Next.js navigation: useRouter, useParams, useSearchParams
  * - Custom components: TagsInput, QuillRichText, PhotoUpload
  * - Custom utilities: getPortfolio
@@ -36,7 +36,7 @@
 
 
 
-import { useEffect, useRef, useState, useReducer } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import '../../AddItems.css'
 
@@ -430,7 +430,7 @@ export default function PublishPortfolioItem() {
    * @param e 
    */
 
-  let delayedSave = useRef();
+  let delayedSave = useRef<null | NodeJS.Timeout>(null);
 
   useEffect(() => {
 

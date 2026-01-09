@@ -12,8 +12,8 @@
 
     --photo-upload-background: var(--background-rgb);
 
-    --photo-upload-preview-area-background: var(--background-rgba-20);
-    --photo-upload-preview-area-bg-gradient: var(--content-bg-grad);
+    --photo-upload-preview-area-background: var(--foreground-rgba-05);
+    --photo-upload-preview-area-bg-gradient: none;
     --photo-upload-border-radius: var(--border-radius);
 
     --photo-upload-error-color: red;
@@ -33,6 +33,7 @@ div#image-files {
     /* padding: -5px; */
     margin-top: 1em;
     margin-bottom: 1em;
+    text-align: center;
 }
 
 

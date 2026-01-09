@@ -63,8 +63,9 @@
     border: 0px solid transparent !important;
     border-radius: var(--border-radius);
     min-height: 10em;
-    background-color: var(--background-rgba-40);
-    background-image: var(--content-bg-grad);
+    max-height: 60vh;
+    background-color: var(--foreground-rgba-05);
+    /* background-image: var(--content-bg-grad); */
     padding: 0.5em 0.5em;
 }
 
@@ -72,6 +73,8 @@
     min-height: 9em;
     max-height: 40vh;
     overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: thin;
 }
 
 
