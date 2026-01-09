@@ -72,3 +72,19 @@ export interface Portfolio {
     certifications: Array<Certification>,
     uniqueTags: Array<UniqueTag>
 }
+
+export interface PublishingError {
+    text: string | null,
+    warn: '' | 'warn'
+}
+
+export interface PublishingErrors {
+    title?: PublishingError | null,
+    content?: PublishingError | null,
+    tags?: PublishingError | null,
+    certDate?: PublishingError | null,
+    certUrl?: PublishingError | null,
+    repoUrl?: PublishingError | null,
+    liveUrl?: PublishingError | null,
+    thumbnails?: PublishingError | null
+}

@@ -153,7 +153,7 @@ const TagsInput = ({ tags, setTags }: TagsInputProps) => {
     return (
         <>
             <div className="item-tags">
-                <h3>Tags: <span className="error-msg"></span></h3>
+                {/* <h3>Tags: <span className="error-msg"></span></h3> */}
                 <div id="tag-input" className="tag-input-wrapper" style={{ position: 'relative' }}>
                     <span id="set-tags">
                         {tags.map((tag) => addTagBox(tag))}

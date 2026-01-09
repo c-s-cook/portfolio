@@ -4,7 +4,7 @@ FRONTEND:
  - X  -  Login page 'Success' msg before redirect
  - X  -  LogOut button to Navbar
  - X  -  "Guest Mode" banner
- - Links to Dashboard Portfolio objs
+ - X  -  Links to Dashboard Portfolio objs
  - X  -  add 'X' to projDeck search
  - update click displays
  - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
@@ -12,11 +12,14 @@ FRONTEND:
  - X - update auth form bg color
  - X - fix mobile menu background
  - Remove console logs from PreviewCard/Deck
+ - add Edit Existing + DEMO MODE to 'add-certification' ... or merge cert/proj into one 'publish' page...
+ - add Date() to localhost Portfolio + a 1-day check to try a refresh...
 
 
 BACKEND:
 - [VPN DETECTION] https://dev.to/saman_sardari_fecbaad4b5d/how-to-detect-vpns-with-javascript-457p
 - "edit" feature to 
+- image API resize
 - Text OTP
 - WS
 - Chat

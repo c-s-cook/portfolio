@@ -83,10 +83,15 @@ form > div > input {
 
 /* BODY */
 
-h3.item-body, h3.item-images {
-    opacity: 0.8;
+h3.item-body, h3.item-images, h3.item-tags {
+    opacity: 0.6;
     margin-top: 1em;
     font-size: 0.8em;
+    transition: 0.3s ease-in-out;
+    opacity: 0;
+}
+h3.item-body.show, h3.item-images.show, h3.item-tags.show {
+  opacity: 1;
 }
 
 
@@ -106,16 +111,16 @@ form button#publish {
 /* ERROR MESSAGES */
 #add-item-form .error-msg {
   color: red;
-  opacity: 0;
-}
-#add-item-form .error-msg.show {
   opacity: 1;
 }
+/* #add-item-form .error-msg.show {
+  opacity: 1;
+} */
 #add-item-form .error-msg.warn {
   color: orange;
 }
 
-#add-item-form label:has( > span.error-msg.show),
-#add-item-form h3:has( > span.error-msg.show) {
+#add-item-form label:has( > span.error-msg),
+#add-item-form h3:has( > span.error-msg) {
   opacity: 1;
 }

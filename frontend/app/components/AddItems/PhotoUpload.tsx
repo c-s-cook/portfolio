@@ -138,8 +138,8 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
             return [...updatedImageFiles];
         })
 
-        if(imageURLs.length == 0) return; 
-        
+        if (imageURLs.length == 0) return;
+
         setImageURLs((prevImageURLs) => {
             let updatedImageURLs = [...prevImageURLs];
 
@@ -248,33 +248,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     }
 
 
-    /**
-     *  check to see if imageUrls is longer than imageFiles (like from a loaded Auto-Save)...
-     */
-    if (imageURLs.length > imageFiles.length) {
 
-        // display the image preview area
-        document.getElementById("image-preview-area").style.display = "flex";
-
-        for (let i = 0; i < imageURLs.length; i++) {
-            let filename = imageURLs[i].ogName || imageURLs[i].name;
-
-            if (!imageFiles[i]) {
-                const tempFile = new File(["lie...but we shouldn't ever access this"], filename, {
-                    type: "text/plain",
-                });
-                tempFile.status = 'success';
-                tempFile.tries = 1;
-                imageFiles[i] = tempFile;
-            }
-            else if (filename !== imageFiles[i].name) {
-                console.log(`Possible mismatch: imageURLs[${i}]: ${filename}  |  imageFiles[${i}]: ${imageFiles[i].name}`)
-
-            }
-
-        }
-
-    }
 
 
 
@@ -619,6 +593,34 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                 clearTimeout(uploadTimer);
                 uploadCountdown;
             });
+        }
+
+        /**
+        *  check to see if imageUrls is longer than imageFiles (like from a loaded Auto-Save)...
+        */ 
+        if (imageURLs.length > imageFiles.length) {
+
+            // display the image preview area
+            document.getElementById("image-preview-area").style.display = "flex";
+
+            for (let i = 0; i < imageURLs.length; i++) {
+                let filename = imageURLs[i].ogName || imageURLs[i].name;
+
+                if (!imageFiles[i]) {
+                    const tempFile = new File(["lie...but we shouldn't ever access this"], filename, {
+                        type: "text/plain",
+                    });
+                    tempFile.status = 'success';
+                    tempFile.tries = 1;
+                    imageFiles[i] = tempFile;
+                }
+                else if (filename !== imageFiles[i].name) {
+                    console.log(`Possible mismatch: imageURLs[${i}]: ${filename}  |  imageFiles[${i}]: ${imageFiles[i].name}`)
+
+                }
+
+            }
+
         }
 
     }, [])

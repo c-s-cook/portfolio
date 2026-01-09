@@ -19,13 +19,13 @@ export default function Dashboard() {
           <div className="card add">
             <h3>Add New</h3>
 
-                <Link href="./dashboard/add-project">
+                <Link href="./dashboard/publish/project">
                   <button>
                     Add Project
                   </button>
                 </Link>
 
-                <Link href="./dashboard/add-certification">
+                <Link href="./dashboard/publish/certification">
                   <button>
                     Add Certificate
                   </button>
