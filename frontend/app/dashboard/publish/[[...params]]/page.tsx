@@ -47,6 +47,7 @@ import type { PhotoUploadProps, ImageURL, UploadFile } from '@components/AddItem
 
 import getPortfolio from '@lib/getPortfolio';
 import type { Certification, Project, PublishingErrors } from '@lib/types';
+import { clear } from 'console';
 // import { Certificate } from 'crypto';
 // import { set } from 'mongoose';
 
@@ -83,8 +84,9 @@ export default function PublishPortfolioItem() {
 
   // routing & search params
   const [itemType, setItemType] = params && params[0] ? useState<string | undefined>(params[0]) : useState<string | undefined>(undefined);
-  let actionType: string | undefined = 'add';
-  let itemId: number | undefined = undefined;
+  const [actionType, setActionType] = useState<string | undefined>('add');
+  const [itemId, setItemId] = useState<number | undefined>(undefined);
+  // let itemId: number | undefined = undefined;
 
   // portfolio item data states
   const [title, setTitle] = useState('');       // project title
@@ -104,6 +106,8 @@ export default function PublishPortfolioItem() {
   const [imageURLs, setImageURLs] = useState<ImageURL[]>([]);
   const [startUpload, setStartUpload] = useState<boolean>(false);
 
+  const [canLoadAutoSave, setCanLoadAutoSave] = useState<boolean>(false);
+
 
   /**
    *    REF VARIABLES
@@ -111,7 +115,7 @@ export default function PublishPortfolioItem() {
 
   let itemTypeCount = useRef<number>(0);
   let portfolio = useRef<any | null>(null);
-  let itemTypeSlugs = useRef<string[]>([]);
+  let itemTypeSlugs = useRef<object[]>([]);
 
   // Use a ref to access the quill instance directly
   const quillRef = useRef<any>(null);
@@ -120,7 +124,8 @@ export default function PublishPortfolioItem() {
   const isPublishingRef = useRef(false);
 
   // use a ref for auto-save limiter
-  const canAutoSave = useRef(true);
+  const canAutoSave = useRef<boolean>(false);
+  // const canLoadAutoSave = useRef<boolean>(false);
 
   // use a ref for publishing checks
   const publishingChecks = useRef({
@@ -133,6 +138,22 @@ export default function PublishPortfolioItem() {
     certUrl: null,
     repoUrl: null,
     liveUrl: null
+  });
+
+  // use a ref for holding the new portfolio item
+  const newPortfolioItem = useRef<Project | Certification>({
+    type: null,
+    id: itemTypeCount.current || 0,
+    title: title,
+    slug: slug,
+    body: content,
+    tags: tags,
+    thumbnails: imageURLs,
+    tempImageFiles: imageFiles,
+    repoUrl: repoUrl,
+    liveUrl: liveUrl,
+    certUrl: certUrl,
+    date: certDate,
   });
 
 
@@ -158,21 +179,9 @@ export default function PublishPortfolioItem() {
         delay: 60,
       }
     }
-  }
+  };
 
-  let newPortfolioItem: Project | Certification = {
-    type: null,
-    id: itemTypeCount.current || 0,
-    title: title,
-    slug: slug,
-    body: content,
-    tags: tags,
-    thumbnails: imageURLs,
-    repoUrl: repoUrl,
-    liveUrl: liveUrl,
-    certUrl: certUrl,
-    date: certDate,
-  }
+
 
 
 
@@ -201,13 +210,16 @@ export default function PublishPortfolioItem() {
         ? portfolio.current.projects!.length
         : portfolio.current.certifications!.length;
 
-      newPortfolioItem.id = itemTypeCount.current || 0;
+      newPortfolioItem.current.id = itemTypeCount.current || 0;
 
       // load existing project URL slugs for safetfy checking...
       itemTypeSlugs.current = itemType === 'project'
-        ? portfolio.current.projects.map(proj => proj.slug).filter(slug => slug !== undefined)
-        : portfolio.current.certifications.map(cert => cert.slug).filter(slug => slug !== undefined)
-      console.log('itemTypeSlugs.current: ', itemTypeSlugs.current);
+        ? portfolio.current.projects.map(proj => {
+          if (proj.slug !== undefined) return { id: proj.id, slug: proj.slug }
+        }).filter(item => item !== undefined)
+        : portfolio.current.certifications.map(cert => {
+          if (cert.slug !== undefined) return { id: cert.id, slug: cert.slug }
+        }).filter(item => item !== undefined);
 
       console.log(`aquired portfolio. setting new .renameTo...${String(itemTypeCount.current).padStart(2, '0')}_${dateString}`);
 
@@ -223,6 +235,216 @@ export default function PublishPortfolioItem() {
     }
   }
 
+  const checkNonEmptyItem = (item: Certification | Project) => {
+    if (item.title
+      || (item.body && item.body !== '<p><br></p>')
+      || item.tags.length > 0
+      || item.thumbnails.length > 0
+      || item.tempImageFiles.length > 0
+      || item.repoUrl
+      || item.liveUrl
+      || item.certUrl
+      || item.date
+    ) {
+      if (item.thumbnails.length > 0) console.log('non-empty item = ', item);
+      return true
+    }
+    else return false
+  }
+
+
+
+  // function to validate if an auto-saved tempImage blob is still valid...
+  async function checkImageExists(url: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+
+      // Timeout to handle slow networks or non-loads...
+      const timeoutId = setTimeout(() => {
+        reject(new Error("Image check timed out"));
+        img.src = ""; // Abort the request
+      }, 1000); // Timeout after 1 seconds
+
+      // Cleanup timeout on success/failure
+      img.onload = () => {
+        clearTimeout(timeoutId);
+        console.log('img loaded.', img)
+        resolve(true);
+      };
+      img.onerror = () => {
+        clearTimeout(timeoutId);
+        resolve(false);
+      };
+
+      // Start the request
+      img.src = url;
+    });
+  }
+
+
+
+  const loadAutoSave = async () => {
+    // get auto-save from session. If null/fail, EXIT
+    let localItem: string | null = await sessionStorage.getItem(`autoSaved${itemType.toUpperCase()}`)
+    if (!localItem) return
+
+    // parse the session data. If it's an empty portfolio item, EXIT
+    let autoSavedItem: Project | Certification = await JSON.parse(localItem);
+    if (!checkNonEmptyItem(autoSavedItem)) return
+
+    // if we're trying to edit an exisitng item, and this auto-saved item is a different id, EXIT
+    if (actionType == 'edit' && autoSavedItem.id !== itemId) return
+
+    setCanLoadAutoSave(false);
+
+    console.log('LOADING auto-saved item...');
+
+    // set all the state...
+    if (autoSavedItem.title) setTitle(autoSavedItem.title);
+    if (autoSavedItem.slug) setSlug(autoSavedItem.slug);
+    if (quillRef.current && (quillRef.current as any).root) {
+      (quillRef.current as any).root.innerHTML = autoSavedItem.body;
+    }
+    if (autoSavedItem.tags && autoSavedItem.tags.length > 0) setTags(autoSavedItem.tags);
+    if (autoSavedItem.repoUrl) setRepoUrl(autoSavedItem.repoUrl);
+    if (autoSavedItem.liveUrl) setLiveUrl(autoSavedItem.liveUrl);
+    if (autoSavedItem.date) setCertDate(autoSavedItem.date);
+    if (autoSavedItem.certUrl) setCertUrl(autoSavedItem.certUrl);
+
+    // handle thumbnails + tempImageFiles... :S
+    let convertedURLsToFiles: UploadFile[] = [];
+    let filteredTempImageFiles: UploadFile[] = [];
+
+    if (autoSavedItem.thumbnails && autoSavedItem.thumbnails.length > 0) {
+      // ensure each thumbnail has the required 'name' property for the PhotoUpload ImageURL type
+      setImageURLs((autoSavedItem.thumbnails ?? []).map((t: any) => ({ ...t, name: t.name ?? 'image' })) as ImageURL[]);
+
+      // convert thumbnail URLs to UploadFile objects
+      convertedURLsToFiles = autoSavedItem.thumbnails.map((img: UploadFile) => {
+        img.status = 'success';
+        img.tries = null;
+        return img;
+      });
+    }
+
+    // filter out any tempImageFiles that were already included from the thumbnails...
+    // and then filter out any that have blobs that are no longer active.
+    if (autoSavedItem.tempImageFiles && autoSavedItem.tempImageFiles.length > 0) {
+      console.log('autoSavedItem.tempImageFiles: ', autoSavedItem.tempImageFiles);
+
+      filteredTempImageFiles = [];
+      for (const file of autoSavedItem.tempImageFiles) {
+        // if not .name, exit
+        if (!file.name) continue;
+        
+        // check if the file.name matches one in thumbnails (already been uploaded)
+        let isNameMatch = autoSavedItem.thumbnails.map(thumb => thumb.ogName).includes(file.name);
+        if (!isNameMatch) isNameMatch = autoSavedItem.thumbnails.map(thumb => thumb.name).includes(file.name);
+        if (isNameMatch) continue;
+
+        // doesn't exist in thumbnails. Now check if the blob is still valid
+        if (file.blob && (typeof file.blob === 'string' && file.blob.startsWith('blob:'))) {
+
+          try {
+            let blobExists = await checkImageExists(file.blob);
+
+            if (blobExists) {filteredTempImageFiles.push(file);}
+            else {
+              // display an error through the publishingErrors obj
+              setPubErrors((prevErr) => {
+                let msg = "Unable to load previously selected images. Sorry. :/";
+                return { ...prevErr, thumbnails: {text: msg, warn: 'warn'}}
+              })
+            };
+          }
+          catch (err) {
+            console.log('Error checking blob for file:', file.name, err);
+            // treat errors as non-existing blobs; skip this file
+          }
+        }
+      }
+
+      console.log('filteredTempImageFiles: ', filteredTempImageFiles);
+    }
+
+    if (convertedURLsToFiles.length > 0 || filteredTempImageFiles.length > 0) {
+      console.log('attempt imageFiles...', [
+        ...convertedURLsToFiles,
+        ...filteredTempImageFiles
+      ]);
+
+      setImageFiles([
+        ...convertedURLsToFiles,
+        ...filteredTempImageFiles
+      ]);
+    }
+
+    setTimeout(() => { canAutoSave.current = true }, 1000);
+    console.log('LOADED auto-save...');
+
+  }
+
+
+
+
+  const autoSave = async () => {
+    // don't auto-save an empty form...
+    if (checkNonEmptyItem(newPortfolioItem.current)) {
+      console.log('auto-saving...');
+      canAutoSave.current = false;
+      clearTimeout(delayedSave.current);
+      await sessionStorage.setItem(`autoSaved${itemType.toUpperCase()}`, JSON.stringify(newPortfolioItem.current));
+
+      setTimeout(() => {
+        canAutoSave.current = true;
+      }, 1000);
+
+      delayedSave.current = setTimeout(() => {
+        console.log('delayed auto-saving...');
+        if (checkNonEmptyItem(newPortfolioItem.current)) {
+          sessionStorage.setItem(`autoSaved${itemType.toUpperCase()}`, JSON.stringify(newPortfolioItem.current));
+        }
+
+      }, 4500);
+    }
+  }
+
+
+  const clearForm = async () => {
+    // clear input fields
+    setItemId(null);
+    setTitle('');
+    setContent('');
+    quillRef.current.root.innerHTML = '';
+    setTags([]);
+    setImageURLs([]);
+    for (let file of imageFiles) {
+      URL.revokeObjectURL(file.blob);
+      file.blob = null;
+    }
+    setImageFiles([]);
+    setRepoUrl('');
+    setLiveUrl('');
+    setCertDate('');
+    setCertUrl('');
+
+    // clear any error messages
+    setPubErrors({});
+
+    // clear any pending auto-save timeouts so that a 
+    clearTimeout(delayedSave.current);
+
+    console.log('XXXXXXXX cleared form  XXXXXXXXXX');
+    await getProjectCount();
+
+    // check for auto-saved item...
+    let localItem: string | null = sessionStorage.getItem(`autoSaved${itemType.toUpperCase()}`)
+    if (localItem) {
+      console.log('found auto-save...');
+      // canAutoSave.current = false;
+      if (checkNonEmptyItem(await JSON.parse(localItem))) setCanLoadAutoSave(true);
+    }
+  }
 
 
 
@@ -240,58 +462,34 @@ export default function PublishPortfolioItem() {
  * 
  *  checks for + sets itemType
  *  loads portfolio data;
- *  checks for existing item to edit;
- *  checks for auto-saved item;
  */
   useEffect(() => {
 
     // check for route params
     if (params && params.length > 0) {
       if (params[0] == 'project' || params[0] == 'certification') {
+
         setItemType(params[0]);
-        if (newPortfolioItem) newPortfolioItem.type = params[0] === 'project' ? 'PROJ' : 'CERT';
+        if (newPortfolioItem.current) newPortfolioItem.current.type = params[0] === 'project' ? 'PROJ' : 'CERT';
+        else console.log('Could not update newPortfolioItem.type...');
 
         // if an edit params + itemId gets passed...
         if (params[1] && params[1] == 'edit') {
-          itemId = parseInt(searchParams.get(params[0] == 'project' ? 'proj' : 'cert'));
-          if (isNaN(itemId)) itemId = undefined;
-          actionType = params[1];
+          let tempItemId = parseInt(searchParams.get(params[0] == 'project' ? 'proj' : 'cert'));
+          if (isNaN(tempItemId)) setItemId(undefined);
+          else setItemId(tempItemId);
+          setActionType(params[1]);
         };
       }
     }
+
+    console.log('\n\n\n ======= NEW / REFRESHED PAGE LOADED =======  \n\n\n');
 
     (async () => {
       await loadPortfolio();
 
       if (!portfolio.current) console.log('Issue getting portfolio...');
-      else console.log('got portfolio!');
 
-      // Check if we are editing an existing item...
-      if (typeof itemId === 'number' && actionType === 'edit') {
-        let itemData = params[0] === 'project'
-          ? portfolio.current.projects.find((p: Project) => p.id === itemId)
-          : portfolio.current.certifications.find((c: Certification) => c.id === itemId);
-        if (itemData) {
-          setTitle(itemData.title);
-          setSlug(itemData.slug);
-          if (quillRef.current && (quillRef.current as any).root) {
-            (quillRef.current as any).root.innerHTML = itemData.body;
-          }
-          setTags(itemData.tags);
-          setImageURLs(itemData.thumbnails);
-          setRepoUrl(itemData.repoUrl);
-          if (params[0] === 'project') {
-            setLiveUrl(itemData.liveUrl);
-          } else if (params[0] === 'certification') {
-            setCertUrl(itemData.certUrl);
-            setCertDate(itemData.date);
-          }
-        }
-        setLoading(false);
-      }
-      else {
-
-      }
     })();
 
   }, [])
@@ -317,40 +515,17 @@ export default function PublishPortfolioItem() {
       (async () => {
         if (!portfolio.current) await loadPortfolio();
 
-        console.log('trying for count...');
         await getProjectCount();
 
         // check for auto-saved item...
         let localItem: string | null = sessionStorage.getItem(`autoSaved${itemType.toUpperCase()}`)
         if (localItem) {
           console.log('found auto-save...');
-          canAutoSave.current = false;
-
-          const loadAutoSave = async () => {
-            let autoSavedItem: Project = await JSON.parse(localItem);
-
-            setTimeout(() => {
-
-              setTitle(autoSavedItem.title);
-              setSlug(autoSavedItem.slug);
-              if (quillRef.current && (quillRef.current as any).root) {
-                (quillRef.current as any).root.innerHTML = autoSavedItem.body;
-              }
-              setTags(autoSavedItem.tags);
-              // ensure each thumbnail has the required 'name' property for the PhotoUpload ImageURL type
-              setImageURLs((autoSavedItem.thumbnails ?? []).map((t: any) => ({ ...t, name: t.name ?? 'image' })) as ImageURL[]);
-              setRepoUrl(autoSavedItem.repoUrl);
-              setLiveUrl(autoSavedItem.liveUrl);
+          // canAutoSave.current = false;
+          if (checkNonEmptyItem(await JSON.parse(localItem))) setCanLoadAutoSave(true);
 
 
-              setTimeout(() => { canAutoSave.current = true }, 1000);
-              console.log('LOADED auto-save...');
-
-            }, 750)
-
-          }
-          await loadAutoSave();
-
+          // if (canLoadAutoSave.current === true) await loadAutoSave(localItem);
         }
       })();
     }
@@ -360,6 +535,56 @@ export default function PublishPortfolioItem() {
     if (!loading && !params) router.push(`/dashboard/publish/${itemType}`)
 
   }, [itemType])
+
+  /*******  [actionType, itemId]
+   * 
+   */
+  useEffect(() => {
+
+    // Check if we are editing an existing item...
+    if (typeof itemId === 'number' && actionType === 'edit') {
+      let itemData = params[0] === 'project'
+        ? portfolio.current.projects.find((p: Project) => p.id === itemId)
+        : portfolio.current.certifications.find((c: Certification) => c.id === itemId);
+      if (itemData && checkNonEmptyItem(itemData)) {
+        console.log('Loading existing item for edit: ', itemData.id);
+        setCanLoadAutoSave(false);
+
+
+        if (itemData.title) setTitle(itemData.title);
+        if (itemData.slug) setSlug(itemData.slug);
+        if (quillRef.current && (quillRef.current as any).root && itemData.body !== undefined) {
+          (quillRef.current as any).root.innerHTML = itemData.body || '';
+        }
+        if (itemData.tags) setTags(itemData.tags);
+        if (itemData.thumbnails && itemData.thumbnails.length > 0) {
+          setImageURLs([...itemData.thumbnails]);
+          let tempImageFiles = itemData.thumbnails.map(img => {
+            img.status = 'success';
+            img.tries = null;
+            return img;
+          });
+          setImageFiles(tempImageFiles);
+        }
+        if (itemData.repoUrl) setRepoUrl(itemData.repoUrl);
+        if (params[0] === 'project' && itemData.liveUrl) {
+          setLiveUrl(itemData.liveUrl);
+        } else if (params[0] === 'certification') {
+          if (itemData.certUrl) setCertUrl(itemData.certUrl);
+          if (itemData.date) setCertDate(itemData.date);
+        }
+      }
+      canAutoSave.current = true;
+      autoSave();
+      setLoading(false);
+    }
+    else if (itemType !== undefined) {
+      // canLoadAutoSave.current = true;
+      // setCanLoadAutoSave(true);
+      canAutoSave.current = true;
+    }
+
+  }, [actionType, itemId])
 
 
   /*******  [title]
@@ -376,16 +601,34 @@ export default function PublishPortfolioItem() {
 
     setSlug(tempSlug);
 
-    if (itemTypeSlugs.current && itemTypeSlugs.current.includes(tempSlug)) {
-      setPubErrors((prevErr) => {
-        let newErr = { ...prevErr };
-        newErr.title = {
-          text: 'This title/slug already exists!',
-          warn: 'warn'
-        }
-        return newErr
-      })
+
+    // check to see if the tempSlug matches any existing slugs...
+    if (itemTypeSlugs.current && itemTypeSlugs.current.map(item => item.slug).includes(tempSlug)) {
+      let isConflict = true;
+
+      // then check to see if we're editing...
+      if (actionType === 'edit') {
+        // if so, compare itemId with slug Id to check if what tempSlug is matching is simply the existing portfolio item...
+        // filter the slug items down to only those where the item slug = tempSlug && item id = itemId
+        let match = itemTypeSlugs.current.filter(item => item.slug === tempSlug && item.id == itemId);
+
+        // if there is just one, perfect match, it's not a conflict
+        if (match.length == 1) isConflict = false;
+      }
+
+      // if it is a conflict, set the error msg...
+      if (isConflict) {
+        setPubErrors((prevErr) => {
+          let newErr = { ...prevErr };
+          newErr.title = {
+            text: 'This title, or resulting slug, already exists!',
+            warn: 'warn'
+          }
+          return newErr
+        })
+      }
     }
+    // else, blank/null out the error msg
     else {
       setPubErrors((prevErr) => {
         let newErr = { ...prevErr };
@@ -393,9 +636,6 @@ export default function PublishPortfolioItem() {
         return newErr
       })
     }
-
-    console.log(itemTypeSlugs.current);
-    console.log(tempSlug);
 
   }, [title])
 
@@ -408,6 +648,33 @@ export default function PublishPortfolioItem() {
    *  if so, fires validateForm() to send the JSON data to the DB
    */
   useEffect(() => {
+
+
+
+    let tempImageFiles = [];
+    for (let file of imageFiles) {
+
+      // ---> TRY THIS --> https://stackoverflow.com/questions/19119040/how-do-i-save-and-restore-a-file-object-in-local-storage
+      //  BLobs are not directly serializable, so we need to convert them to base64 strings or use FileReader to read their contents.
+
+      tempImageFiles.push({
+        name: file.name,
+        status: file.status || null,
+        blob: file.blob || '',
+        isBlob: file.isBlob || false,
+        caption: file.caption || '',
+        isStarred: file.starred || false,
+      });
+    }
+    console.log('updated tempImageFiles: ', tempImageFiles);
+    newPortfolioItem.current.tempImageFiles = [...tempImageFiles];
+
+    if (imageFiles && imageFiles.length > 0 && canAutoSave.current && checkNonEmptyItem(newPortfolioItem.current) && typeof (Storage) !== "undefined") {
+      autoSave();
+      setCanLoadAutoSave(false);
+    }
+
+
 
     if (isPublishingRef.current) {
       //  are any of them marked as 'uploading'?
@@ -434,35 +701,29 @@ export default function PublishPortfolioItem() {
 
   useEffect(() => {
 
-    if (canAutoSave.current && typeof (Storage) !== "undefined") {
-
-      // don't auto-save an empty form...
-      if (newPortfolioItem.title
-        || (newPortfolioItem.body && newPortfolioItem.body !== '<p><br></p>')
-        || newPortfolioItem.tags.length > 0
-        || newPortfolioItem.thumbnails.length > 0
-        || newPortfolioItem.repoUrl
-        || newPortfolioItem.liveUrl
-        || newPortfolioItem.certUrl
-        || newPortfolioItem.date
-      ) {
-        canAutoSave.current = false;
-        clearTimeout(delayedSave.current);
-
-        setTimeout(() => {
-          sessionStorage.setItem(`autoSaved${itemType.toUpperCase()}`, JSON.stringify(newPortfolioItem));
-          console.log('auto-saving...');
-          canAutoSave.current = true;
-        }, 2000);
-
-        delayedSave.current = setTimeout(() => {
-          console.log('delayed auto-saving...');
-          sessionStorage.setItem(`autoSaved${itemType.toUpperCase()}`, JSON.stringify(newPortfolioItem));
-        }, 4500);
-      }
+    newPortfolioItem.current = {
+      ...newPortfolioItem.current,
+      type: itemType === 'project' ? 'PROJ' : 'CERT',
+      id: itemTypeCount.current || null,
+      title: title,
+      slug: slug,
+      body: content,
+      tags: tags,
+      thumbnails: imageURLs,
+      // tempImageFiles: imageFiles, --  handled in separate useEffect
+      repoUrl: repoUrl,
+      liveUrl: liveUrl,
+      certUrl: certUrl,
+      date: certDate,
     }
 
-  }, [title, content, tags, imageURLs, imageFiles, repoUrl, liveUrl, certUrl, certDate]);
+    if (canAutoSave.current && checkNonEmptyItem(newPortfolioItem.current) && typeof (Storage) !== "undefined") {
+      autoSave();
+      setCanLoadAutoSave(false);
+    }
+
+
+  }, [itemType, title, content, tags, imageURLs, repoUrl, liveUrl, certUrl, certDate]);
 
 
 
@@ -497,7 +758,8 @@ export default function PublishPortfolioItem() {
 
     const postNewProject = async () => {
       // send the newPortfolioItem object to the 'api/portfolio' api with a POST call in a try/catch block
-      console.log('Posting project:', newPortfolioItem);
+      console.log('Posting project:', newPortfolioItem.current);
+
       try {
         const response = await fetch('../../api/portfolio', {
           method: 'POST',
@@ -505,7 +767,7 @@ export default function PublishPortfolioItem() {
             'Content-Type': 'application/json',
             'Action-Type': actionType
           },
-          body: JSON.stringify(newPortfolioItem),
+          body: JSON.stringify(newPortfolioItem.current),
         });
 
         const data = await response.json();
@@ -514,8 +776,8 @@ export default function PublishPortfolioItem() {
         if (data.error && data.error === 'Unauthorized') {
           // user is logged in, but not an admin
           // flag the portfolio item as a demo
-          newPortfolioItem.isDemo = true;
-          console.log('Flagging project as demo:', newPortfolioItem);
+          newPortfolioItem.current.isDemo = true;
+          console.log('Flagging project as demo:', newPortfolioItem.current);
         }
         else if (!response.ok) {
           throw new Error(`${data}`);
@@ -529,11 +791,14 @@ export default function PublishPortfolioItem() {
         isPublishingRef.current = false;
 
         // update the portfolio...
-        if (actionType === 'add') portfolio.current.projects.push(newPortfolioItem);
+        if (actionType === 'add') {
+          if (itemType === 'project') portfolio.current.projects.push(newPortfolioItem.current);
+          else if (itemType === 'certification') portfolio.current.certifications.push(newPortfolioItem.current);
+        }
         else if (actionType === 'edit') {
-          const index = portfolio.current.projects.findIndex((proj) => proj.id === newPortfolioItem.id);
+          const index = portfolio.current.projects.findIndex((proj) => proj.id === newPortfolioItem.current.id);
           if (index !== -1) {
-            portfolio.current.projects[index] = newPortfolioItem;
+            portfolio.current.projects[index] = newPortfolioItem.current;
           }
         }
         await localStorage.setItem('portfolio', JSON.stringify(portfolio.current));
@@ -594,7 +859,7 @@ export default function PublishPortfolioItem() {
       isPublishingRef.current = false;
     }
     //  check for duplicate title/slug...
-    else if (itemTypeSlugs.current && itemTypeSlugs.current.includes(slug)) {
+    else if (itemTypeSlugs.current && itemTypeSlugs.current.map(item => item.slug).includes(slug)) {
       let msg = 'Title or slug already exists.'
       tempErrors.title = { text: msg, warn: '' };
 
@@ -676,7 +941,7 @@ export default function PublishPortfolioItem() {
     }
 
     // have we been here before and they're choosing to proceed? Okie-dokie!
-    else if (publishingChecks.current.images == 'proceed')  tempErrors.thumbnails = null;
+    else if (publishingChecks.current.images == 'proceed') tempErrors.thumbnails = null;
 
     else {
       let filesWithErrors = imageFiles.filter((file) => file.status == 'error');
@@ -705,12 +970,12 @@ export default function PublishPortfolioItem() {
       publishingChecks.current['repoUrl'] = '';
     }
 
-    
+
     // if we're publishing a 'PROJ'...
     /**
      *  CHECK LIVE SITE URL
      */
-    
+
     if (itemType === 'project') {
       //  check live site URL...
       if (!liveUrl && publishingChecks.current.liveUrl !== 'proceed') {
@@ -809,6 +1074,9 @@ export default function PublishPortfolioItem() {
 
             <h1>{actionType == 'edit' ? 'Edit' : 'Add New'} {itemType == 'project' ? 'Portfolio Project' : 'Certification'}</h1>
 
+            {canLoadAutoSave && <button className="load-auto-save" onClick={loadAutoSave}>Load Auto-Save?</button>}
+            {!canLoadAutoSave && checkNonEmptyItem(newPortfolioItem.current) && <button className="clear-publish-form" onClick={clearForm}>Clear Form</button>}
+
             <form id="add-item-form">
 
               {/* <!-- This hidden button prevents implicit submission --> */}
@@ -833,12 +1101,12 @@ export default function PublishPortfolioItem() {
               </h3>
               <QuillRichText ref={quillRef} setRichTextContent={setContent} />
 
-              <h3 className={'item-tags ' + `${(tags.length > 0) && 'show' }`}>Tags:
+              <h3 className={'item-tags ' + `${(tags.length > 0) && 'show'}`}>Tags:
                 {pubErrors.tags && <span className={`error-msg ${pubErrors.tags.warn}`}> {pubErrors.tags.text}</span>}
               </h3>
               <TagsInput tags={tags} setTags={setTags} />
 
-              <h3 className={'item-images ' + `${(imageFiles.length > 0) && 'show'}`}>Images:
+              <h3 className={'item-images ' + `${((imageFiles.length > 0) || (pubErrors.thumbnails)) && 'show'}`}>Images:
                 {pubErrors.thumbnails && <span className={`error-msg ${pubErrors.thumbnails.warn}`}> {pubErrors.thumbnails.text}</span>}
               </h3>
               <PhotoUpload {...photoUploadProps} />

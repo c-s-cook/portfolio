@@ -19,6 +19,7 @@ export interface ImageURL {
 export interface UploadFile extends File {
     status: null | "uploading" | "success" | "error" | "removed";
     tries: null | number;
+    blob?: string;
     starred?: boolean;
     caption?: string;
     isBlob?: boolean;
@@ -216,9 +217,13 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     const removeImage = async (index) => {
         let newImageFiles = [...imageFiles];
 
+        // clear the blob URL from memory...
+        if (newImageFiles[index].blob) URL.revokeObjectURL(newImageFiles[index].blob);
+
         // handle removal of files that have already been uploaded...
         if (uploadAPI && newImageFiles[index].status == 'success') {
             newImageFiles[index].status = 'removed';
+
             for (let u = 0; u < imageURLs.length; u++) {
                 if (imageURLs[u].name == newImageFiles[index].name || imageURLs[u].ogName == newImageFiles[index].name) {
                     setImageURLs((prevImageURLs) => {
@@ -279,7 +284,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
             if (tempImageFiles) {
 
                 // display the image preview area
-                document.getElementById("image-preview-area").style.display = "flex";
+                // document.getElementById("image-preview-area").style.display = "flex";
 
                 // const imageFileErrors = document.getElementById("image-file-errors");
 
@@ -307,6 +312,10 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                         setErrorMessage(`Only .jpg or .png files allows. ${tempImageFiles[f].name} not added.`);
                     }
                     else {
+                        tempImageFiles[f].blob = URL.createObjectURL(tempImageFiles[f]);
+                        tempImageFiles[f].status = null;
+                        tempImageFiles[f].tries = null;
+
 
                         tempArray.push(tempImageFiles[f]);
                     }
@@ -325,6 +334,8 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
         // check if image already has a caption
         if (imageFiles.length > 0 && addingCaption !== null) {
+
+            console.log('addingCaption = ', addingCaption);
 
             if (imageFiles[addingCaption].caption || (imageURLs.length > 0 && imageURLs[addingCaption].caption)) {
 
@@ -446,6 +457,69 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // a regex for replacing ' - ' with '_'...
 
 
+        // check if we're working with a blob URL from an auto-save...
+        if (imageFile.blob && imageFile.status !== 'success') {
+            // make a copy of the blob for uploading
+            console.log('working with a blob here on upload....', imageFile.type, imageFile.blob);
+
+            const bibityBlobityBo = async () => {
+                let img = new Image();
+                img.src = imageFile.blob;
+                img.onload = async () => {
+                    console.log('loaded img: ', img);
+
+                    let imageFileBlob;
+
+                    let canvas = document.createElement('canvas');
+                    canvas.width = (img.naturalWidth || img.width);
+                    canvas.height = (img.naturalHeight || img.height);
+                    const ctx = canvas.getContext('2d');
+                    if (ctx) ctx.drawImage(img, 0, 0);
+
+                    const blob = await new Promise<Blob | null>((resolve) =>
+                        canvas.toBlob(resolve, "image/jpeg", 0.8)
+                    );
+
+                    if (blob) {
+                        console.log('made a new Blob? - ', blob);
+                        imageFileBlob = await new File([blob], imageFile.name, { type: imageFile.type });
+                        console.log('made a new File blob? - ', imageFileBlob);
+                    }
+
+                    canvas.remove();
+
+
+
+                    console.log('but...did I make a new File blob? - ', imageFileBlob);
+
+
+                    if (!imageFileBlob) {
+                        console.error('Failed to create imageFileBlob');
+                        throw new Error('Failed to create imageFileBlob');
+                    }
+
+                    //  append extra UploadFile props
+                    imageFileBlob.status = imageFile.status;
+                    imageFileBlob.tries = imageFile.tries;
+                    if (imageFile.starred) imageFileBlob.starred = imageFile.starred;
+                    if (imageFile.caption) imageFileBlob.caption = imageFile.caption;
+                    imageFileBlob.isBlob = true;
+                    imageFileBlob.blob = imageFile.blob;
+
+                    console.log("Created blob file for upload:", imageFileBlob);
+
+                    // replace the original imageFile with the new blob
+                    if (imageFileBlob.size && imageFileBlob.size > 0) {
+                        imageFile = imageFileBlob;
+                    }
+                }
+            }
+            await bibityBlobityBo();
+
+
+
+
+        }
 
 
         // clean spaces out of the filename...
@@ -505,8 +579,12 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                 } else if (data.URL) {
                     // check for 'blob' flag to use local blob
                     if (data.URL == 'blob') {
+                        if (imageFile.blob && typeof imageFile.blob == 'string' && imageFile.blob.includes('blob:http')) {
+                            imageURL.url = imageFile.blob;
+                        } else {
+                            imageURL.url = URL.createObjectURL(imageFile);
+                        }
 
-                        imageURL.url = URL.createObjectURL(imageFile);
                         console.log(`Using local blob URL for file #${f}:`, imageURL.url);
                         imageFile.isBlob = true;
                     } else {
@@ -597,7 +675,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
         /**
         *  check to see if imageUrls is longer than imageFiles (like from a loaded Auto-Save)...
-        */ 
+        */
         if (imageURLs.length > imageFiles.length) {
 
             // display the image preview area
@@ -745,67 +823,71 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                 />
 
 
-                <div id="image-preview-area" style={{ display: 'none' }}>
+                {imageFiles.length > 0 &&
+                    <div id="image-preview-area">
 
 
-                    {(addingCaption !== null) && <div id="add-photo-caption">
-                        <label htmlFor="photo-caption">Photo Caption:</label>
-                        <textarea
-                            // type="textarea" 
-                            name="photo-caption"
-                            id="photo-caption"
-                            value={photoCaption}
-                            onChange={(e) => setPhotoCaption(e.target.value)}
-                            placeholder="Add caption here"
-                        />
-                        <button onClick={attachCaption}>Set Caption</button>
-                    </div>}
+                        {(addingCaption !== null) && <div id="add-photo-caption">
+                            <label htmlFor="photo-caption">Photo Caption:</label>
+                            <textarea
+                                // type="textarea" 
+                                name="photo-caption"
+                                id="photo-caption"
+                                value={photoCaption}
+                                onChange={(e) => setPhotoCaption(e.target.value)}
+                                placeholder="Add caption here"
+                            />
+                            <button onClick={attachCaption}>Set Caption</button>
+                        </div>}
 
-                    {imageFiles.map((file, index) => {
+                        {imageFiles.map((file, index) => {
 
-                        let imgSrc, status, starred, captioned;
+                            let imgSrc, status, starred, captioned;
 
-                        // check if the file has been uploaded...
-                        if (file.status === 'success') {
-                            imgSrc = imageURLs[index].url;
+                            // check if the file has been uploaded...
+                            if (file.status === 'success') {
+                                imgSrc = imageURLs[index].url;
 
-                            status = 'success';
-                            starred = imageURLs[index].starred ? 'is-starred' : '';
-                            captioned = imageURLs[index].caption ? 'is-captioned' : '';
-                        }
+                                status = 'success';
+                                starred = imageURLs[index].starred ? 'is-starred' : '';
+                                captioned = imageURLs[index].caption ? 'is-captioned' : '';
+                            }
 
-                        // validate that the file variable is of type Blob
-                        else if ((file instanceof Blob) && file.type !== 'text/plain') {
-                            imgSrc = URL.createObjectURL(file);
+                            // validate that the file variable is of type Blob
+                            else if (((file instanceof Blob) && file.type !== 'text/plain') || file.blob) {
+                                if (file.blob) console.log('using existing blob URL for preview: ', file.blob, '...');
+                                imgSrc = file.blob;
 
-                            status = file.status ? file.status : 'remove';
-                            starred = file.starred ? 'is-starred' : '';
-                            captioned = file.caption ? 'is-captioned' : '';
-                        }
-                        else {
-                            console.error(`File at index ${index} is not a valid Blob. Skipping rendering.`);
-                            return null;
-                        }
+                                status = file.status ? file.status : 'remove';
+                                starred = file.starred ? 'is-starred' : '';
+                                captioned = file.caption ? 'is-captioned' : '';
+                            }
+                            else {
+                                console.error(`File at index ${index} is not a valid Blob. Skipping rendering.`);
+                                return null;
+                            }
 
 
 
-                        return (
-                            <div className={`img-container ${file.isBlob ? 'is-blob' : ''}`} key={"img-container-" + index}>
-                                <img
-                                    src={imgSrc}
-                                    key={"img" + index}
-                                    alt="preview"
-                                    className="img-preview"
-                                />
-                                {addStar && <div className={`icon star ${starred}`} key={`star-${index}`} onClick={() => starImage(index)}></div>}
-                                <div className={`icon img-${status}`} key={`remove-${index}`} onClick={() => removeImage(index)}></div>
-                                {addCaptions && <div className={`icon caption ${captioned}`} key={`caption-${index}`} onClick={() => setAddingCaption(index)}></div>}
-                                {(addCaptions || addStar) && <div className="overlay" key={`overlay-${index}`}></div>}
+                            return (
+                                <div className={`img-container ${file.isBlob ? 'is-blob' : ''}`} key={"img-container-" + index}>
+                                    <img
+                                        src={imgSrc}
+                                        key={"img" + index}
+                                        alt="preview"
+                                        className="img-preview"
+                                    />
+                                    {addStar && <div className={`icon star ${starred}`} key={`star-${index}`} onClick={() => starImage(index)}></div>}
+                                    <div className={`icon img-${status}`} key={`remove-${index}`} onClick={() => removeImage(index)}></div>
+                                    {addCaptions && <div className={`icon caption ${captioned}`} key={`caption-${index}`} onClick={() => setAddingCaption(index)}></div>}
+                                    {(addCaptions || addStar) && <div className="overlay" key={`overlay-${index}`}></div>}
 
-                            </div>
-                        );
-                    })}
-                </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                }
+
 
             </div>
         </>

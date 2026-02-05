@@ -110,8 +110,6 @@ const QuillRichText = forwardRef(
 
     useEffect(() => {
       let moreBtn = document.querySelector('.ql-toolbar span.ql-formats:has(button.ql-More)') as HTMLElement;
-      
-      console.log('this was effective...');
 
       if (moreBtn) {
         moreBtn.style.color = "orange";

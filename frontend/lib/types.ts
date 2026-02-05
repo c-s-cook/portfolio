@@ -2,6 +2,7 @@
 // 
 //  for Auth processes APIs
 
+import { UploadFile } from "@components/AddItems/PhotoUpload";
 import { SetStateAction } from "react";
 
 // 
@@ -24,6 +25,7 @@ export interface PortfolioItem {
     thumbnails: ImageURL[],
     repoUrl?: string,
     isDemo?: boolean
+    tempImageFiles?: UploadFile[],
 }
 
 export interface ImageURL {

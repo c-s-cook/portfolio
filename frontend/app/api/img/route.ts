@@ -40,6 +40,8 @@ export async function POST(req: NextRequest) {
         // assume non-admin user is using DEMO MODE
         // send back a note to use BLOB URL for local use
 
+        console.log("DEMO MODE - sending BLOB URL...");
+
         return new Response(JSON.stringify({
             success: 'Image should be BLOBBED for local use!',
             URL: 'blob'
