@@ -688,9 +688,9 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                     const tempFile = new File(["lie...but we shouldn't ever access this"], filename, {
                         type: "text/plain",
                     });
-                    tempFile.status = 'success';
-                    tempFile.tries = 1;
-                    imageFiles[i] = tempFile;
+                    (tempFile as UploadFile).status = 'success';
+                    (tempFile as UploadFile).tries = 1;
+                    imageFiles[i] = tempFile as UploadFile;
                 }
                 else if (filename !== imageFiles[i].name) {
                     console.log(`Possible mismatch: imageURLs[${i}]: ${filename}  |  imageFiles[${i}]: ${imageFiles[i].name}`)

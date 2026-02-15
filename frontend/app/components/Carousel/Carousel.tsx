@@ -22,7 +22,7 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
     const lastTouchRef = useRef<{ x: number; t: number } | null>(null);
     const lastTapRef = useRef<number>(0);
     const autoplayRef = useRef<number | null>(null);
-    const unpauseRef = useRef<number | null>(null);
+    const unpauseRef = useRef<any>(null);
 
     const isMobile = typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false;
 

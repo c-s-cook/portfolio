@@ -4,7 +4,7 @@ import { jwtVerify } from 'jose'
 
 
 // JWT/admin validation
-async function isValidJWT(token: string | undefined): JSON {
+async function isValidJWT(token: string | undefined): Promise<any> {
 
     var payload;
     try {

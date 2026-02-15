@@ -6,7 +6,7 @@ const getUrl = process.env.PORTFOLIO_GET_URL!;
 const postUrl = process.env.PORTFOLIO_POST_URL!;
 
 // JWT/admin validation
-async function isValidJWT(token: string | undefined): boolean {
+async function isValidJWT(token: string | undefined): Promise<boolean> {
 
     var payload;
     try {

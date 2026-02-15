@@ -1,6 +1,6 @@
 // 'use server'
 
-import type { NextApiRequest } from 'next'
+import type { NextApiRequest } from 'next'    // << TO ADDRESS for type hinting only - NextApiRequest is not actually used in the function signature because this is a Next 13 route handler, not an API route
 import { cookies } from 'next/headers'
 import mongoose from 'mongoose'
 import 'dotenv/config'

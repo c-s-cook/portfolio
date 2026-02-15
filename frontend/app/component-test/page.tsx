@@ -27,7 +27,7 @@ const ComponentTest = () => {
 
 
     // Use a ref to access the quill instance directly
-    const quillRef = useRef();
+    const quillRef = useRef<any>(null);
 
 
 
@@ -51,6 +51,7 @@ const ComponentTest = () => {
                 uploadAPI: '../api/img',
                 imageURLs: imageURLs,
                 setImageURLs: setImageURLs,
+                startUpload: false,
                 renameTo: 'test-11-10-25',
                 maxRetries: 3,
                 delay: 10,

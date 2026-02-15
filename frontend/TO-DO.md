@@ -1,6 +1,7 @@
 FRONTEND:
  - Custom 404 page
  - Add timed redirect to 404, Content Error, & Content Not Found page
+ - DASHBOARD:  Switch view/Edit icons & links
  - X  -  Login page 'Success' msg before redirect
  - X  -  LogOut button to Navbar
  - X  -  "Guest Mode" banner
@@ -25,4 +26,4 @@ BACKEND:
 - WS
 - Chat
 - Weather
-- 
+- Mongoose DB -- 'useNewUrlParser" -- remove
