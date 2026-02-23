@@ -46,7 +46,7 @@ import PhotoUpload from '@components/AddItems/PhotoUpload';
 import type { PhotoUploadProps, ImageURL, UploadFile } from '@components/AddItems/PhotoUpload';
 
 import getPortfolio from '@lib/getPortfolio';
-import type { Certification, Project, PublishingErrors } from '@lib/types';
+import type { Certification, Project, PublishingErrors, Slug } from '@lib/types';
 import { clear } from 'console';
 // import { Certificate } from 'crypto';
 // import { set } from 'mongoose';
@@ -83,7 +83,8 @@ export default function PublishPortfolioItem() {
   const [errorText, setErrorText] = useState('');
 
   // routing & search params
-  const [itemType, setItemType] = params && params[0] ? useState<string | undefined>(params[0]) : useState<string | undefined>(undefined);
+  let tempType = params && params[0] ? params[0] : undefined;
+  const [itemType, setItemType] = useState<string | undefined>(tempType);
   const [actionType, setActionType] = useState<string | undefined>('add');
   const [itemId, setItemId] = useState<number | undefined>(undefined);
   // let itemId: number | undefined = undefined;
@@ -115,7 +116,7 @@ export default function PublishPortfolioItem() {
 
   let itemTypeCount = useRef<number>(0);
   let portfolio = useRef<any | null>(null);
-  let itemTypeSlugs = useRef<object[]>([]);
+  let itemTypeSlugs = useRef<Slug[]>([]);
 
   // Use a ref to access the quill instance directly
   const quillRef = useRef<any>(null);
@@ -242,9 +243,9 @@ export default function PublishPortfolioItem() {
       || item.thumbnails.length > 0
       || item.tempImageFiles.length > 0
       || item.repoUrl
-      || item.liveUrl
-      || item.certUrl
-      || item.date
+      || (item.type === 'PROJ' && (item as Project).liveUrl)
+      || (item.type === 'CERT' && (item as Certification).certUrl)
+      || (item.type === 'CERT' && (item as Certification).date)
     ) {
       if (item.thumbnails.length > 0) console.log('non-empty item = ', item);
       return true
@@ -307,9 +308,9 @@ export default function PublishPortfolioItem() {
     }
     if (autoSavedItem.tags && autoSavedItem.tags.length > 0) setTags(autoSavedItem.tags);
     if (autoSavedItem.repoUrl) setRepoUrl(autoSavedItem.repoUrl);
-    if (autoSavedItem.liveUrl) setLiveUrl(autoSavedItem.liveUrl);
-    if (autoSavedItem.date) setCertDate(autoSavedItem.date);
-    if (autoSavedItem.certUrl) setCertUrl(autoSavedItem.certUrl);
+    if ((autoSavedItem as Project).liveUrl) setLiveUrl((autoSavedItem as Project).liveUrl);
+    if ((autoSavedItem as Certification).date) setCertDate((autoSavedItem as Certification).date);
+    if ((autoSavedItem as Certification).certUrl) setCertUrl((autoSavedItem as Certification).certUrl);
 
     // handle thumbnails + tempImageFiles... :S
     let convertedURLsToFiles: UploadFile[] = [];
@@ -319,7 +320,7 @@ export default function PublishPortfolioItem() {
       // ensure each thumbnail has the required 'name' property for the PhotoUpload ImageURL type
       setImageURLs((autoSavedItem.thumbnails ?? []).map((t: any) => ({ ...t, name: t.name ?? 'image' })) as ImageURL[]);
 
-      // convert thumbnail URLs to UploadFile objects
+      // @ts-ignore convert thumbnail URLs to UploadFile objects
       convertedURLsToFiles = autoSavedItem.thumbnails.map((img: UploadFile) => {
         img.status = 'success';
         img.tries = null;

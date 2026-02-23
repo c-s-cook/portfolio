@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import type { ImageURL } from "../../../lib/types";
+import NextImage from "next/image";
 import "./Carousel.css";
 import { createPortal } from "react-dom";
 
@@ -207,7 +208,13 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                                     if (!isMobile) openLightboxAt(i);
                                 }}
                             >
-                                <img src={src} alt={img.caption ?? img.name ?? `Image ${i + 1}`} className="carousel-image" />
+                                <NextImage
+                                    src={src} alt={img.caption ?? img.name ?? `Image ${i + 1}`}
+                                    className="carousel-image"
+                                    width={600}
+                                    height={600}
+                                    sizes="(max-width: 768px) 300px, 600px"
+                                />
                             </div>
                         );
                     })}
@@ -258,7 +265,14 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                             <button className="lightbox-close" aria-label="Close" onClick={() => setLightboxOpen(false)}>&times;</button>
                             <button className="lightbox-arrow left" aria-label="Previous" onClick={() => setLightboxIndex((s) => (s - 1 + count) % count)}>&#10094;</button>
                             <div className="lightbox-image-wrap">
-                                <img src={images[lightboxIndex]?.url ?? ""} alt={images[lightboxIndex]?.caption ?? images[lightboxIndex]?.name ?? ""} className="lightbox-image" />
+                                <NextImage 
+                                    src={images[lightboxIndex]?.url ?? ""} 
+                                    alt={images[lightboxIndex]?.caption ?? images[lightboxIndex]?.name ?? ""} 
+                                    className="lightbox-image" 
+                                    width={900}
+                                    height={900}
+                                    sizes="(max-width: 768px) 300px, 900px"
+                                />
                             </div>
                             <button className="lightbox-arrow right" aria-label="Next" onClick={() => setLightboxIndex((s) => (s + 1) % count)}>&#10095;</button>
 
@@ -275,7 +289,13 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                                         onClick={() => setLightboxIndex(i)}
                                         aria-label={`Open image ${i + 1}`}
                                     >
-                                        <img src={img.url ?? ""} alt={img.name ?? ""} />
+                                        <NextImage 
+                                            src={img.url ?? ""} 
+                                            alt={img.name ?? ""}
+                                            width={100}
+                                            height={100}
+                                            sizes="(max-width: 768px) 100px, 200px"
+                                        />
                                     </button>
                                 ))}
                             </div>

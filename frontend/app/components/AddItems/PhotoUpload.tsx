@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
+import NextImage from "next/image";
 import findKey from "../../../lib/findKey"
 
 import './PhotoUpload.css'
@@ -241,18 +242,6 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     }
 
 
-    /**
-     *  timer for error msg fade-out
-     */
-    var errorFadeTimer;
-    const errorFadeCountdown = async () => {
-        errorFadeTimer = setTimeout(() => {
-            document.getElementById('image-file-errors').classList.remove('fade-in');
-            document.getElementById('image-file-errors').classList.add('fade-out');
-        }, 500)
-    }
-
-
 
 
 
@@ -265,7 +254,15 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
             document.getElementById('image-file-errors').classList.remove('fade-out');
             document.getElementById('image-file-errors').classList.add('fade-in');
-            errorFadeCountdown();
+            
+            // Move errorFadeCountdown inside useEffect
+            const errorFadeTimer = setTimeout(() => {
+                document.getElementById('image-file-errors').classList.remove('fade-in');
+                document.getElementById('image-file-errors').classList.add('fade-out');
+            }, 500);
+
+            // Cleanup timer on unmount or next effect run
+            return () => clearTimeout(errorFadeTimer);
 
         }
     }, [errorMessage])
@@ -335,7 +332,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // check if image already has a caption
         if (imageFiles.length > 0 && addingCaption !== null) {
 
-            console.log('addingCaption = ', addingCaption);
+            // console.log('addingCaption = ', addingCaption);
 
             if (imageFiles[addingCaption].caption || (imageURLs.length > 0 && imageURLs[addingCaption].caption)) {
 
@@ -667,7 +664,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
             // listen for Input field focus-loss
             document.getElementById('filefield').addEventListener('focusout', () => {
-                console.log('input lost focus...starting countdown...')
+                // console.log('input lost focus...starting countdown...')
                 clearTimeout(uploadTimer);
                 uploadCountdown;
             });
@@ -679,7 +676,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         if (imageURLs.length > imageFiles.length) {
 
             // display the image preview area
-            document.getElementById("image-preview-area").style.display = "flex";
+            document.getElementById("image-preview-area").style.display = "flex"; // TO-DO:  Switch to useState 
 
             for (let i = 0; i < imageURLs.length; i++) {
                 let filename = imageURLs[i].ogName || imageURLs[i].name;
@@ -871,11 +868,15 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
                             return (
                                 <div className={`img-container ${file.isBlob ? 'is-blob' : ''}`} key={"img-container-" + index}>
-                                    <img
+                                    <NextImage
                                         src={imgSrc}
-                                        key={"img" + index}
+                                        // key={"img" + index}
                                         alt="preview"
                                         className="img-preview"
+                                        width={300}
+                                        height={300}
+                                        sizes="(max-width: 768px) 200px, 300px"
+
                                     />
                                     {addStar && <div className={`icon star ${starred}`} key={`star-${index}`} onClick={() => starImage(index)}></div>}
                                     <div className={`icon img-${status}`} key={`remove-${index}`} onClick={() => removeImage(index)}></div>

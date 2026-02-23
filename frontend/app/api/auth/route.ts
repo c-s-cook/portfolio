@@ -1,6 +1,6 @@
 // 'use server'
 
-import type { NextApiRequest } from 'next'    // << TO ADDRESS for type hinting only - NextApiRequest is not actually used in the function signature because this is a Next 13 route handler, not an API route
+import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import mongoose from 'mongoose'
 import 'dotenv/config'
@@ -48,13 +48,14 @@ const handleErrors = (err) => {
   }
 
   // validate errors
-  if (err.message.includes('user validation failed')) {
-    Object.values(err.errors).forEach(({ properties }) => {
-      // console.log(properties);
-      errors[properties.path] = properties.message;
-    });
-
-  }
+    if (err.message.includes('user validation failed')) {
+      (Object.values(err.errors) as any[]).forEach((error: any) => {
+        // console.log(error.properties);
+        const properties = error.properties;
+        errors[properties.path] = properties.message;
+      });
+  
+    }
   // catch all else
   console.log("got sent this error: ", err)
   return errors;
@@ -103,7 +104,7 @@ const returnResponse = (statusCode: number = 400, payload: Object, headers?: JSO
 const isSignup = async (email: string, password: string) => {
   try {
     const user = await User.create({ email, password });
-    const verificationLink = `http://localhost:3000/verification/${user.id}/${user.verificationToken}`;
+    const verificationLink = `http://localhost:3000/verification/${user._id}/${user.verificationToken}`;
 
     sendMail({
       to: `${email}`,
@@ -145,24 +146,25 @@ const isLogin = async (email: string, password: string) => {
       _id: user._id,
       email: email,
       // admin: process.env.ENVIRONMENT == 'DEV' ? true : false
+      admin: user.admin || false
     }
     if (user.admin) jwtUserInfo['admin'] = user.admin;
 
     const token = await createToken(jwtUserInfo);
-    cookies().set({
+    (await cookies()).set({
       name: 'jwt',
       value: token,
       maxAge: maxAge * 1000,
       sameSite: 'strict',
       secure: true,
       httpOnly: true
-    })
+    });
 
-    cookies().set({
+    (await cookies()).set({
       name: 'user',
       value: JSON.stringify({
         email: email.split('@')[0],
-        admin: jwtUserInfo.admin
+        admin: jwtUserInfo.admin || false,
       }),
       maxAge: maxAge * 1000,
       sameSite: 'strict',
@@ -186,11 +188,12 @@ const isLogin = async (email: string, password: string) => {
 //  LOG-OUT
 // 
 const isLogout = async () => {
-  const message = cookies().has('jwt') ? "You've successfully logged out." : "You aren't logged in."
+  const cookieStore = await cookies();
+  const message = cookieStore.has('jwt') ? "You've successfully logged out." : "You aren't logged in.";
 
-  cookies().delete('jwt')
-  cookies().delete('authPost')
-  cookies().delete('user')
+  cookieStore.delete('jwt');
+  cookieStore.delete('authPost');
+  cookieStore.delete('user');
 
   return returnResponse(200, { message: message })
 }
@@ -210,20 +213,21 @@ const isVerify = async (userId: string, verificationToken: string) => {
       _id: user._id,
       email: user.email,
       // admin: process.env.ENVIRONMENT == 'DEV' ? true : false
+      admin: user.admin || false
     }
     if (user.admin) jwtUserInfo['admin'] = user.admin;
 
     const token = await createToken(jwtUserInfo);
-    cookies().set({
+    (await cookies()).set({
       name: 'jwt',
       value: token,
       maxAge: maxAge * 1000,
       sameSite: 'strict',
       secure: true,
       httpOnly: true
-    })
+    });
 
-    cookies().set({
+    (await cookies()).set({
       name: 'user',
       value: JSON.stringify({
         email: user.email.split('@')[0],
@@ -233,7 +237,7 @@ const isVerify = async (userId: string, verificationToken: string) => {
       sameSite: 'strict',
       secure: true,
       httpOnly: false
-    })
+    });
 
     return returnResponse(201, { message: 'Successfully verified.', user: user._id });
 
@@ -358,7 +362,8 @@ const isReset = async (userId: string, password: string, resetToken: string, res
 // 
 const authTest = async () => {
 
-  const token = cookies().get('jwt')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('jwt')?.value;
   if (token) {
 
   }
@@ -377,13 +382,14 @@ const authTest = async () => {
 // 
 // basic GET response - just testing for now
 // 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
 
   const message = "Whatcha trying to do here, huh?"
 
-  cookies().delete('jwt')
-  cookies().delete('authPost')
-  cookies().delete('user')
+  const cookieStore = await cookies();
+  cookieStore.delete('jwt')
+  cookieStore.delete('authPost')
+  cookieStore.delete('user')
 
   return returnResponse(400, { message: message })
 }
@@ -395,12 +401,12 @@ export async function GET(req: NextApiRequest) {
  * 
  * Primary API endpoint for authentication via /login, /signup, /logout, and /[verification]
  * 
- * @param   { NextApiRequest }  req   req body must contain an .authType property of type:AuthType
+ * @param   { NextRequest }  req   req body must contain an .authType property of type:AuthType
  * @returns { Response }
  */
 
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
 
   const body = await req.json()
 
@@ -409,9 +415,10 @@ export async function POST(req: NextApiRequest) {
 
 
   // delete old versions of cookies
-  cookies().delete('jwt')
-  cookies().delete('authPost')
-  cookies().delete('user')
+  const cookieStore = await cookies();
+  cookieStore.delete('jwt')
+  cookieStore.delete('authPost')
+  cookieStore.delete('user')
 
 
   // confirm that req comes from one of the specific pages
@@ -420,9 +427,12 @@ export async function POST(req: NextApiRequest) {
 
   // database connection
   const dbURI = process.env.MONGO_URI;
-  mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((result) => console.log("db connection!"))
-    .catch((err) => console.log(err));
+  try {
+    await mongoose.connect(dbURI);
+    console.log("db connection!");
+  } catch (err) {
+    console.log(err);
+  }
 
   //  call auth logic based on authType
   switch (authType) {

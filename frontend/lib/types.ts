@@ -47,6 +47,11 @@ export interface Certification extends Project {
     date: Date | string,
 }
 
+export interface Slug {
+    id: number;
+    slug: string;
+}
+
 export interface PreviewCardProps {
     key: string,
     cardID: number,

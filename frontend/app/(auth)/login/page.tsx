@@ -140,7 +140,7 @@ export default function LoginPage() {
           </form>
 
           <p className='subcap centered'>Forgot password?<Link href={"/reset"}> Click here to reset. </Link></p>
-          <p className='subcap centered'>Dont' have an account? <Link href={"/signup"}>Click here to create one.</Link></p>
+          <p className='subcap centered'>Don&apos;t have an account? <Link href={"/signup"}>Click here to create one.</Link></p>
           <div id="error-msg" className='centered error'> </div>
 
         </div>

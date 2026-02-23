@@ -16,6 +16,11 @@ FRONTEND:
  - X  -  add Edit Existing + DEMO MODE to 'add-certification' ... or merge cert/proj into one 'publish' page...
  - add Date() to localStorage Portfolio + a 1-day check to try a refresh...
  - ?? add a stash of .starred and .caption info on auto-saved thumbnails that get removed after refresh? (ooffftahh...)
+ - stroke-width v strokeWidth in burgers?
+ - page params<Promise> vs useParams 'use client' ....may not need client side
+ - Logo.tsx - too old. update to actual React/useState functions
+ 
+ 
 
 
 BACKEND:

@@ -4,14 +4,17 @@ import bcrypt from 'bcrypt'
 
 
 interface IUser {
+    _id: string;
     email: string;
     password: string;
     isVerified: boolean;
     verificationToken: string;
     resetToken: string;
     resetTime: Date | null;
+    admin: boolean;
 }
 interface IUserModel extends IUser {
+    create(userData: any): Promise<IUser>; // just creating a type of the built-in mongoose 8 .create()
     login(email: string, password: string): Promise<IUser>;
     verify(id: string, token: string): Promise<IUser>;
     reverify(email: string): Promise<IUser>;
@@ -59,6 +62,10 @@ const userSchema = new Schema({
         type: Date,
         // required: [true, 'Still missing a password reset token'],
         default: null
+    },
+    admin: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -239,7 +246,8 @@ userSchema.statics.resetPassword = async function (email, newPassword, token) {
 
 
 
-export const User = models.user || model<IUser, IUserModel>('user', userSchema);
+// export const User = models.user || model<IUser, IUserModel>('user', userSchema);
+export const User = model<IUser, IUserModel>('User', userSchema);
 // export default User
 
 // module.exports = User;

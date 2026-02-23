@@ -1,7 +1,7 @@
 "use client"
 
 import { FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import type { AuthType } from '../../../../lib/types'
@@ -9,8 +9,10 @@ import type { AuthType } from '../../../../lib/types'
 import '../../authForms.css'
 import { error } from 'console'
 
-export default function resetPassword({ params }: { params: { params: Array<string> } }) {
-    const router = useRouter()
+// export default function resetPassword({ params }: { params: { params: Array<string> } }) {
+export default function ResetPassword() {
+    const router = useRouter();
+    const params = useParams();
 
     // state variables
     let [email, setEmail] = useState<string>('');
@@ -80,7 +82,7 @@ export default function resetPassword({ params }: { params: { params: Array<stri
 
 
         // If no params, show "request link" form
-    }, [])
+    }, [params])
 
 
     // handle updates to the ERROR MSG
@@ -222,7 +224,7 @@ export default function resetPassword({ params }: { params: { params: Array<stri
                     <form id='request-reset-form' onSubmit={handleRequestReset} className='auth hide'>
 
                         <h3>Password Reset:</h3>
-                        <p className='subcap'>Enter the email associated with your account and I'll send you a password reset link.</p>
+                        <p className='subcap'>Enter the email associated with your account and I&apos;ll send you a password reset link.</p>
 
                         <label htmlFor="email">Email:</label>
                         <input

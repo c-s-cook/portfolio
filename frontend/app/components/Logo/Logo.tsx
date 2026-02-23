@@ -21,9 +21,10 @@ const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
  */
 
 
-const Logo = ({forNavBar}) => {
+const Logo = ({forNavBar}: {forNavBar: boolean}) => {
 
     useEffect(() => {
+        // TO-DO: need to switch this to an actual React/useState methodology
 
         const mainLogoGet = document.getElementById('main-logo');
         const navLogo = document.getElementById('nav-logo');

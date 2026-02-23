@@ -1,6 +1,6 @@
 "use client"
 
-import { forwardRef, useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css'; // for snow theme
@@ -65,10 +65,14 @@ const quicksand = Quicksand({
  *  - add responsive styling
  * 
  */
-const QuillRichText = forwardRef(
-  ({ setRichTextContent }, quillref) => {
+interface QuillRichTextProps {
+  setRichTextContent: Dispatch<SetStateAction<string>>;
+}
 
-    const containerRef = useRef(null);
+const QuillRichText = forwardRef<any, QuillRichTextProps>(
+  ({ setRichTextContent }, quillref: any) => {
+
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
 
     let extraFonts = [
@@ -104,7 +108,9 @@ const QuillRichText = forwardRef(
 
     // enable custom font list
     const FontAttributor = Quill.import('attributors/class/font');
+    // @ts-ignore -- it's a Quill-specific thing
     FontAttributor.whitelist = extraFonts;
+    // @ts-ignore
     Quill.register(FontAttributor, true);
 
 

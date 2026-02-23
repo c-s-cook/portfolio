@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image";
+import NextImage from "next/image";
 import Link from "next/link";
 import "./PreviewCard.css";
 import { ReactElement, useEffect, useRef, useState } from "react";
@@ -60,18 +60,18 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
         let thumbs: Element = card.getElementsByClassName("thumbnails")[0];
 
         // Attempting Re-ordering...
-        if (thumbs.firstChild.style.left != "0%") {
-            let reordered = thumbs.firstChild;
+        if ((thumbs.firstChild as HTMLImageElement).style.left != "0%") {
+            let reordered = (thumbs.firstChild as HTMLImageElement);
             reordered.style.zIndex = "-1";
             thumbs.removeChild(thumbs.firstChild);
             thumbs.appendChild(reordered);
-            thumbs.lastChild.style.left = `${(thumbs.children.length - 1) * 100}%`;
+            (thumbs.lastChild as HTMLImageElement).style.left = `${(thumbs.children.length - 1) * 100}%`;
         }
 
         // Sliding the thumbnails over...
         for (let i = 0; i < thumbs.children.length; i++) {
-            thumbs.children[i].style.zIndex = "0";
-            thumbs.children[i].style.left = `${(i - 1) * 100}%`;
+            (thumbs.children[i] as HTMLImageElement).style.zIndex = "0";
+            (thumbs.children[i] as HTMLImageElement).style.left = `${(i - 1) * 100}%`;
         }
     }
 
@@ -227,7 +227,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
                     <div className="thumbnails">
                         {project.thumbnails.map((img, index) => {
                             return (
-                                <img
+                                <NextImage
                                     src={img.url}
                                     width={500}
                                     height={500}
@@ -237,6 +237,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
                                         zIndex: `${(index * -1)}`,
                                         left: `${index * 100}%`
                                     }}
+                                    sizes="500px"
                                 />
                             )
 

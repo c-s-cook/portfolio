@@ -35,7 +35,8 @@ const ComponentTest = () => {
     // Run for EVERY change in the DOM
     useEffect(() => {
         if (quillRef.current) setContent(quillRef.current.root.innerHTML); // This is how to get the HTML formatted
-    });
+    }, [quillRef.current]);
+    // This effect runs whenever the quillRef.current changes -- updated during Next.js v15 upgrade.
 
 
 

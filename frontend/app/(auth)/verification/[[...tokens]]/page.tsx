@@ -1,13 +1,14 @@
 "use client"
 
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect } from "react";
 // import 'dotenv/config'
 import type { AuthType } from "../../../../lib/types";
 
-const userVerification = async ({ params }: { params: { tokens: Array<string> } }) => {
-    const router = useRouter()
+const UserVerification = () => {
+    const router = useRouter();
+    const params = useParams();
 
     let userId:string, verificationToken:string;
 
@@ -68,4 +69,4 @@ const userVerification = async ({ params }: { params: { tokens: Array<string> } 
     );
 }
 
-export default userVerification;
+export default UserVerification;

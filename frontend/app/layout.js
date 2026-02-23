@@ -24,7 +24,7 @@ export const metadata = {
   description: 'Full Stack Web Development Portfolio by Christopher Cook',
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
 
   const navLinks = [
     { href: "/", text: "Main" },
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
   ];
 
   // check for login
-  let isLoggedin = cookies().get('jwt')?.value ? true : false;
+  let isLoggedin = (await cookies()).get('jwt')?.value ? true : false;
 
 
   return (
