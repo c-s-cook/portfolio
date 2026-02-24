@@ -7,7 +7,7 @@ import { verify } from 'crypto'
 
  
 // This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     // console.log("dashboard middleware test")
 
     const token = request.cookies.get('jwt')?.value
