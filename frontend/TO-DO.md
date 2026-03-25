@@ -20,6 +20,8 @@ FRONTEND:
  - page params<Promise> vs useParams 'use client' ....may not need client side.."Route Prop Helpers"
  - Logo.tsx - too old. update to actual React/useState functions
  - Optimizie, use fewer client components
+ - fix Login Redirect (still not working... :S )
+ - After publish - add Redirect to Item Type list page...
 
  
  
