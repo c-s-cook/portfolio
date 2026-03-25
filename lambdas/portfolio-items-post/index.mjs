@@ -18,7 +18,7 @@ export const handler = async (event) => {
         if (!actionType || (actionType !== 'add') || (actionType !== 'edit')) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: "Invalid Action-Type" }),
+                body: JSON.stringify({ error: `Invalid Action-Type: '${actionType}'` }),
             };
         }
         // console.log("body: ", event.body);

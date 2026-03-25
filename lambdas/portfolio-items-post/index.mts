@@ -24,12 +24,17 @@ export const handler = async (
     }
 
     // get the Action-Type header value that this AWS Lambda function is processing
-    const actionType = event.headers['Action-Type'];
+    // the lambda integration seems to automatically convert header keys to lowercase, 
+    // so we check for both 'action-type' and 'Action-Type'...
+    const actionType = event.headers['action-type'] || event.headers['Action-Type'];
+
     console.log("Action-Type: ", actionType);
     if (!actionType || (actionType !== 'add') || (actionType !== 'edit')) {
+      console.log('Action-Type error. Headers: ', JSON.stringify(event.headers, null, 2));
+
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Invalid Action-Type" }),
+        body: JSON.stringify({ error: `Invalid Action-Type: '${actionType}'` }),
       };
     }
 
