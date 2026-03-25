@@ -108,7 +108,7 @@
     fill: var(--foreground-rgb);
 }
 
-.deck>.card .portfolio-item+.view-icon svg {
+.deck>.card .portfolio-item+.edit-icon svg {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -116,28 +116,30 @@
     height: 2em;
 }
 
-.deck>.card .portfolio-item + .view-icon {
+.deck>.card .portfolio-item + .edit-icon {
     z-index: 999;
     opacity: .3;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-.deck>.card .portfolio-item + .view-icon:hover {
+.deck>.card .portfolio-item + .edit-icon:hover {
     opacity: 1;
 }
 
 
 
-.deck>.card ul.portfolio-items li:has( .portfolio-item:hover) .view-icon {
+.deck>.card ul.portfolio-items li:has( .title:hover) .edit-icon {
     opacity: 0;
 }
 
 
-.portfolio-item .edit-icon {
+.portfolio-item .view-icon {
     opacity: 0;
+    transition: 0.3s;
 }
 
-.portfolio-item:hover .edit-icon {
+.portfolio-item .title:hover + .view-icon {
     opacity: 1;
 }
 
@@ -153,15 +155,15 @@
 
 
 
-.deck>.card ul.portfolio-items li .view-icon {
+.deck>.card ul.portfolio-items li .edit-icon {
     position: absolute;
 
-    right: 0.5em;
-    top: 0em;
+    right: 1em;
+    top: 0.5em;
     margin-top: 0.5em;
     /* transform: translateY(-50%); */
-    height: 3em;
-    width: 3em;
+    height: 2em;
+    width: 2em;
     display: inline-block;
     z-index: 99;
     /* border: 1px magenta dashed; */
@@ -169,7 +171,7 @@
     fill: var(--foreground-rgb);
 }
 
-.deck>.card ul.portfolio-items li .view-icon:hover {
+.deck>.card ul.portfolio-items li .edit-icon:hover {
     opacity: 1;
 }
 /* 
@@ -179,7 +181,7 @@
 
 
 
-.deck>.card ul.portfolio-items li .view-icon svg:hover {
+.deck>.card ul.portfolio-items li .edit-icon svg:hover {
     opacity: 1;
 }
 
@@ -200,16 +202,18 @@
     opacity: 0;
     padding: 0.5em;
     border-radius: 0.5em;
-    /* transition: 0.3s; */
+    z-index: 50;
+    transition: 0.3s;
 }
 
-.portfolio-items li:has(.portfolio-item:hover)::after {
-    content: "Edit";
-    opacity: 1;
-}
-
-.portfolio-items li:has(.view-icon:hover)::after {
+.portfolio-items li:has(.portfolio-item .title:hover)::after {
     content: "View";
+    opacity: 1;
+    
+}
+
+.portfolio-items li:has(.edit-icon:hover)::after {
+    content: "Edit";
     opacity: 1;
 }
 

@@ -8,10 +8,6 @@ import './Navbar.css'
 
 // import Image from 'next/image'
 import Link from 'next/link'
-// import HamburgerX01 from './Hamburgers/HamburgerX01'
-// import HamburgerX02 from './Hamburgers/HamburgerX02'
-// import HamburgerX03 from './Hamburgers/HamburgerX03'
-// import HamburgerX04 from './Hamburgers/HamburgerX04'
 import { useState, useEffect } from 'react'
 import Background from '../Background/Background'
 import Logo from '../Logo/Logo'
@@ -27,6 +23,7 @@ export default function Navbar({ navLinks }) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [boxChecked, setBoxChecked] = useState(false);
 
 
   //  create default array of nav menu items
@@ -52,38 +49,17 @@ export default function Navbar({ navLinks }) {
   let links = navLinks ? navLinks : navLinkDefaults;
 
 
-
-
-  // // create an array of menu-icon components to iterate through
-  // const burgers = [
-  //   (<HamburgerX01 width={2} />),
-  //   (<HamburgerX02 width={2} />),
-  //   (<HamburgerX03 width={2} />),
-  //   (<HamburgerX04 width={2} />)
-  // ];
-
-  // const [currentBurger, setCurrentBurger] = useState(burgers[0])
-  // const [burgerCount, setBurgerCount] = useState(0)
-
-  // // 
-  // const burgerFlipper = () => {
-  //   const box = document.getElementById('nav_checkbox_toggle');
-
-  //   if(box.checked){ 
-  //     // console.log('Box:check is TRUE!')
-  //   }
-
-  //   if(!box.checked){
-  //     setBurgerCount(burgerCount < 3 ? burgerCount+1 : 0)
-  //     setCurrentBurger(burgers[(burgerCount)]);
-  //   }
-  // }
-
   //  toggles the checkbox to false to hide the menu when Link is clicked
-  const unCheckbox = () => {
-    const box = document.getElementById('nav_checkbox_toggle') as HTMLInputElement;
-    if (box) box.checked = false;
-    // burgerFlipper();
+  const unCheckbox = async () => {
+
+    if (boxChecked) {
+      // setBoxChecked(false);
+      const box = document.getElementById('nav_checkbox_toggle') as HTMLInputElement;
+      if (box) box.checked = false;
+    }
+    
+    setBoxChecked(!boxChecked);
+
   }
 
   // check for logged-in User & admin
@@ -113,9 +89,9 @@ export default function Navbar({ navLinks }) {
         <ul className="nav-links">
 
           {/* USING CHECKBOX HACK */}
-          <input type="checkbox" id="nav_checkbox_toggle" />
+          <input type="checkbox" id="nav_checkbox_toggle" onClick={unCheckbox} />
           {/* <label htmlFor="nav_checkbox_toggle" className='hamburger' onClick={ burgerFlipper }>{ currentBurger }</label> */}
-          <label htmlFor="nav_checkbox_toggle" className='hamburger' ><Hamburger /></label>
+          <label htmlFor="nav_checkbox_toggle" className='hamburger' ><Hamburger boxChecked={boxChecked} /></label>
 
           {/* NAVICATION MENU */}
           <div id='menu'>

@@ -6,7 +6,7 @@ import type { Portfolio, Project, Certification } from "../../../lib/types";
 import getPortfolio from "../../../lib/getPortfolio";
 
 type Props = {
-    
+
 };
 
 
@@ -77,22 +77,24 @@ const ListCertifications: React.FC<Props> = () => {
     return (
         <ul className="portfolio-items">
             {certifications.map((c) => (
-                <li key={c.id}>
-                    <Link href={`./dashboard/publish/certification/edit?cert=${c.id}`}>
+                <li key={`certification-${c.id}`}>
+                    <Link href={`./certifications/${c.slug}`}>
                         <button type="button" className="portfolio-item">
                             <div className="title">
                                 {c.title}
                             </div>
-                            <EditIcon />
+                            <ViewIcon />
                         </button>
                     </Link>
 
-                    <Link href={`./certifications/${c.slug}`}>
-                        <ViewIcon />
+                    
+                    <Link href={`./dashboard/publish/certification/edit?cert=${c.id}`}>
+
+                        <EditIcon />
                     </Link>
                 </li>
             ))}
-           
+
 
             {/* <li key="17">
                 <button type="button" className="portfolio-item">

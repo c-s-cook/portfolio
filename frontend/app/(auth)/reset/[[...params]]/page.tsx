@@ -246,7 +246,7 @@ export default function ResetPassword() {
                         <h3>Update Password:</h3>
                         <p className='subcap'>You have shown yourself to be worthy! ...of updating your password.</p>
 
-                        <label htmlFor="password1">Email:</label>
+                        <label htmlFor="password1">Updated Password:</label>
                         <input
                             type="password"
                             name="password1"
@@ -256,7 +256,7 @@ export default function ResetPassword() {
                             required
                         />
 
-                        <label htmlFor="password2">Email:</label>
+                        <label htmlFor="password2">Confirm Password:</label>
                         <input
                             type="password"
                             name="password2"

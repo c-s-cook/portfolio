@@ -76,19 +76,21 @@ const ListProjects: React.FC<Props> = ({ onSelect }) => {
     return (
         <ul className="portfolio-items">
             {projects.map((p) => (
-                <li key={p.id}>
-                    <Link href={`./dashboard/publish/project/edit?proj=${p.id}`}>
+                <li key={`project-${p.id}`}>
+                    <Link href={`./projects/${p.slug}`}>
                         <button type="button" className="portfolio-item">
                             <div className="title">
                                 {p.title}
                             </div>
-                            <EditIcon />
+                            <ViewIcon />
 
                         </button>
                     </Link>
 
-                    <Link href={`./projects/${p.slug}`}>
-                        <ViewIcon />
+                    
+                    <Link href={`./dashboard/publish/project/edit?proj=${p.id}`}>
+
+                        <EditIcon />
                     </Link>
                 </li>
             ))}

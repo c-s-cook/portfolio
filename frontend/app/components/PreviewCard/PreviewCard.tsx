@@ -270,7 +270,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
                     </div>
 
-                    <h3>{cardID} {project.title} {observerClasses}</h3>
+                    <h3>{project.title}</h3>
                     <div className="preview-snippet">
                         {project.snippet && (<p>{project.snippet}</p>)}
                         {!project.snippet && project.body && (<p>{stripHTML(project.body.slice(0, 100))}</p>)}

@@ -73,6 +73,8 @@
     text-transform: uppercase;
     padding-top: .6em;
     padding-bottom: 0.4em;
+    overflow-x: hidden;
+    white-space: nowrap;
     /* color: red; */
 }
 

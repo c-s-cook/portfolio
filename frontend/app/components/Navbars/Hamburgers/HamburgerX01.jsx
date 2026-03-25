@@ -7,7 +7,7 @@ import './HamburgerX01.css'
 
 export default function HamburgerX01({width}) {
   const lineStyle = {
-    "stroke-width": width | 1.5
+    "strokeWidth": width | 1.5
   }
   return (
     <>
