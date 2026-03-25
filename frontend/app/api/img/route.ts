@@ -83,7 +83,8 @@ export async function POST(req: NextRequest) {
 
 
         // concat the expected img file path after a successfull upload...
-        var imgUrl = `${process.env.S3_IMG_BUCKET}${imageFile.name}`;
+        var imgUrl = `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/${imageFile.name}`;
+        var thumb = `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/${imageFile.name.replace(/\.(jpg|jpeg|png)$/i, "_thumbnail.jpg")}`;
 
         console.log('attempting to upload: ', imageFile.name);
 
@@ -92,7 +93,7 @@ export async function POST(req: NextRequest) {
             method: 'PUT',
             body: imageFile,
             headers: {
-                'Content-Type': imageFile.type
+                'Content-Type': imageFile.type,
             }
         })
 
@@ -111,9 +112,48 @@ export async function POST(req: NextRequest) {
             })
         } else {
 
+            console.log('Image uploaded. Beginning accessibility checks...');
+            // pause for processing, then test the thumb URL (which would be the last processed)...
+            let testCount = 0;
+            let maxTests = 6;
+            let imgAccessible = false;
+
+            // initial pause...
+            await new Promise(resolve => setTimeout(resolve, 2000));    
+
+            // test...
+            let testImgUrl = async () => {
+                try {
+                    var testResponse = await fetch(thumb, {
+                        method: 'HEAD'
+                    })
+
+                    if (testResponse.ok) {
+                        imgAccessible = true;
+                        console.log('Processed thumbnail is accessible!');
+                    } else {
+                        // console.log('Image not accessible yet, retrying...');
+                        testCount++;
+                        if (testCount < maxTests) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            await testImgUrl();
+                        } else {
+                            console.log('Max retries reached. Image is still not accessible.');
+                            throw new Error('Image uploaded, but is not accessible after max retry attempts.');
+                        }
+                    }
+                }
+                catch (error) {
+                    throw error;
+                }
+            }
+            await testImgUrl();
+
+            console.log('Image upload and processing complete. Returning response...');
             return new Response(JSON.stringify({
                 success: 'Image uploaded!',
                 URL: imgUrl,
+                thumb: thumb
             }), {
                 status: 200,
                 headers: {

@@ -27,13 +27,26 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
 
     const isMobile = typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false;
 
+
+    // replace S3 img urls with CloudFront URLS
+    // images = images.map((img: ImageURL) => {
+    //     if (img.url?.includes(process.env.IMG_BUCKET_CDN)) return img;
+    //     if (img.url?.includes(process.env.S3_IMG_BUCKET)) {
+    //         console.log("Replacing S3 URL with CDN URL for image:", img.url);
+    //         return {
+    //             ...img,
+    //             url: img.url?.replace(process.env.S3_IMG_BUCKET, `${process.env.IMG_BUCKET_CDN}/`) || null
+    //         };
+    //     }
+    // });
+
     /**
      *  SORT IMAGES[]
      *      - in case it has a featured/starred image that is not already at index 0
      */
     const sortFeaturedImages = (tempImages: ImageURL[]) => {
-        
-        if (tempImages.find((i)=> i.starred)) {
+
+        if (tempImages.find((i) => i.starred)) {
             tempImages.reverse().sort((a, b) => {
                 if (a.starred && !b.starred) return -1;
                 else if (a.starred && b.starred) return 0;
@@ -42,7 +55,7 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
         }
         return [...tempImages];
     }
-    
+
     images = sortFeaturedImages(images);
 
 
@@ -196,7 +209,10 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
             <div className="carousel-viewport" role="region" aria-roledescription="carousel" aria-label="Image carousel">
                 <div className="carousel-slides">
                     {images.map((img, i) => {
-                        const src = img?.url ?? "";
+                        if (!img.url) return null;
+
+                        const src = (img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`);
+                        const proxySrc = `../../api/image-proxy?url=${encodeURIComponent(src)}`;
                         const active = i === index; // boolean - does this match the autoplay index?
                         return (
                             <div
@@ -208,8 +224,10 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                                     if (!isMobile) openLightboxAt(i);
                                 }}
                             >
-                                <NextImage
-                                    src={src} alt={img.caption ?? img.name ?? `Image ${i + 1}`}
+                                <img
+                                    // src={src} 
+                                    src={proxySrc}
+                                    alt={img.caption ?? img.name ?? `Image ${i + 1}`}
                                     className="carousel-image"
                                     width={600}
                                     height={600}
@@ -265,10 +283,10 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                             <button className="lightbox-close" aria-label="Close" onClick={() => setLightboxOpen(false)}>&times;</button>
                             <button className="lightbox-arrow left" aria-label="Previous" onClick={() => setLightboxIndex((s) => (s - 1 + count) % count)}>&#10094;</button>
                             <div className="lightbox-image-wrap">
-                                <NextImage 
-                                    src={images[lightboxIndex]?.url ?? ""} 
-                                    alt={images[lightboxIndex]?.caption ?? images[lightboxIndex]?.name ?? ""} 
-                                    className="lightbox-image" 
+                                <NextImage
+                                    src={images[lightboxIndex]?.url ?? ""}
+                                    alt={images[lightboxIndex]?.caption ?? images[lightboxIndex]?.name ?? ""}
+                                    className="lightbox-image"
                                     width={900}
                                     height={900}
                                     sizes="(max-width: 768px) 300px, 900px"
@@ -289,8 +307,8 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                                         onClick={() => setLightboxIndex(i)}
                                         aria-label={`Open image ${i + 1}`}
                                     >
-                                        <NextImage 
-                                            src={img.url ?? ""} 
+                                        <NextImage
+                                            src={img.url ?? ""}
                                             alt={img.name ?? ""}
                                             width={100}
                                             height={100}

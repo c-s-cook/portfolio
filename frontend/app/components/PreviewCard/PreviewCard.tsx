@@ -6,7 +6,7 @@ import "./PreviewCard.css";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import animationEase from "../../../lib/animationEase";
 
-import type { Project, Certification, PreviewCardProps } from "../../../lib/types"
+import type { Project, Certification, PreviewCardProps, ImageURL } from "../../../lib/types"
 
 
 
@@ -59,6 +59,8 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
         let thumbs: Element = card.getElementsByClassName("thumbnails")[0];
 
+        if (!thumbs || !thumbs.firstChild || !thumbs.lastChild || !(thumbs.firstChild as HTMLImageElement).style.left) return;
+
         // Attempting Re-ordering...
         if ((thumbs.firstChild as HTMLImageElement).style.left != "0%") {
             let reordered = (thumbs.firstChild as HTMLImageElement);
@@ -106,7 +108,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
 
         // IntersectionObserver for Phone /responsive layout
-        if(!observerOptions) return;
+        if (!observerOptions) return;
 
         const toggleActiveCard = (entries) => {
 
@@ -218,6 +220,16 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
     // const stripHTML = (html: string = ""): string =>
     //     html.replace(/<\/?[^>]+(>|$)/g, "");
 
+    // replace S3 img urls with CloudFront URLS
+    // project.thumbnails = project.thumbnails.map((img: ImageURL) => {
+
+    //     return {
+    //         ...img,
+    //         url: img.url?.replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`) || null
+    //     };
+
+    // });
+
 
 
     return (
@@ -226,9 +238,22 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
                 <div ref={ref} className={`preview-card with-background ${observerClasses}`} id={"preview-card-" + cardID} key={`preview-card-${cardID}`} style={{ animationDelay: `${animationEase(cardID)}s` }}>
                     <div className="thumbnails">
                         {project.thumbnails.map((img, index) => {
+                            if (!img.url) return null;
+                            // if (img.url.includes(process.env.NEXT_PUBLIC_S3_IMG_BUCKET)) {
+                            //     console.log('url before', img.url);
+                            //     img.url = img.url.replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`);
+                            //     console.log('url after', img.url);
+                            // } else {
+                            //     console.log(img.url, 'does not include', process.env.NEXT_PUBLIC_S3_IMG_BUCKET);
+                            // }
+                            if (!img.caption){
+                                img.caption = `An image ${index + 1} for ${project.title} showing Christopher Cook's work as a Full Stack application developer.`;
+                            }
+
                             return (
                                 <NextImage
-                                    src={img.url}
+                                    src={(img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`)}
+                                    // src={img.url}
                                     width={500}
                                     height={500}
                                     alt={img.caption}

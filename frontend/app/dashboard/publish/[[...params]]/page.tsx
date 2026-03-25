@@ -43,11 +43,11 @@ import '../../AddItems.css'
 import TagsInput from '@components/AddItems/TagsInput';
 import QuillRichText from '@components/Quill/QuillRichText';
 import PhotoUpload from '@components/AddItems/PhotoUpload';
-import type { PhotoUploadProps, ImageURL, UploadFile } from '@components/AddItems/PhotoUpload';
+import type { PhotoUploadProps, UploadFile } from '@components/AddItems/PhotoUpload';
 
 import getPortfolio from '@lib/getPortfolio';
-import type { Certification, Project, PublishingErrors, Slug } from '@lib/types';
-import { clear } from 'console';
+import type { Certification, Project, PublishingErrors, Slug, ImageURL } from '@lib/types';
+// import { clear } from 'console';
 // import { Certificate } from 'crypto';
 // import { set } from 'mongoose';
 
@@ -247,7 +247,7 @@ export default function PublishPortfolioItem() {
       || (item.type === 'CERT' && (item as Certification).certUrl)
       || (item.type === 'CERT' && (item as Certification).date)
     ) {
-      if (item.thumbnails.length > 0) console.log('non-empty item = ', item);
+      // if (item.thumbnails.length > 0) console.log('non-empty item = ', item);
       return true
     }
     else return false
@@ -349,7 +349,10 @@ export default function PublishPortfolioItem() {
           try {
             let blobExists = await checkImageExists(file.blob);
 
-            if (blobExists) {filteredTempImageFiles.push(file);}
+            if (blobExists) {
+              file.isBlob = true;
+              filteredTempImageFiles.push(file);
+            }
             else {
               // display an error through the publishingErrors obj
               setPubErrors((prevErr) => {

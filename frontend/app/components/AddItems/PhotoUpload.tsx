@@ -5,21 +5,24 @@ import NextImage from "next/image";
 import findKey from "../../../lib/findKey"
 
 import './PhotoUpload.css'
+import type { ImageURL } from "@lib/types";
 
 
 
-export interface ImageURL {
-    name: string;
-    url: string | null;
-    data?: JSON | null;
-    ogName?: string;
-    caption?: string;
-    starred?: boolean;
-}
+// export interface ImageURL {
+//     name: string;
+//     url: string | null;
+//     data?: JSON | null;
+//     ogName?: string;
+//     caption?: string;
+//     starred?: boolean;
+// }
 
 export interface UploadFile extends File {
     status: null | "uploading" | "success" | "error" | "removed";
     tries: null | number;
+    width?: number;
+    height?: number;
     blob?: string;
     starred?: boolean;
     caption?: string;
@@ -127,10 +130,18 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
     const starImage = async (index) => {
         console.log('star cliked on image ', index);
 
+        // let debugRun: number = 1;
+
         setImageFiles((prevImageFiles) => {
             let updatedImageFiles = [...prevImageFiles];
 
-            if (updatedImageFiles[index].starred) {
+            // console.log('images degug run ', debugRun);
+            // if (debugRun > 1) return [...updatedImageFiles];
+            // debugRun++;
+
+            // for (let f = 0; f < updatedImageFiles.length; f++) console.log(`file ${f} : `, updatedImageFiles[f].name, ' starred? ', updatedImageFiles[f].starred);
+
+            if (updatedImageFiles[index] && updatedImageFiles[index].starred) {
                 console.log('unstarring image file ', index)
                 updatedImageFiles[index].starred = false;
             } else {
@@ -142,10 +153,17 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
         if (imageURLs.length == 0) return;
 
+        // console.log('setting debugRun back to 1...');
+        // debugRun = 1;
+
         setImageURLs((prevImageURLs) => {
             let updatedImageURLs = [...prevImageURLs];
+            
+            // console.log('urls degug run ', debugRun);
+            // if (debugRun > 1) return [...updatedImageURLs];
+            // debugRun++;
 
-            if (updatedImageURLs[index].starred) {
+            if (updatedImageURLs[index] && updatedImageURLs[index].starred) {
                 console.log('unstarring image url ', index)
                 updatedImageURLs[index].starred = false;
             } else {
@@ -309,7 +327,16 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                         setErrorMessage(`Only .jpg or .png files allows. ${tempImageFiles[f].name} not added.`);
                     }
                     else {
+                        let img = new Image();
+                        img.onload = () => {
+                            tempImageFiles[f].width = img.naturalWidth || img.width;
+                            tempImageFiles[f].height = img.naturalHeight || img.height;
+                            img.remove();
+                        };
+
                         tempImageFiles[f].blob = URL.createObjectURL(tempImageFiles[f]);
+                        img.src = tempImageFiles[f].blob;
+                        
                         tempImageFiles[f].status = null;
                         tempImageFiles[f].tries = null;
 
@@ -332,9 +359,9 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // check if image already has a caption
         if (imageFiles.length > 0 && addingCaption !== null) {
 
-            // console.log('addingCaption = ', addingCaption);
+            console.log('addingCaption = ', addingCaption, ' imageFiles.length = ', imageFiles.length, ' imageURLs.length = ', imageURLs.length);
 
-            if (imageFiles[addingCaption].caption || (imageURLs.length > 0 && imageURLs[addingCaption].caption)) {
+            if (imageFiles[addingCaption].caption || (imageURLs.length > addingCaption && imageURLs[addingCaption].caption)) {
 
                 let tempCaption = imageFiles[addingCaption].caption || imageURLs[addingCaption].caption;
                 setPhotoCaption(tempCaption);
@@ -451,11 +478,10 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
         // create payload container
         const formData = new FormData();
 
-        // a regex for replacing ' - ' with '_'...
 
 
         // check if we're working with a blob URL from an auto-save...
-        if (imageFile.blob && imageFile.status !== 'success') {
+        if (imageFile.isBlob && imageFile.status !== 'success') {
             // make a copy of the blob for uploading
             console.log('working with a blob here on upload....', imageFile.type, imageFile.blob);
 
@@ -586,6 +612,9 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
                         imageFile.isBlob = true;
                     } else {
                         imageURL.url = data.URL;
+                        if (data.thumb) {
+                            imageURL.thumb = data.thumb;
+                        }
                     }
                 } else {
 
@@ -843,7 +872,7 @@ const PhotoUpload = ({ imageFiles, setImageFiles, options }: PhotoUploadProps) =
 
                             // check if the file has been uploaded...
                             if (file.status === 'success') {
-                                imgSrc = imageURLs[index].url;
+                                imgSrc = imageURLs[index].thumb ? imageURLs[index].thumb : imageURLs[index].url;
 
                                 status = 'success';
                                 starred = imageURLs[index].starred ? 'is-starred' : '';

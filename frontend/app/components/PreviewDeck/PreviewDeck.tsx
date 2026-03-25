@@ -100,7 +100,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         let newObserverClasses = new Array(observedCards.length).fill('');
 
         tempActiveCards.forEach((el) => newObserverClasses[el] = 'active');
-        console.log('first load? newObserverClasses: ', newObserverClasses)
+        // console.log('first load? newObserverClasses: ', newObserverClasses)
 
         return [...newObserverClasses];
       })
@@ -118,7 +118,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
 
     //  if we aren't maxed out...
     if (tempActiveCards.length !== activeLimit) {
-      console.log('Early tempActiveCards = ', tempActiveCards, ' Length: ', tempActiveCards.length);
+      // console.log('Early tempActiveCards = ', tempActiveCards, ' Length: ', tempActiveCards.length);
 
       let lastActiveIndex: number;
 
@@ -133,11 +133,11 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         observedCards.map((el, i) => {
           if (el) observedFilteredCards.push(i);
         })
-        console.log('Currently visible cards are: ', observedFilteredCards);
+        // console.log('Currently visible cards are: ', observedFilteredCards);
 
         // THIS LINE IS THE ISSUE. IT ASSUMES LOST - NO LOGIC FOR 'NEVER SET'...
         lastActiveIndex = scrollDirection.current === 'DOWN' ? observedFilteredCards[observedFilteredCards.length - 1] : observedFilteredCards[0];
-        console.log('We are scrolling ', scrollDirection.current, ' so the lastActiveIndex is: ', lastActiveIndex);
+        // console.log('We are scrolling ', scrollDirection.current, ' so the lastActiveIndex is: ', lastActiveIndex);
       }
 
       // once we know where we left off, add the index of more visible cards..
@@ -151,7 +151,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         tempActiveCards.push(lastActiveIndex)
       }
 
-      console.log('Late tempActiveCards = ', tempActiveCards);
+      // console.log('Late tempActiveCards = ', tempActiveCards);
 
       // now that we've determined which cards are both in our desired visible range, and should be set active,
       // update the classList array and the activeCards
@@ -159,7 +159,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         let newObserverClasses = new Array(observedCards.length).fill('');
 
         tempActiveCards.forEach((el) => newObserverClasses[el] = 'active');
-        console.log('newObserverClasses: ', newObserverClasses)
+        // console.log('newObserverClasses: ', newObserverClasses)
 
         return [...newObserverClasses];
       })

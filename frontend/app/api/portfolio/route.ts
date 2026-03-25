@@ -15,8 +15,8 @@ async function isValidJWT(token: string | undefined): Promise<boolean> {
             new TextEncoder().encode(process.env.JWT_SECRET)
         )
         payload = verified ? verified.payload.jti : null
-        console.log('jwt payload:', payload);
-        console.log('jwt admin?:', payload.admin);
+        // console.log('jwt payload:', payload);
+        // console.log('jwt admin?:', payload.admin);
     } catch (err) {
         console.log('jwt error!')
     }

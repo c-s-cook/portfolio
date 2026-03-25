@@ -31,11 +31,14 @@ export interface PortfolioItem {
 export interface ImageURL {
     name?: string;
     url: string | null;
+    width?: number;
+    height?: number;
     alt?: string;
     data?: JSON | null;
     ogName?: string;
     caption?: string;
     starred?: boolean;
+    thumb?: string | null;
 }
 
 export interface Project extends PortfolioItem {

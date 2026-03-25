@@ -39,6 +39,9 @@ export const handler = async (event) => {
     const originalWidth = metadata.width;
     const originalHeight = metadata.height;
 
+    console.log(`Original image size: ${originalSize} bytes, dimensions: ${originalWidth}x${originalHeight}`);
+    console.log(`Image format: ${metadata.format}`);
+
     // If the image is too big (size or dimensions)...
     if (originalSize > 1024 * 1024 || originalWidth > 1200 || originalHeight > 1200) {
         if (originalWidth > 1200 || originalHeight > 1200) {
@@ -56,7 +59,7 @@ export const handler = async (event) => {
     }
 
     // save image to new bucket...
-    const compressedImageBuffer = await image.toBuffer();
+    const compressedImageBuffer = await image.withMetadata().toBuffer();
 
     const putObjectCommand = new PutObjectCommand({
         Bucket: putBucket,
@@ -64,17 +67,27 @@ export const handler = async (event) => {
         Body: compressedImageBuffer,
     });
 
-    await s3.send(putObjectCommand);
+
+    const result = await s3.send(putObjectCommand);
+    if (result) {
+        console.log(`Successfully uploaded compressed image: ${key} to bucket: ${putBucket}. Moving on to Thumbnail...`);
+    } else {
+        throw new Error(`Failed to upload compressed image: ${key} to bucket: ${putBucket}. Result: ${JSON.stringify(result)}`);
+    }
 
     // now for the thumbnail...
-    const thumbnailBuffer = await image.resize({ width: 150, height: 150, fit: "cover" }).jpeg({ quality: 80 }).toBuffer();
+    const thumbnailBuffer = await image.resize({ width: 250, height: 250, fit: "cover" }).jpeg({ quality: 70 }).withMetadata().toBuffer();
 
-    const thumbnailKey = key.replace(/\.(jpg|jpeg|png)$/, "_thumbnail.jpg");
+    const thumbnailKey = key.replace(/\.(jpg|jpeg|png)$/i, "_thumbnail.jpg");   //  really need the 'i' flag here to catch uppercase extensions...
+                                                                                // otherwise the thumbnail will overwrite the initial compressed JPG / JPEG / PNG images in the new bucket...
     const putThumbnailCommand = new PutObjectCommand({
         Bucket: putBucket,
         Key: thumbnailKey,
         Body: thumbnailBuffer,
     });
 
-    await s3.send(putThumbnailCommand);
+    const thumbnailResult = await s3.send(putThumbnailCommand);
+    if (!thumbnailResult) {
+        throw new Error(`Failed to upload thumbnail: ${thumbnailKey} to bucket: ${putBucket}. Result: ${JSON.stringify(thumbnailResult)}`);
+    }
 };

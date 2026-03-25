@@ -12,23 +12,26 @@ FRONTEND:
  - X! - fix the GD mobile cards
  - X - update auth form bg color
  - X - fix mobile menu background
- - Remove console logs from PreviewCard/Deck
+ - X -  Remove console logs from PreviewCard/Deck
  - X  -  add Edit Existing + DEMO MODE to 'add-certification' ... or merge cert/proj into one 'publish' page...
  - add Date() to localStorage Portfolio + a 1-day check to try a refresh...
  - ?? add a stash of .starred and .caption info on auto-saved thumbnails that get removed after refresh? (ooffftahh...)
  - stroke-width v strokeWidth in burgers?
- - page params<Promise> vs useParams 'use client' ....may not need client side
+ - page params<Promise> vs useParams 'use client' ....may not need client side.."Route Prop Helpers"
  - Logo.tsx - too old. update to actual React/useState functions
+ - Optimizie, use fewer client components
+
  
  
 
 
 BACKEND:
 - [VPN DETECTION] https://dev.to/saman_sardari_fecbaad4b5d/how-to-detect-vpns-with-javascript-457p
-- "edit" feature to 
-- image API resize
+- x  "edit" feature to 
+- X  image API resize
+- add Authorizer/Lambda to Image API Gateway
 - Text OTP
 - WS
 - Chat
 - Weather
-- Mongoose DB -- 'useNewUrlParser" -- remove
+- X  Mongoose DB -- 'useNewUrlParser" -- remove

@@ -1,7 +1,8 @@
 "use client"
 
 import PhotoUpload from "../components/AddItems/PhotoUpload";
-import type { PhotoUploadProps, ImageURL } from "../components/AddItems/PhotoUpload";
+import type { PhotoUploadProps } from "../components/AddItems/PhotoUpload";
+import type { ImageURL } from "@lib/types";
 
 import TagsInput from "../components/AddItems/TagsInput";
 
