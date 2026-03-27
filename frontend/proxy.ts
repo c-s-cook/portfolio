@@ -14,7 +14,7 @@ export async function proxy(request: NextRequest) {
 
     if(!token){
         console.log('No JWT token found.');
-        return NextResponse.redirect(new URL('/login', request.url))
+        return NextResponse.rewrite(new URL('/login', request.url))
     } else {
         
         // console.log('jwt token is: ', token)

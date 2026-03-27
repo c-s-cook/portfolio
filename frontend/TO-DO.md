@@ -1,22 +1,23 @@
 FRONTEND:
  - Custom 404 page
  - Add timed redirect to 404, Content Error, & Content Not Found page
- - update click displays
+ - update click displays??
+ - add a propper footer
  - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
  - add Date() to localStorage Portfolio + a 1-day check to try a refresh...
  - ?? add a stash of .starred and .caption info on auto-saved thumbnails that get removed after refresh? (ooffftahh...)
  - page params<Promise> vs useParams 'use client' ....may not need client side.."Route Prop Helpers"
  - Logo.tsx - too old. update to actual React/useState functions
  - Optimizie, use fewer client components
- - fix Login Redirect (still not working... :S )
  - After publish - add Redirect to Item Type list page...
+ - X  -  fix Login Redirect (still not working... :S )
  - X  -  DASHBOARD:  Switch view/Edit icons & links
  - X  -  Remove Numbers & 'ACTIVE' from Preview Cards
  - X  -  stroke-width v strokeWidth in burgers?
- - X! - fix the GD mobile cards
- - X - update auth form bg color
- - X - fix mobile menu background
- - X -  Remove console logs from PreviewCard/Deck
+ - X! -  fix the GD mobile cards
+ - X  -  update auth form bg color
+ - X  -  fix mobile menu background
+ - X  -  Remove console logs from PreviewCard/Deck
  - X  -  add Edit Existing + DEMO MODE to 'add-certification' ... or merge cert/proj into one 'publish' page...
  - X  -  Login page 'Success' msg before redirect
  - X  -  LogOut button to Navbar
@@ -31,11 +32,11 @@ FRONTEND:
 
 BACKEND:
 - [VPN DETECTION] https://dev.to/saman_sardari_fecbaad4b5d/how-to-detect-vpns-with-javascript-457p
-- x  "edit" feature to 
-- X  image API resize
 - add Authorizer/Lambda to Image API Gateway
 - Text OTP
 - WS
 - Chat
 - Weather
 - X  Mongoose DB -- 'useNewUrlParser" -- remove
+- x  "edit" feature to 
+- X  image API resize

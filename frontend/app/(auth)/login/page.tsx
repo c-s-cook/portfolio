@@ -1,7 +1,7 @@
 "use client"
 
 import { FormEvent, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { createRoot } from 'react-dom/client'
 import type { AuthType } from '../../../lib/types'
 
@@ -9,7 +9,10 @@ import '../authForms.css'
 import Link from 'next/link'
 
 export default function LoginPage() {
-  const router = useRouter()
+  const router = useRouter();
+  const pathname = usePathname();
+
+  console.log('LoginPage rendered. Current pathname: ', pathname);
 
 
 
@@ -88,9 +91,12 @@ export default function LoginPage() {
 
     if (response.status == 201) {
       
+      console.log('Response: ', response.status, 'Pathname: ', pathname);
+
       submitBtn.textContent = 'SUCCESS!'
-      // await navigation to ensure it completes before any further code runs
-      await router.push('/dashboard')
+      // await router.push('/dashboard');
+      router.refresh(); // Refresh to send user to desired page
+      // console.log('Navigation REFRESH complete...?')
       return
 
     } else {
