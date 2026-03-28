@@ -74,6 +74,7 @@
   background: transparent;
   color: var(--foreground-rgb);
   outline: none;
+  border: none;
 }
 .preview-search > input::placeholder,
 .preview-search > input:focus::placeholder {

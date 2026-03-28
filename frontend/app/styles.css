@@ -195,6 +195,20 @@ footer.scrollsnap {
 }
 
 
+/* 404 */
+.four-oh-four {
+    padding-bottom: 5em;
+}
+.four-oh-four h1 {
+    font-size: 4em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    line-height: 0.7em;
+}
+.four-oh-four-title {
+    padding-bottom: 1em;
+}
+
 
 
 /* BUTTONS */

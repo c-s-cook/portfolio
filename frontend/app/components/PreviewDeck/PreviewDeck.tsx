@@ -9,6 +9,7 @@ import './PreviewDeck.css';
 type Props = {
   type: 'project' | 'certification';
   slideInterval?: number;
+  limit?: number;
 };
 
 
@@ -21,7 +22,7 @@ const SearchIcon = () => {
 }
 
 
-export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
+export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props) {
   const [items, setItems] = useState<Project[] | Certification[] | null>(null);
   const [allItems, setAllItems] = useState<Project[] | Certification[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -279,7 +280,10 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
     // const q = query.trim().toLowerCase();
     const q = query.split(',');
     if (!q) {
-      setItems(allItems);
+      let tempItems = [...allItems];
+      if (limit !== undefined) tempItems = tempItems.slice(0, limit);
+      
+      setItems(tempItems);
       return;
     }
 
@@ -291,6 +295,7 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         return tags.some((t: string) => t.toLowerCase().includes(q[i].trim().toLowerCase()));
       })
     }
+    if (limit !== undefined) toBeFiltered = toBeFiltered.slice(0, limit);
     setItems(toBeFiltered);
 
 
@@ -325,7 +330,12 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
         {!items || items.length === 0 && (
           <p>No {type} matches found.</p>
         )}
+
+
         {items.map((item, i) => (
+
+          // if (limit !== undefined && i &gt limit) return <></>;
+          // else return ( 
 
           <PreviewCard
             key={`preview-card-${i}`}
@@ -337,8 +347,9 @@ export default function PreviewDeck({ type, slideInterval = 5000 }: Props) {
               observerClasses: observerClasses[i]
             }}
           />
+          )
 
-        ))}
+        )}
       </div>
     </>
   );
