@@ -39,7 +39,7 @@ This application demonstrates proficiency across multiple technical tiers:
 - **Slug-based URL generation** for SEO-friendly links
 
 ### 🖼️ PhotoUpload Component ⭐ (Featured)
-The **PhotoUpload** component (located in [app/components/AddItems/PhotoUpload.tsx](app/components/AddItems/PhotoUpload.tsx)) is a sophisticated image management tool:
+The **PhotoUpload** component (located in [frontend/app/components/AddItems/PhotoUpload.tsx](frontend/app/components/AddItems/PhotoUpload.tsx)) is a sophisticated image management tool:
 
 **Capabilities:**
 - Drag-and-drop or click-to-select image uploads (JPEG/PNG)
@@ -58,7 +58,7 @@ The component seamlessly integrates into the publishing form, uploading images t
 5. Caches via CloudFront CDN for fast delivery
 
 ### 📤 Dashboard/Publish Page ⭐ (Featured)
-The publish system (located at [app/dashboard/publish/[[...params]]/page.tsx](app/dashboard/publish/[[...params]]/page.tsx)) provides flexible content creation:
+The publish system (located at [frontend/app/dashboard/publish/[[...params]]/page.tsx](frontend/app/dashboard/publish/[[...params]]/page.tsx)) provides flexible content creation:
 
 **Features:**
 - **Dynamic routing** supports multiple modes: `/dashboard/publish/[itemType]/[action]`
@@ -191,22 +191,22 @@ npm run lint       # Run ESLint checks
 ## Key Components
 
 ### PhotoUpload (Featured) ⭐
-**File**: [frontend/app/components/AddItems/PhotoUpload.tsx](app/components/AddItems/PhotoUpload.tsx)
+**File**: [frontend/app/components/AddItems/PhotoUpload.tsx](frontend/app/components/AddItems/PhotoUpload.tsx)
 
 Handles all image upload workflows with preview, validation, and error recovery.
 
 ### Dashboard/Publish (Featured) ⭐
-**File**: [frontend/app/dashboard/publish/[[...params]]/page.tsx](app/dashboard/publish/[[...params]]/page.tsx)
+**File**: [frontend/app/dashboard/publish/[[...params]]/page.tsx](frontend/app/dashboard/publish/[[...params]]/page.tsx)
 
 Complete publishing interface for creating and editing portfolio items.
 
 ### PreviewCard
-**File**: [frontend/app/components/PreviewCard/PreviewCard.tsx](app/components/PreviewCard/PreviewCard.tsx)
+**File**: [frontend/app/components/PreviewCard/PreviewCard.tsx](frontend/app/components/PreviewCard/PreviewCard.tsx)
 
 Displays individual portfolio items (projects/certifications) with images and metadata.
 
 ### PreviewDeck
-**File**: [frontend/app/components/PreviewDeck/PreviewDeck.tsx](app/components/PreviewDeck/PreviewDeck.tsx)
+**File**: [frontend/app/components/PreviewDeck/PreviewDeck.tsx](frontend/app/components/PreviewDeck/PreviewDeck.tsx)
 
 Carousel component for browsing multiple portfolio items on the homepage.
 
