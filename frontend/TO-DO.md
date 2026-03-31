@@ -1,7 +1,7 @@
 FRONTEND:
- - Custom 404 page
- - Add timed redirect to 404, Content Error, & Content Not Found page
+  - Add timed redirect to 404, Content Error, & Content Not Found page
  - update click displays??
+ - update Publish page styling for Mobile screens
  - add a propper footer
  - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
  - add Date() to localStorage Portfolio + a 1-day check to try a refresh...
@@ -10,6 +10,7 @@ FRONTEND:
  - Logo.tsx - too old. update to actual React/useState functions
  - Optimizie, use fewer client components
  - After publish - add Redirect to Item Type list page...
+ - X  -  Custom 404 page
  - X  -  fix Login Redirect (still not working... :S )
  - X  -  DASHBOARD:  Switch view/Edit icons & links
  - X  -  Remove Numbers & 'ACTIVE' from Preview Cards

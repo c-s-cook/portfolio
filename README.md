@@ -117,7 +117,7 @@ Public Display Pages (projects/certifications routes)
 frontend/
 ├── app/
 │   ├── (auth)/              # Authentication routes (login, signup, reset, verify)
-│   ├── (content)/           # Public content pages (projects, certifications, about)
+│   ├── (content)/           # Public content pages (projects, certifications)
 │   ├── api/                 # API endpoints
 │   │   ├── auth/           # Authentication operations
 │   │   ├── portfolio/      # Publish/fetch portfolio items
@@ -160,8 +160,8 @@ lambdas/
 # Install dependencies
 npm install
 
-# Create .env.local for environment variables
-# Required: DATABASE_URL, NEXT_PUBLIC_API_URL, S3_BUCKET, AWS_REGION, EMAIL_USER, EMAIL_PASS
+# Create .env for environment variables
+# Refer to .env.example for required vs optional environment variables
 
 # Run development server
 npm run dev
@@ -191,29 +191,25 @@ npm run lint       # Run ESLint checks
 ## Key Components
 
 ### PhotoUpload (Featured) ⭐
-**File**: [app/components/AddItems/PhotoUpload.tsx](app/components/AddItems/PhotoUpload.tsx)
+**File**: [frontend/app/components/AddItems/PhotoUpload.tsx](app/components/AddItems/PhotoUpload.tsx)
 
 Handles all image upload workflows with preview, validation, and error recovery.
 
 ### Dashboard/Publish (Featured) ⭐
-**File**: [app/dashboard/publish/[[...params]]/page.tsx](app/dashboard/publish/[[...params]]/page.tsx)
+**File**: [frontend/app/dashboard/publish/[[...params]]/page.tsx](app/dashboard/publish/[[...params]]/page.tsx)
 
 Complete publishing interface for creating and editing portfolio items.
 
 ### PreviewCard
-**File**: [app/components/PreviewCard/PreviewCard.tsx](app/components/PreviewCard/PreviewCard.tsx)
+**File**: [frontend/app/components/PreviewCard/PreviewCard.tsx](app/components/PreviewCard/PreviewCard.tsx)
 
 Displays individual portfolio items (projects/certifications) with images and metadata.
 
 ### PreviewDeck
-**File**: [app/components/PreviewDeck/PreviewDeck.tsx](app/components/PreviewDeck/PreviewDeck.tsx)
+**File**: [frontend/app/components/PreviewDeck/PreviewDeck.tsx](app/components/PreviewDeck/PreviewDeck.tsx)
 
 Carousel component for browsing multiple portfolio items on the homepage.
 
-### Navbar
-**File**: [app/components/Navbars/Navbar.tsx](app/components/Navbars/Navbar.tsx)
-
-Navigation component with responsive hamburger menu for mobile devices.
 
 ## Learning Outcomes
 

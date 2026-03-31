@@ -221,18 +221,6 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
             .replace(/\s+/g, " ")
             .trim();
 
-    // const stripHTML = (html: string = ""): string =>
-    //     html.replace(/<\/?[^>]+(>|$)/g, "");
-
-    // replace S3 img urls with CloudFront URLS
-    // project.thumbnails = project.thumbnails.map((img: ImageURL) => {
-
-    //     return {
-    //         ...img,
-    //         url: img.url?.replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`) || null
-    //     };
-
-    // });
 
 
 
@@ -243,23 +231,22 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
                     <div className="thumbnails">
                         {project.thumbnails.map((img, index) => {
                             if (!img.url) return null;
-                            // if (img.url.includes(process.env.NEXT_PUBLIC_S3_IMG_BUCKET)) {
-                            //     console.log('url before', img.url);
-                            //     img.url = img.url.replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`);
-                            //     console.log('url after', img.url);
-                            // } else {
-                            //     console.log(img.url, 'does not include', process.env.NEXT_PUBLIC_S3_IMG_BUCKET);
-                            // }
-                            if (!img.caption){
+
+                            // are we still checking for S3 URLs that need to be replaced with CDN URLs? if so, do it here. Otherwise, just use the img.url as is.
+                            const src = process.env.NEXT_PUBLIC_S3_IMG_BUCKET
+                                ? (img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`)
+                                : img.url;
+
+                            if (!img.caption) {
                                 img.caption = `An image ${index + 1} for ${project.title} showing Christopher Cook's work as a Full Stack application developer.`;
                             }
 
                             return (
                                 <NextImage
-                                    src={(img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`)}
+                                    src={src}
                                     // src={img.url}
-                                    width={500}
-                                    height={500}
+                                    width={200}
+                                    height={200}
                                     alt={img.caption}
                                     key={index}
                                     style={{

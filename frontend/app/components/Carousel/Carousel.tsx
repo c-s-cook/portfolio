@@ -211,7 +211,11 @@ export default function Carousel({ images, interval = 3000, autoPlay = true, hol
                     {images.map((img, i) => {
                         if (!img.url) return null;
 
-                        const src = (img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`);
+                        // are we still checking for S3 URLs that need to be replaced with CDN URLs? if so, do it here. Otherwise, just use the img.url as is.
+                        const src = process.env.NEXT_PUBLIC_S3_IMG_BUCKET
+                            ? (img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`)
+                            : img.url;
+
                         const proxySrc = `../../api/image-proxy?url=${encodeURIComponent(src)}`;
                         const active = i === index; // boolean - does this match the autoplay index?
                         return (
