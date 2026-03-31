@@ -19,7 +19,7 @@ const UserVerification = () => {
     const authType: AuthType = "VERIFY"
 
 
-    console.log("verify received params.tokens: ", userId, verificationToken);
+    // console.log("verify received params.tokens: ", userId, verificationToken);
 
 
 

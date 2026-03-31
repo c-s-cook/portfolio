@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import getPortfolio from "../../../lib/getPortfolio";
-import type { Project, ImageURL } from "../../../lib/types";
+import getPortfolio from "@lib/getPortfolio";
+import type { Project, ImageURL } from "@lib/types";
 
 import '../../ContentPages.css';
-import Carousel from "../../components/Carousel/Carousel";
+import Carousel from "@components/Carousel/Carousel";
 import Link from "next/link";
-import PreviewDeck from "../../components/PreviewDeck/PreviewDeck";
+import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
 
 const LinkIcon = () => {
 	return (

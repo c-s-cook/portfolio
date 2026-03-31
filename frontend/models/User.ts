@@ -86,7 +86,7 @@ const generateRandomString = (length) => {
 
 // fire a function after doc is daved to db
 userSchema.post('save', function (doc, next) {
-    console.log('new user was created and saved', doc)
+    console.log('new user was created and saved')
     next();
 });
 
@@ -95,7 +95,7 @@ userSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt)
     this.verificationToken = generateRandomString(64)
-    console.log('generated this veriToken: ', this.verificationToken)
+    // console.log('generated this veriToken: ', this.verificationToken)
     next();
 });
 
@@ -137,7 +137,7 @@ userSchema.statics.verify = async function (id, token) {
                     new: true
                 }).lean();
             if (user) {
-                console.log('user after update is: ', user)
+                // console.log('user after update is: ', user)
                 return user
             }
 
@@ -163,7 +163,7 @@ userSchema.statics.reverify = async function (email) {
             new: true
         }).lean();
     if (user) {
-        console.log('user after regened veriToken is: ', user)
+        // console.log('user after regened veriToken is: ', user)
         return user
     } else {
         throw Error('Issue updating with new veriToken.')
@@ -183,7 +183,7 @@ userSchema.statics.resetRequest = async function (email) {
             new: true
         }).lean();
     if (user) {
-        console.log('user after new password reset token is: ', user)
+        // console.log('user after new password reset token is: ', user)
         return user
     } else {
         throw Error('Email / User not found.')

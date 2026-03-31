@@ -19,16 +19,20 @@ const defaultProject: Project = {
     slug: 'demo-proj',
     thumbnails: [
         {
-            url: "/img/IMG-20210110-WA0000.jpg",
-            alt: "Picture of the author & child at play"
+            url: "/img/csc-cook-dev-sample-01.jpg",
+            alt: "Demo image number the first"
         },
         {
-            url: "/img/IMG-20210110-WA0001.jpg",
-            alt: "2nd pic of the author & child at play"
+            url: "/img/csc-cook-dev-sample-02.jpg",
+            alt: "Demo image number the second"
         },
         {
-            url: "/img/IMG-20210110-WA0002.jpg",
-            alt: "3rd photo of the author & child at play"
+            url: "/img/csc-cook-dev-sample-03.jpg",
+            alt: "Demo image number the third"
+        },
+        {
+            url: "/img/csc-cook-dev-sample-04.jpg",
+            alt: "Demo image number the fourth"
         },
     ],
     body: "",

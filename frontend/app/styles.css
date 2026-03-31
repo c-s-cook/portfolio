@@ -51,7 +51,7 @@ section.scrollsnap {
     min-height: 100vh;
 
     position: relative;
-    outline: 2px dotted greenyellow;
+    /* outline: 2px dotted greenyellow; */
 }
 
 section.scrollsnap,

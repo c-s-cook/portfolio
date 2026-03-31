@@ -13,6 +13,8 @@ type ResponseData = {
   message: string
 }
 
+const rootUrl = process.env.ROOT_URL || 'http://localhost:3000';
+
 
 
 //  handle errors
@@ -104,20 +106,17 @@ const returnResponse = (statusCode: number = 400, payload: Object, headers?: JSO
 const isSignup = async (email: string, password: string) => {
   try {
     const user = await User.create({ email, password });
-    const verificationLink = `http://localhost:3000/verification/${user._id}/${user.verificationToken}`;
+    const verificationLink = `${rootUrl}/verification/${user._id}/${user.verificationToken}`;
 
     sendMail({
       to: `${email}`,
       from: '"Christopher Cook" <no-reply@verify.brainroot.tv>',
       subject: 'You just signed up for my dev site!',
-      text: `Thank you! You just registered on my site using the following credentials. Email: ${email}, Password: ${password}`,
+      text: `Thank you! You just registered on my site using the following credentials. Email: ${email}. Please verify your account by clicking on the following link: ${verificationLink}`,
       html: `<h1>Thank you!</h1>
-              <p>You just registered on my site using the following credentials.</p>
-              <ul>
-                <li>Email: ${email}</li>
-                <li>Password: ${password}</li>
-              </ul>
-              <p>Please verify your account by clicking on the following link: ${verificationLink}
+              <p>You just registered on my site!.</p>
+              <p>
+                Please verify your account by clicking on the following link: ${verificationLink}
               </p>`
     })
 
@@ -257,7 +256,7 @@ const isVerify = async (userId: string, verificationToken: string) => {
 const isReverify = async (email: string) => {
   try {
     const user = await User.reverify(email);
-    const verificationLink = `http://localhost:3000/verification/${user._id}/${user.verificationToken}`;
+    const verificationLink = `${rootUrl}/verification/${user._id}/${user.verificationToken}`;
 
     sendMail({
       to: `${email}`,
@@ -289,7 +288,7 @@ const isReverify = async (email: string) => {
 const isResetRequest = async (email: string) => {
   try {
     const user = await User.resetRequest(email);
-    const verificationLink = `http://localhost:3000/reset/${user._id}/${user.resetToken}/${user.resetTime.getTime()}`;
+    const verificationLink = `${rootUrl}/reset/${user._id}/${user.resetToken}/${user.resetTime.getTime()}`;
 
     sendMail({
       to: `${email}`,

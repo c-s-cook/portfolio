@@ -1,14 +1,14 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import getPortfolio from "../../../lib/getPortfolio";
-import type { Certification, ImageURL } from "../../../lib/types";
+import { useParams, notFound } from "next/navigation";
+import getPortfolio from "@lib/getPortfolio";
+import type { Certification, ImageURL } from "@lib/types";
 
 import '../../ContentPages.css';
-import Carousel from "../../components/Carousel/Carousel";
+import Carousel from "@components/Carousel/Carousel";
 import Link from "next/link";
-import PreviewDeck from "../../components/PreviewDeck/PreviewDeck";
+import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
 
 const LinkIcon = () => {
 	return (
@@ -48,6 +48,7 @@ export default function CertificationPage() {
 	useEffect(() => {
 		let mounted = true;
 		if (!slug) {
+			
 			setError("No certification specified");
 			setLoading(false);
 			return;
@@ -64,6 +65,7 @@ export default function CertificationPage() {
 				if (found) {
 					setCertification(found);
 				} else {
+					
 					setError("Certification not found");
 				}
 			} catch (err: any) {
