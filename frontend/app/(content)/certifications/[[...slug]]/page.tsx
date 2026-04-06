@@ -86,11 +86,11 @@ export default function CertificationPage() {
 		<section className="certification-page no-snap">
 
 			{/* LOADING MSG */}
-			{/* {loading && (
+			{loading && (
 				<div className="content with-background bg-grad">
 					<p className="loading-text">Loading certification…</p>
 				</div>
-			)} */}
+			)}
 
 			{/* ERROR MSG */}
 			{error && slug && !loading && (
