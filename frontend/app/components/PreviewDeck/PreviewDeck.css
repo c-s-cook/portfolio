@@ -41,6 +41,11 @@
     0.3s ease;
     
 }
+.preview-search.skeleton::before {
+  content:'';
+  height: 1.5em;
+
+}
 .preview-search:has( input:focus){
   background: var(--background-rgba-60);
   border: 1px solid var(--foreground-rgba-60);

@@ -89,9 +89,9 @@ export default function ProjectPage() {
 			)}
 
 			{/* DISPLAY ALL PROJECT PREVIEW CARDS WHEN NO SLUG */}
-			{!slug && error && !loading && (
+			{!slug && error && (
 				<div className="content extra-long">
-					<PreviewDeck type={'project'} />
+						<PreviewDeck type={'project'} />
 				</div>
 			)}
 

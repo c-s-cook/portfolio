@@ -5,6 +5,7 @@ import getPortfolio from '../../../lib/getPortfolio';
 import type { Project, Certification } from '../../../lib/types';
 import PreviewCard from '../PreviewCard/PreviewCard';
 import './PreviewDeck.css';
+import { PreviewDeckSkeleton } from './PreviewDeckSkeleton';
 
 type Props = {
   type: 'project' | 'certification';
@@ -301,7 +302,8 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
 
   }, [query, allItems]);
 
-  if (loading) return <div className="preview-deck loading">Loading...</div>;
+  // if (loading) return <div className="preview-deck loading">Loading...</div>;
+  if (loading) return <PreviewDeckSkeleton />;
   if (error) return <div className="preview-deck error">Error: {error}</div>;
 
   return (

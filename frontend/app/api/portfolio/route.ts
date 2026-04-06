@@ -33,6 +33,8 @@ export async function GET(req: NextRequest) {
 
     const res = await fetch(getUrl);
     const data = await res.json();
+    // 5-second delay
+    // await new Promise(resolve => setTimeout(resolve, 5000));
     return NextResponse.json(data, { status: res.status });
 }
 

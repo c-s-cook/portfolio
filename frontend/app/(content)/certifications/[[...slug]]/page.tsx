@@ -8,6 +8,7 @@ import type { Certification, ImageURL } from "@lib/types";
 import '../../ContentPages.css';
 import Carousel from "@components/Carousel/Carousel";
 import Link from "next/link";
+// const PreviewDeck = React.lazy(() => import("@components/PreviewDeck/PreviewDeck"));
 import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
 
 const LinkIcon = () => {
@@ -85,11 +86,11 @@ export default function CertificationPage() {
 		<section className="certification-page no-snap">
 
 			{/* LOADING MSG */}
-			{loading && (
+			{/* {loading && (
 				<div className="content with-background bg-grad">
 					<p className="loading-text">Loading certification…</p>
 				</div>
-			)}
+			)} */}
 
 			{/* ERROR MSG */}
 			{error && slug && !loading && (
@@ -99,9 +100,11 @@ export default function CertificationPage() {
 			)}
 
 			{/* DISPLAY ALL PROJECT PREVIEW CARDS WHEN NO SLUG */}
-			{!slug && error && !loading && (
+			{!slug && error && (
 				<div className="content extra-long no-snap">
-					<PreviewDeck type={'certification'} />
+					
+						<PreviewDeck type={'certification'} />
+					
 				</div>
 			)}
 

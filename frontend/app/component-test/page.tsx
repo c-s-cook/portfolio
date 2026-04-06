@@ -10,6 +10,9 @@ import { useState, useRef, useEffect } from "react";
 import QuillRichText from "../components/Quill/QuillRichText";
 import Carousel from "../components/Carousel/Carousel";
 import PreviewDeck from "../components/PreviewDeck/PreviewDeck";
+import { PreviewCardSkeleton } from "@components/PreviewCard/PreviewCardSkeleton";
+import PreviewCard from "@components/PreviewCard/PreviewCard";
+import { PreviewDeckSkeleton } from "@components/PreviewDeck/PreviewDeckSkeleton";
 
 
 
@@ -73,7 +76,9 @@ const ComponentTest = () => {
 
                     {/* <Carousel images={imageURLs} interval={2000} holdOnFeatured={4} /> */}
 
-                    <PreviewDeck type="certification"/>
+                    {/* <PreviewDeck type="certification"/> */}
+                    {/* <PreviewCardSkeleton /> */}
+                    <PreviewDeckSkeleton />
 
 
 
