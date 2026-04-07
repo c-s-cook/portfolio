@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getPortfolio from '../../../lib/getPortfolio';
 import type { Project, Certification } from '../../../lib/types';
 import PreviewCard from '../PreviewCard/PreviewCard';
 import './PreviewDeck.css';
 import { PreviewDeckSkeleton } from './PreviewDeckSkeleton';
+import { set } from 'mongoose';
 
 type Props = {
   type: 'project' | 'certification';
   slideInterval?: number;
   limit?: number;
+  setTagResults: (type: 'PROJ' | 'CERT', hasResults: boolean) => void;
 };
 
 
@@ -23,7 +26,7 @@ const SearchIcon = () => {
 }
 
 
-export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props) {
+export default function PreviewDeck({ type, slideInterval = 5000, limit, setTagResults }: Props) {
   const [items, setItems] = useState<Project[] | Certification[] | null>(null);
   const [allItems, setAllItems] = useState<Project[] | Certification[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,6 +38,10 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
   const [observerClasses, setObserverClasses] = useState<string[]>([]);
   // const [scrollDirection, setScrollDirection] = useState<string>('DOWN');
   const scrollDirection = useRef('DOWN');
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   // function to pass to PreviewCards for updating Observations...
   function updateObserved(id: number, seeIt: boolean) {
@@ -204,6 +211,14 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
   //   console.log('from Deck bbb: ', typeof updateObserved);
   // }, []);
 
+  useEffect(() => {
+    const tagFromURL = searchParams.get('tags');
+    if (tagFromURL) {
+      setQuery(decodeURIComponent(tagFromURL));
+    }
+    else if (query) setQuery('');
+  }, [searchParams.get('tags')]);
+
 
   useEffect(() => {
     let mounted = true;
@@ -272,6 +287,7 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
       // })
       // console.log('from Deck: ', typeof updateObserved);
     }
+    else setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', false);
   }, [items])
 
 
@@ -279,12 +295,22 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
   useEffect(() => {
     if (!allItems) return;
     // const q = query.trim().toLowerCase();
+
+    // if we're clearing the query, also clear the URL tag param and reset the items to all
+    if (query.trim() === '' && searchParams.get('tags')) router.replace(pathname, { scroll: false });
+    
+
     const q = query.split(',');
     if (!q) {
+      console.log('Clearing tag filter, resetting items to all items...');
+
+
       let tempItems = [...allItems];
       if (limit !== undefined) tempItems = tempItems.slice(0, limit);
-      
+
       setItems(tempItems);
+      console.log('why not clear the tags?');
+      setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', false);
       return;
     }
 
@@ -298,6 +324,19 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
     }
     if (limit !== undefined) toBeFiltered = toBeFiltered.slice(0, limit);
     setItems(toBeFiltered);
+    
+    if (query && setTagResults && toBeFiltered.length > 0) {
+      // console.log(`Updating tag results for ${type}: ${toBeFiltered.length} matches found.`);
+      setTagResults(type === 'project' ? 'PROJ' : 'CERT', true);
+    } else {
+      setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', false);
+      console.log('setTagResults function not provided, cannot update tag results in parent component.');
+    }
+
+    // if (searchParams.get('tags') && query && toBeFiltered.length > 0 && setTagResults) {
+    //   // router.replace(`${pathname}?tags=${searchParams.get('tags')}&results=${toBeFiltered.length}`, { scroll: false });
+    //   setTagResults(type === 'project' ? 'PROJ' : 'CERT', toBeFiltered.length);
+    // }
 
 
   }, [query, allItems]);
@@ -349,7 +388,7 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit }: Props
               observerClasses: observerClasses[i]
             }}
           />
-          )
+        )
 
         )}
       </div>

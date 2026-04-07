@@ -4,7 +4,7 @@
 // import Image from 'next/image'
 // import Link from 'next/link'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 
 
@@ -13,10 +13,20 @@ import { Satisfy } from 'next/font/google'
 import Logo from './components/Logo/Logo'
 import PreviewCard from './components/PreviewCard/PreviewCard'
 import PreviewDeck from './components/PreviewDeck/PreviewDeck'
+import TagCloud from './components/TagCloud/TagCloud'
 const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
 
 
 export default function Home() {
+
+  const [projTagResults, setProjTagResults] = useState<boolean>(false);
+  const [certTagResults, setCertTagResults] = useState<boolean>(false);
+
+  function setTagResults (type: 'PROJ' | 'CERT', hasResults: boolean):void {
+    if (type === 'PROJ') setProjTagResults(hasResults);
+    else setCertTagResults(hasResults);
+    console.log(`Tag results updated: ${type} has results? ${hasResults} | projTagResults: ${projTagResults} | certTagResults: ${certTagResults}`);
+  };
 
 
   let prvi = 1;
@@ -25,7 +35,8 @@ export default function Home() {
   // which would otherwise overflow the vertical height of the window. So
   // the observer toggles scrollsnap
   useEffect(() => {
-    return
+    // canceled that out...
+    return;
 
     let scrollnapContainer = document.querySelector('.scrollsnap-container');
     let sections = document.querySelectorAll('section:has(>.content.extra-long)');
@@ -96,6 +107,7 @@ export default function Home() {
       <section className='scrollsnap'>
         <div className="content no-background">
           <Logo />
+          <TagCloud projTagResults={projTagResults} certTagResults={certTagResults} />
         </div>
       </section>
 
@@ -113,13 +125,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className='scrollsnap'>
+      <section className='scrollsnap' id='projects'>
         <div className="content extra-long">
 
           <h2 className={satisfy.className}>Projects</h2>
 
 
-          <div className="body preview-deck">
+          {/* <div className="body preview-deck">
 
             <PreviewCard cardID={1} />
             <PreviewCard cardID={2} />
@@ -128,9 +140,19 @@ export default function Home() {
             <PreviewCard cardID={5} />
             <PreviewCard cardID={6} />
 
-          </div>
+          </div> */}
 
-          {/* <PreviewDeck type={'project'}/> */}
+          <PreviewDeck type={'project'}  setTagResults={setTagResults}/>
+
+        </div>
+      </section>
+
+      <section className='scrollsnap' id='certifications'>
+        <div className="content extra-long">
+
+          <h2 className={satisfy.className}>Certifications</h2>
+
+          <PreviewDeck type={'certification'}  setTagResults={setTagResults}/>
 
         </div>
       </section>

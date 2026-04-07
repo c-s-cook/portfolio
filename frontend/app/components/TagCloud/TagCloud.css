@@ -1,0 +1,89 @@
+
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2em;
+    margin-top: 2em;
+    /* animation in */
+    opacity: 0;
+    animation: fadeIn 0.9s ease-in-out forwards;
+    animation-delay: 1.0s;
+    -moz-animation-delay: 1.0s;
+    -webkit-animation-delay: 1.0s;
+}
+
+.tag-cloud .tag-box {
+    opacity: 0.7;
+    border-color: var(--foreground-rgba-20);
+    padding-right: 1.5em;
+    margin: 5px;
+    transition: 0.2s ease-in-out;
+}
+
+
+.tag-cloud .tag-box::before {
+    content: "✕";
+    visibility: hidden;
+    padding-right: 0em;
+    transition: 0.2s ease-in-out;
+}
+
+
+.tag-cloud .tag-box:hover {
+    opacity: 1;
+    border-color: var(--foreground-rgba-80);
+    background-color: var(--background-rgba-40);
+}
+
+.tag-cloud .tag-box.active {
+    opacity: 1;
+    border-color: var(--foreground-rgba-80);
+    padding-right: 1em;
+    font-weight: bold;
+}
+.tag-cloud .tag-box.active::before {
+    visibility: visible;
+    padding-right: 0.5em;
+    opacity: 0.5;
+}
+.tag-cloud .tag-box.active:hover::before {
+    opacity: 1;
+}
+
+
+
+.tag-cloud-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 1.5em;
+    min-height: 3em;
+    max-height: 3em;
+    overflow-y: hidden;
+    /* border: 1px dotted yellow; */
+}
+
+.tag-cloud-links a {
+    transition: 1s ease-in-out;
+    /* max-width: 0; */
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    /* animation: fade-in-up 0.3s ease-in-out reverse; */
+
+}
+.tag-cloud-links a.active {
+    max-width: 1000px;
+    width: auto;
+    opacity: 1;
+    
+    transition: 1.3s ease-in-out;
+    /* animation: fade-in-up 0.5s ease-in-out forwards;
+    animation-delay: 1.3s;
+    -moz-animation-delay: 1.3s;
+    -webkit-animation-delay: 1.3s; */
+}

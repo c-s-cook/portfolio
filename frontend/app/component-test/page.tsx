@@ -12,6 +12,7 @@ import Carousel from "../components/Carousel/Carousel";
 import PreviewDeck from "../components/PreviewDeck/PreviewDeck";
 import { PreviewCardSkeleton } from "@components/PreviewCard/PreviewCardSkeleton";
 import PreviewCard from "@components/PreviewCard/PreviewCard";
+import { TagCloud } from "@components/TagCloud/TagCloud";
 import { PreviewDeckSkeleton } from "@components/PreviewDeck/PreviewDeckSkeleton";
 
 
@@ -75,10 +76,14 @@ const ComponentTest = () => {
                     {/* <PhotoUpload {...photoUploadProps} /> */}
 
                     {/* <Carousel images={imageURLs} interval={2000} holdOnFeatured={4} /> */}
-
-                    {/* <PreviewDeck type="certification"/> */}
+                    <TagCloud />
                     {/* <PreviewCardSkeleton /> */}
-                    <PreviewDeckSkeleton />
+                    {/* <PreviewDeckSkeleton /> */}
+                    <br />
+                    <br />
+                    
+                    <PreviewDeck type="project"/>
+                    
 
 
 
