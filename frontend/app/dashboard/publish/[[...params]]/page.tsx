@@ -171,7 +171,7 @@ export default function PublishPortfolioItem() {
       addStar: true,
       addCaptions: true,
       autoUpload: {
-        uploadAPI: '../../api/img',
+        uploadAPI: '/api/img',
         imageURLs: imageURLs,
         setImageURLs: setImageURLs,
         startUpload: startUpload,
