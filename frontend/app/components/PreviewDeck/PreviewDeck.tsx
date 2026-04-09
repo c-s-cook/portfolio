@@ -13,7 +13,7 @@ type Props = {
   type: 'project' | 'certification';
   slideInterval?: number;
   limit?: number;
-  setTagResults: (type: 'PROJ' | 'CERT', hasResults: boolean) => void;
+  setTagResults?: (type: 'PROJ' | 'CERT', hasResults: boolean) => void;
 };
 
 
@@ -327,7 +327,7 @@ export default function PreviewDeck({ type, slideInterval = 5000, limit, setTagR
     
     if (query && setTagResults && toBeFiltered.length > 0) {
       // console.log(`Updating tag results for ${type}: ${toBeFiltered.length} matches found.`);
-      setTagResults(type === 'project' ? 'PROJ' : 'CERT', true);
+      setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', true);
     } else {
       setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', false);
       console.log('setTagResults function not provided, cannot update tag results in parent component.');

@@ -68,7 +68,16 @@ export const TagCloud: React.FC<TagCloudProps> = ({ projTagResults = false, cert
     return (
         <>
             <div className='tag-cloud'>
-                {uniqueTags.map((uniqueTag) => (
+                {uniqueTags.length == 0 && 
+                    <>
+                    <span className="tag-box suspense-loading-animation"></span>
+                    <span className="tag-box suspense-loading-animation"></span>
+                    <span className="tag-box suspense-loading-animation"></span>
+                    <span className="tag-box suspense-loading-animation"></span>
+                    </>
+                }
+
+                {uniqueTags.length > 0 && uniqueTags.map((uniqueTag) => (
                     <span
                         key={uniqueTag.tag}
                         data-tag={encodeURIComponent(uniqueTag.tag)}

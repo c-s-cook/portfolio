@@ -6,6 +6,10 @@
     justify-content: center;
     gap: 0.2em;
     margin-top: 2em;
+    height: auto;
+    transition: 1s ease-in-out;
+    /* border: 1px dotted yellow; */
+    /* max-height: 9em; */
     /* animation in */
     opacity: 0;
     animation: fadeIn 0.9s ease-in-out forwards;
@@ -14,12 +18,29 @@
     -webkit-animation-delay: 1.0s;
 }
 
+
+.tag-cloud .tag-box.suspense-loading-animation {
+    width: 10%;
+}
+.tag-cloud .tag-box.suspense-loading-animation:nth-of-type(2){
+    width: 20%;
+}
+.tag-cloud .tag-box.suspense-loading-animation:nth-of-type(4){
+    width: 25%;
+}
+
+
 .tag-cloud .tag-box {
     opacity: 0.7;
     border-color: var(--foreground-rgba-20);
     padding-right: 1.5em;
     margin: 5px;
     transition: 0.2s ease-in-out;
+}
+
+.tag-cloud .tag-box:last-of-type {
+    /* margin-bottom: 10em; */
+    
 }
 
 
