@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
     console.log('API portfolio POST actionType = ', actionType);
 
-    if (!actionType || (actionType !== 'add')) {
+    if (!actionType || (actionType !== 'add' && actionType !== 'edit')) {
         return NextResponse.json({ error: 'Invalid Action-Type' }, { status: 400 });
     }
 
@@ -78,18 +78,27 @@ export async function POST(req: NextRequest) {
     console.log('sending portfolio payload to Lambda...');
     const res = await fetch(postUrl, {
         method: 'POST',
-        headers: { 
+        headers: {
             'Content-Type': 'application/json',
             'Action-Type': actionType
         },
         body: JSON.stringify(payload),
     });
 
-    
 
-    const data = await res.json();
-    
-    if (!res.ok) console.log(data);
+    if (!res.ok) {
+        if (res.json) {
+            const errorData = await res.json();
+            console.log('Error response from Lambda:', errorData);
+            return NextResponse.json({ error: 'Error from Lambda', details: errorData }, { status: res.status });
+        } else {
+            console.log('Error response from Lambda with no JSON body');
+            return NextResponse.json({ error: 'Error from Lambda with no details' }, { status: res.status });
+        }
+    }
+    else {
+        const data = await res.json();
+        return NextResponse.json(data, { status: res.status });
+    }
 
-    return NextResponse.json(data, { status: res.status });
 }

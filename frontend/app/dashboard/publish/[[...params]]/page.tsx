@@ -337,7 +337,7 @@ export default function PublishPortfolioItem() {
       for (const file of autoSavedItem.tempImageFiles) {
         // if not .name, exit
         if (!file.name) continue;
-        
+
         // check if the file.name matches one in thumbnails (already been uploaded)
         let isNameMatch = autoSavedItem.thumbnails.map(thumb => thumb.ogName).includes(file.name);
         if (!isNameMatch) isNameMatch = autoSavedItem.thumbnails.map(thumb => thumb.name).includes(file.name);
@@ -357,7 +357,7 @@ export default function PublishPortfolioItem() {
               // display an error through the publishingErrors obj
               setPubErrors((prevErr) => {
                 let msg = "Unable to load previously selected images. Sorry. :/";
-                return { ...prevErr, thumbnails: {text: msg, warn: 'warn'}}
+                return { ...prevErr, thumbnails: { text: msg, warn: 'warn' } }
               })
             };
           }
@@ -557,9 +557,18 @@ export default function PublishPortfolioItem() {
 
         if (itemData.title) setTitle(itemData.title);
         if (itemData.slug) setSlug(itemData.slug);
-        if (quillRef.current && (quillRef.current as any).root && itemData.body !== undefined) {
-          (quillRef.current as any).root.innerHTML = itemData.body || '';
+
+        
+
+        // if (quillRef.current && (quillRef.current as any).root && itemData.body !== undefined) {
+        if (quillRef.current && (quillRef.current as any).root) {
+          // (quillRef.current as any).root.innerHTML = itemData.body || 'Failed to Load Body Content...';
+          (quillRef.current as any).root.innerHTML = itemData.body;
+          // console.log('set content for quill editor: ', itemData.body);
+
+          // setContent(itemData.body);
         }
+
         if (itemData.tags) setTags(itemData.tags);
         if (itemData.thumbnails && itemData.thumbnails.length > 0) {
           setImageURLs([...itemData.thumbnails]);
@@ -581,6 +590,11 @@ export default function PublishPortfolioItem() {
       canAutoSave.current = true;
       autoSave();
       setLoading(false);
+      let delay = setTimeout(() => {
+        if (itemData.body && quillRef.current && (quillRef.current as any).root) (quillRef.current as any).root.innerHTML = itemData.body;
+        console.log('quill set with body...??');
+        clearTimeout(delay);
+      }, 1000);
     }
     else if (itemType !== undefined) {
       // canLoadAutoSave.current = true;
@@ -765,7 +779,7 @@ export default function PublishPortfolioItem() {
       console.log('Posting project:', newPortfolioItem.current);
 
       try {
-        const response = await fetch('../../api/portfolio', {
+        const response = await fetch('/api/portfolio', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -813,9 +827,11 @@ export default function PublishPortfolioItem() {
 
 
         // All done here. send them on their way...
-        setTimeout(() => {
+        let pushTimerID = setTimeout(() => {
 
-          router.push('../');
+          clearTimeout(pushTimerID);
+          router.push('/dashboard');
+
 
         }, 2000);
 
@@ -863,7 +879,10 @@ export default function PublishPortfolioItem() {
       isPublishingRef.current = false;
     }
     //  check for duplicate title/slug...
-    else if (itemTypeSlugs.current && itemTypeSlugs.current.map(item => item.slug).includes(slug)) {
+    else if (
+      (actionType == 'add' && itemTypeSlugs.current && itemTypeSlugs.current.map(item => item.slug).includes(slug))
+      || (actionType == 'edit' && itemTypeSlugs.current && itemTypeSlugs.current.filter(item => item.slug === slug && item.id !== itemId).length > 0)
+      ) {
       let msg = 'Title or slug already exists.'
       tempErrors.title = { text: msg, warn: '' };
 
