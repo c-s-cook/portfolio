@@ -38,57 +38,57 @@ export default function Home() {
     // canceled that out...
     return;
 
-    let scrollnapContainer = document.querySelector('.scrollsnap-container');
-    let sections = document.querySelectorAll('section:has(>.content.extra-long)');
-    if (scrollnapContainer && sections.length > 0) {
+    // let scrollnapContainer = document.querySelector('.scrollsnap-container');
+    // let sections = document.querySelectorAll('section:has(>.content.extra-long)');
+    // if (scrollnapContainer && sections.length > 0) {
 
-      let numSteps = 20;
-      let buildThresholdsList = () => {
-        const thresholds = [];
+    //   let numSteps = 20;
+    //   let buildThresholdsList = () => {
+    //     const thresholds = [];
 
-        for (let i = 1.0; i <= numSteps; i++) {
-          const ratio = i / numSteps;
-          thresholds.push(ratio);
-        }
+    //     for (let i = 1.0; i <= numSteps; i++) {
+    //       const ratio = i / numSteps;
+    //       thresholds.push(ratio);
+    //     }
 
-        thresholds.push(0);
-        return thresholds;
-      }
+    //     thresholds.push(0);
+    //     return thresholds;
+    //   }
 
-      // console.log('found scrollsnapContainer & these sections:', sections);
+    //   // console.log('found scrollsnapContainer & these sections:', sections);
 
-      let prevRatio = 0.0;
-      let isSnapping = true;
+    //   let prevRatio = 0.0;
+    //   let isSnapping = true;
 
-      let scrollsnapToggle = (entries) => {
-        entries.forEach((entry) => {
+    //   let scrollsnapToggle = (entries) => {
+    //     entries.forEach((entry) => {
 
-          if (entry.intersectionRatio < prevRatio && entry.intersectionRatio <= 0.45) {
-            isSnapping = true;
-            scrollnapContainer.style.scrollSnapType = "y mandatory";
-          }
-          else if (entry.intersectionRatio < prevRatio && isSnapping) {
-            isSnapping = false;
-            scrollnapContainer.style.scrollSnapType = "none";
-          }
+    //       if (entry.intersectionRatio < prevRatio && entry.intersectionRatio <= 0.45) {
+    //         isSnapping = true;
+    //         scrollnapContainer.style.scrollSnapType = "y mandatory";
+    //       }
+    //       else if (entry.intersectionRatio < prevRatio && isSnapping) {
+    //         isSnapping = false;
+    //         scrollnapContainer.style.scrollSnapType = "none";
+    //       }
 
-          prevRatio = entry.intersectionRatio;
-        })
-      }
+    //       prevRatio = entry.intersectionRatio;
+    //     })
+    //   }
 
-      let observerToggleOptions = {
-        root: null,
-        rootMargin: "-10% 0% -10% 0%",
-        threshold: buildThresholdsList(),
-      }
+    //   let observerToggleOptions = {
+    //     root: null,
+    //     rootMargin: "-10% 0% -10% 0%",
+    //     threshold: buildThresholdsList(),
+    //   }
 
 
-      let observerToggle = new IntersectionObserver(scrollsnapToggle, observerToggleOptions);
+    //   let observerToggle = new IntersectionObserver(scrollsnapToggle, observerToggleOptions);
 
-      for (let section of sections) {
-        observerToggle.observe(section);
-      }
-    }
+    //   for (let section of sections) {
+    //     observerToggle.observe(section);
+    //   }
+    // }
 
 
 
@@ -119,7 +119,7 @@ export default function Home() {
 
           <div className="body">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque dignissim enim sit amet venenatis urna. In fermentum et sollicitudin ac orci phasellus egestas tellus. Cras semper auctor neque vitae. Tincidunt vitae semper quis lectus nulla at volutpat diam. Pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus. Vel pharetra vel turpis nunc eget lorem. Sodales ut eu sem integer vitae justo eget magna. Egestas erat imperdiet sed euismod nisi porta lorem. Dui accumsan sit amet nulla facilisi. Mattis vulputate enim nulla aliquet porttitor lacus luctus accumsan. Turpis in eu mi bibendum neque egestas congue. Suspendisse interdum consectetur libero id faucibus nisl tincidunt.
+              A mild-mannered A/V geek by day. But when kids' melatonine pills finally kick in, I transform into a coding geek. ...so really, not much of a shift there.
             </p>
           </div>
         </div>
@@ -129,18 +129,6 @@ export default function Home() {
         <div className="content extra-long">
 
           <h2 className={satisfy.className}>Projects</h2>
-
-
-          {/* <div className="body preview-deck">
-
-            <PreviewCard cardID={1} />
-            <PreviewCard cardID={2} />
-            <PreviewCard cardID={3} />
-            <PreviewCard cardID={4} />
-            <PreviewCard cardID={5} />
-            <PreviewCard cardID={6} />
-
-          </div> */}
 
           <PreviewDeck type={'project'}  setTagResults={setTagResults}/>
 
@@ -160,7 +148,7 @@ export default function Home() {
       <section className='scrollsnap'>
         <div className="content">
 
-          <h2 className={satisfy.className}>About me 3...</h2>
+          <h2 className={satisfy.className}>What AI Thinks I should say about myself...</h2>
 
           <div className="body">
             <p>
