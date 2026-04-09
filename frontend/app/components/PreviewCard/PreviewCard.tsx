@@ -61,9 +61,13 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
     const shuffleThumbs = (card: HTMLBodyElement) => {
 
+
+
         let thumbs: Element = card.getElementsByClassName("thumbnails")[0];
 
-        if (!thumbs || !thumbs.firstChild || !thumbs.lastChild || !(thumbs.firstChild as HTMLImageElement).style.left) return;
+        if (!thumbs || thumbs.children.length < 2 || !thumbs.firstChild || !thumbs.lastChild || !(thumbs.firstChild as HTMLImageElement).style.left) return;
+
+        console.log('shuffling thumbs for card ', cardID, new Date().toLocaleDateString());
 
         // Attempting Re-ordering...
         if ((thumbs.firstChild as HTMLImageElement).style.left != "0%") {
@@ -76,7 +80,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
         // Sliding the thumbnails over...
         for (let i = 0; i < thumbs.children.length; i++) {
-            (thumbs.children[i] as HTMLImageElement).style.zIndex = "0";
+            (thumbs.children[i] as HTMLImageElement).style.zIndex = `${i * -1}`;
             (thumbs.children[i] as HTMLImageElement).style.left = `${(i - 1) * 100}%`;
         }
     }
@@ -99,82 +103,30 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
             e.preventDefault();
 
             clearInterval(shuffleInterval);
+            console.log('stopped shuffle for card ', cardID, new Date().toLocaleDateString());
             shuffleInterval = null;
         }
 
+        
         const card = ref.current;
 
         if (project.thumbnails.length > 1) {
-            card.addEventListener('mouseenter', startShuffle);
-            card.addEventListener('mouseleave', stopShuffle, false);
+            ref.current && console.log(ref.current.id, new Date().toLocaleString());
+            ref.current?.addEventListener('mouseenter', startShuffle);
+            ref.current?.addEventListener('mouseleave', stopShuffle, false);
         }
+        
 
 
 
-        // IntersectionObserver for Phone /responsive layout
+        // 
+        // IntersectionObserver for mobile / responsive layout
+        // 
+
         if (!observerOptions) return;
 
         const toggleActiveCard = (entries) => {
-
-
-            if (typeof updateObserved === 'function') {
-
-                // if(entries[0].isIntersecting){
-                //     card.style.color = 'red';
-                // } else {
-                //     card.style.color = 'black';
-                // }
-
-                updateObserved(cardID, entries[0].isIntersecting);
-            }
-
-            // setObservedCards((prevCards) => {
-            //     let newCards = [...prevCards];
-
-            //     newCards[cardID] = entries[0].isIntersecting ? 'observed' : ''
-
-            //     return [...newCards]
-            // })
-
-
-            // if (entries[0].isIntersecting) {
-            //     // card.classList.add("active");
-            //     // card.classList.add("observed");
-
-            //     setIsObserved('observed');
-            //     console.log(card.id, ' is observed.');
-            //     // let activeCards = document.querySelectorAll('.preview-card.active');
-            //     // if(activeCards.length == 0){
-
-            //     // }
-            //     // console.log();
-            //     // console.log(!(document.querySelector('.preview-card.active')));
-            //     // if(!(document.querySelector('.preview-card.active'))) card.classList.add('active');
-            // } else {
-            //     // card.classList.remove("active");
-            //     setIsObserved('');
-            //     console.log(card.id, 'is NOT observed');
-
-            //     // card.classList.remove("observed");
-            //     // if(card.classList.contains('active')){
-            //     //     card.classList.remove('active');
-            //     //     let nextCard = document.querySelector('.preview-card.observed');
-            //     //     console.log('adding ACTIVE to ', nextCard.id)
-            //     //     nextCard.classList.add('active');
-            //     // }
-            // }
-
-
-            // let activeCards = document.querySelectorAll('.preview-card.active');
-            // activeCards.forEach((card) => {
-            //     if (entries[0] !== card) card.classList.remove('active')
-            // });
-            // console.log(entries[0]);
-            // console.log('active cards = ', activeCards.length);
-            // console.log('card em = ', parseFloat(getComputedStyle(entries[0].target).fontSize));
-            // console.log('parent parent em = ', parseFloat(getComputedStyle(entries[0].target.parentElement.parentElement).fontSize));
-            // if (entries.length > 0) entries[0].target.parentElement.parentElement.style.marginBottom = `-${activeCards.length * 9}em`;
-            // console.log(entries[0].target.parentElement.parentElement.style.marginBottom);
+            if (typeof updateObserved === 'function') updateObserved(cardID, entries[0].isIntersecting);
         }
 
         let cardObserverOptions = {
@@ -183,33 +135,33 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
             threshold: .5,
         };
 
-
-
+        const observer = new IntersectionObserver(toggleActiveCard, cardObserverOptions);
         let mobileObservation = (screenWidth) => {
-            if (screenWidth.matches) {
-                const observer = new IntersectionObserver(toggleActiveCard, cardObserverOptions);
-                observer.observe(card);
-            }
+
+            if (screenWidth.matches) ref.current &&observer.observe(ref.current);
+            else ref.current && observer.unobserve(ref.current);
         }
 
         let screenWidth = window.matchMedia("(max-width: 768px)");
         mobileObservation(screenWidth);
+        const checkMobile = () => mobileObservation(screenWidth);
 
         // Attach listener function on state changes
-        screenWidth.addEventListener("change", () => mobileObservation(screenWidth));
+        screenWidth.addEventListener("change", checkMobile);
 
 
+        // Cleanup function
+        return () => {
+            console.log('cleaning up observers & Intervals for card ', cardID, new Date());
+            clearInterval(shuffleInterval);
+            ref.current?.removeEventListener('mouseenter', startShuffle);
+            ref.current?.removeEventListener('mouseleave', stopShuffle, false);
+            screenWidth.removeEventListener("change", checkMobile);
+            observer.disconnect();
+        }
     }, [])
 
-    // useEffect(() => {
-    //     if (isObserved) {
-    //         let activeCards = document.querySelectorAll('.preview-card.active');
-    //         if (activeCards.length == 0) {
-    //             setIsActive('active');
-    //         }
-    //     } else setIsActive('');
 
-    // }, [isObserved])
 
     project = !project ? defaultProject : project;
     let type = project.type == 'PROJ' ? 'projects' : 'certifications';
@@ -264,7 +216,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
                     <h3>{project.title}</h3>
                     <div className="preview-snippet">
                         {project.snippet && (<p>{project.snippet}</p>)}
-                        {!project.snippet && project.body && (<p>{stripHTML(project.body.slice(0, 100))}</p>)}
+                        {!project.snippet && project.body && (<p>{stripHTML(project.body.slice(0, 200))}</p>)}
                         {/* <p >{project.snippet}</p> */}
                     </div>
                     <div className="tags">

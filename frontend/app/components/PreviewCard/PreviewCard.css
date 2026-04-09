@@ -15,8 +15,13 @@
     margin-bottom: 4em;
     padding: 2em;
     opacity: 0;
+    border: 1px solid var(--foreground-rgba-20);
+    
+    
+    box-shadow: var(--foreground-rgba-20) 0px 5px 30px;
     /* set at 0 b/c animation will set it to 1 */
     animation: fade-in-up 0.5s ease-in-out forwards;
+    
 
 }
 
@@ -32,6 +37,7 @@
     margin-bottom: 1em;
     /* background-color: aqua; */
     background-image: var(--content-bg-grad);
+    
 }
 
 .preview-card .thumbnails {
@@ -91,7 +97,7 @@
 .preview-card .preview-snippet {
     /* grid-column: 1 / 3;
     grid-row: 3 / 7; */
-
+    height: 4em;
     -webkit-box-orient: vertical;
     display: -webkit-box;
     text-align: justify;
@@ -123,8 +129,9 @@
 .preview-card .tags {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
-    max-height: calc(line-height *1);
+    /* -webkit-line-clamp: 1; */
+    max-height: 3em;
+    height: 3em;
 }
 .preview-card.skeleton .tags {
     display: block;
@@ -166,6 +173,8 @@
     right: 0%;
     border: none;
     background: none;
+    color: var(--foreground-rgb);
+    font-weight: bolder;
 
     /* bottom: 0%; */
 
@@ -185,15 +194,19 @@
 /* APPLYING MEDIA QUERIES */
 @media (max-width: 768px) {
     .preview-card {
-        max-width: 100%;
-        max-height: 6em;
+        max-width: 95%;
+        max-height: 8em;
         /* width: 100%; */
         width: 95vw;
-        margin: 0;
+        margin: 0 auto;
         margin-bottom: 1em;
         padding: 1em;
         padding-bottom: 1em;
         overflow-y: hidden;
+        display: grid;
+        grid-template-columns: [first] 4em [second] 1fr;
+        grid-template-rows: [first] auto [second] 2.5em [third] 2.5em [fourth] auto;
+        gap: 0.5em;
         /* overflow-x: visible; */
 
         transition: padding-bottom 0.6s ease-in;
@@ -203,7 +216,7 @@
 
     .preview-card.active {
         /* max-height: 600px; */
-        padding-bottom: 10em;
+        padding-bottom: 11em;
         overflow: hidden;
         /* background-color: aqua; */
         background-image: var(--content-bg-grad);
@@ -222,6 +235,8 @@
 
 
     .preview-card .thumbnails {
+        grid-column: 1/2;
+        grid-row: 2 / 4;
         width: 4em;
         height: 4em;
         float: left;
@@ -236,12 +251,21 @@
     }
 
     .preview-card h3 {
+        grid-column: 1/3;
+        grid-row: 1/2;
+        text-align: left;
+        flex-basis: 100%;
         padding-top: 0;
         padding-bottom: 0;
     }
 
     .preview-card .preview-snippet {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
         -webkit-line-clamp: 2;
+        height: 3.5em;
+        min-height: 2.5em;
+        max-height: 3.5em
     }
 
     .preview-card p {
@@ -249,12 +273,16 @@
     }
 
     .preview-card .tags {
+        grid-column: 2 / 3;
+        grid-row: 3 / 4;
         margin-top: 0.5em;
+        max-height: 3em;
         opacity: 1;
         visibility: visible;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
+        height: fit-content;
         transition: 0.3s ease;
     }
 
@@ -267,11 +295,15 @@
     }
 
     .preview-card button {
+        grid-column: 1 / 3;
+        grid-row: 4 / 5;
         transition: 1.5s ease;
         position: relative;
         float: right;
         padding-right: 20%;
         text-align: center;
+        padding-bottom: 1em;
+        /* margin: 0.5em 2em 2em auto; */
     }
 
     .preview-card.active .tags,

@@ -26,7 +26,7 @@ const SearchIcon = () => {
 }
 
 
-export default function PreviewDeck({ type, slideInterval = 5000, limit, setTagResults }: Props) {
+export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResults }: Props) {
   const [items, setItems] = useState<Project[] | Certification[] | null>(null);
   const [allItems, setAllItems] = useState<Project[] | Certification[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

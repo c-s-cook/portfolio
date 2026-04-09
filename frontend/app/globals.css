@@ -134,6 +134,9 @@ a {
 
     --light-grad-start-rgb: rgb(197, 168, 222);
     --light-grad-end-rgb: rgb(167, 222, 167);
+
+    /* Misc. Global Vars */
+    --box-shadow: 0 2px 6px rgba(255, 255, 255, 0.6);
   }
 }
 

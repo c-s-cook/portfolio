@@ -76,14 +76,18 @@ const ComponentTest = () => {
                     {/* <PhotoUpload {...photoUploadProps} /> */}
 
                     {/* <Carousel images={imageURLs} interval={2000} holdOnFeatured={4} /> */}
-                    <TagCloud />
+                    {/* <TagCloud /> */}
                     {/* <PreviewCardSkeleton /> */}
                     {/* <PreviewDeckSkeleton /> */}
                     <br />
                     <br />
                     
-                    <PreviewDeck type="project"/>
+                    {/* <PreviewDeck type="project"/> */}
                     
+                    <PreviewCard cardID={1} />
+                    <PreviewCard cardID={2} />
+                    <PreviewCard cardID={3} />
+                    <PreviewCard cardID={4} />
 
 
 

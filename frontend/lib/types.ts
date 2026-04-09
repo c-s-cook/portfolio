@@ -59,7 +59,7 @@ export interface PreviewCardProps {
     key: string,
     cardID: number,
     project: Project | Certification,
-    slideinterval: number,
+    slideinterval?: number,
     observerOptions?: {
         updateObserved: Function,
         observerClasses: string
