@@ -1,10 +1,11 @@
 "use client"
 
-import NextImage from "next/image";
 import Link from "next/link";
 import "./PreviewCard.css";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState, Suspense } from "react";
 import animationEase from "../../../lib/animationEase";
+import { ThumbnailsCarousel } from "./ThumbnailsCarousel";
+import { ThumbnailsCarouselFallback } from "./ThumbnailsCarouselFallback";
 
 import type { Project, Certification, PreviewCardProps, ImageURL } from "../../../lib/types"
 
@@ -180,38 +181,9 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
         <>
             <Link href={`/${type}/${project.slug}`} key={"preview-card-link-" + cardID}>
                 <div ref={ref} className={`preview-card with-background ${observerClasses}`} id={"preview-card-" + cardID} key={`preview-card-${cardID}`} style={{ animationDelay: `${animationEase(cardID)}s` }}>
-                    <div className="thumbnails">
-                        {project.thumbnails.map((img, index) => {
-                            if (!img.url) return null;
-
-                            // are we still checking for S3 URLs that need to be replaced with CDN URLs? if so, do it here. Otherwise, just use the img.url as is.
-                            const src = process.env.NEXT_PUBLIC_S3_IMG_BUCKET
-                                ? (img.url as string).replace(process.env.NEXT_PUBLIC_S3_IMG_BUCKET, `${process.env.NEXT_PUBLIC_IMG_BUCKET_CDN}/`)
-                                : img.url;
-
-                            if (!img.caption) {
-                                img.caption = `An image ${index + 1} for ${project.title} showing Christopher Cook's work as a Full Stack application developer.`;
-                            }
-
-                            return (
-                                <NextImage
-                                    src={src}
-                                    // src={img.url}
-                                    width={200}
-                                    height={200}
-                                    alt={img.caption}
-                                    key={index}
-                                    style={{
-                                        zIndex: `${(index * -1)}`,
-                                        left: `${index * 100}%`
-                                    }}
-                                    sizes="500px"
-                                />
-                            )
-
-                        })}
-
-                    </div>
+                    <Suspense fallback={<ThumbnailsCarouselFallback />}>
+                        <ThumbnailsCarousel thumbnails={project.thumbnails} project={project} />
+                    </Suspense>
 
                     <h3>{project.title}</h3>
                     <div className="preview-snippet">

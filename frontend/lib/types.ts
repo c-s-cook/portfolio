@@ -56,9 +56,9 @@ export interface Slug {
 }
 
 export interface PreviewCardProps {
-    key: string,
+    key?: string,
     cardID: number,
-    project: Project | Certification,
+    project?: Project | Certification,
     slideinterval?: number,
     observerOptions?: {
         updateObserved: Function,
