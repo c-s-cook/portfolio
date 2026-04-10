@@ -17,7 +17,6 @@ const RandomPithyReason = () => {
 
     let r = Math.round(Math.random() * 10);
 
-    console.log(`Random reason index: ${r}`);
     switch (r) {
         case 0:
             return (<><p>

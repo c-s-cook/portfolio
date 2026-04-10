@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose'
 import 'dotenv/config'
+import { set } from 'mongoose';
 
 const getUrl = process.env.PORTFOLIO_GET_URL!;
 const postUrl = process.env.PORTFOLIO_POST_URL!;
@@ -98,7 +99,10 @@ export async function POST(req: NextRequest) {
     }
     else {
         const data = await res.json();
-        return NextResponse.json(data, { status: res.status });
+        let delay = setTimeout(() => {
+            return NextResponse.json(data, { status: res.status });
+        }, 2000);
+        
     }
 
 }

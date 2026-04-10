@@ -235,13 +235,13 @@ export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResu
 
         if (type === 'project') {
           const list = portfolio.projects || [];
-          console.log('testing list length: ', list.length);
+          // console.log('testing list length: ', list.length);
           // setAllItems(list);
           // setItems(list);
 
           // testing larger group...
           const testList = list.concat([...list]).concat([...list]);
-          console.log('testList length = ', testList.length);
+          // console.log('testList length = ', testList.length);
           setAllItems(testList);
           setItems(testList);
 
@@ -302,14 +302,14 @@ export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResu
 
     const q = query.split(',');
     if (!q) {
-      console.log('Clearing tag filter, resetting items to all items...');
+      // console.log('Clearing tag filter, resetting items to all items...');
 
 
       let tempItems = [...allItems];
       if (limit !== undefined) tempItems = tempItems.slice(0, limit);
 
       setItems(tempItems);
-      console.log('why not clear the tags?');
+      // console.log('why not clear the tags?');
       setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', false);
       return;
     }
@@ -330,7 +330,7 @@ export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResu
       setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', true);
     } else {
       setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', false);
-      console.log('setTagResults function not provided, cannot update tag results in parent component.');
+      // console.log('setTagResults function not provided, cannot update tag results in parent component.');
     }
 
     // if (searchParams.get('tags') && query && toBeFiltered.length > 0 && setTagResults) {

@@ -14,6 +14,11 @@ interface ThumbnailsCarouselProps {
  * Handles S3 to CDN URL replacement and image lazy loading.
  */
 export const ThumbnailsCarousel = ({ thumbnails, project }: ThumbnailsCarouselProps): ReactElement => {
+
+    
+
+
+
     return (
         <div className="thumbnails">
             {thumbnails.map((img, index) => {

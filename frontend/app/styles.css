@@ -166,7 +166,8 @@ section .centered {
 }
 
 .content p.subcap {
-    font-size: 0.7em;
+    font-size: 0.8em;
+    padding-top: 0.7em;
 }
 
 

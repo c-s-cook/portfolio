@@ -12,9 +12,6 @@ export default function LoginPage() {
   const router = useRouter();
   const pathname = usePathname();
 
-  console.log('LoginPage rendered. Current pathname: ', pathname);
-
-
 
   useEffect(() => {
     const errorMsg = document.getElementById('error-msg') || document.createElement('div')

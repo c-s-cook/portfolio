@@ -4,7 +4,7 @@
 // import Image from 'next/image'
 // import Link from 'next/link'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 
 
 
@@ -25,7 +25,7 @@ export default function Home() {
   function setTagResults (type: 'PROJ' | 'CERT', hasResults: boolean):void {
     if (type === 'PROJ') setProjTagResults(hasResults);
     else setCertTagResults(hasResults);
-    console.log(`Tag results updated: ${type} has results? ${hasResults} | projTagResults: ${projTagResults} | certTagResults: ${certTagResults}`);
+    // console.log(`Tag results updated: ${type} has results? ${hasResults} | projTagResults: ${projTagResults} | certTagResults: ${certTagResults}`);
   };
 
 
@@ -106,8 +106,10 @@ export default function Home() {
 
       <section className='scrollsnap'>
         <div className="content no-background">
-          <Logo />
-          <TagCloud projTagResults={projTagResults} certTagResults={certTagResults} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Logo />
+            <TagCloud projTagResults={projTagResults} certTagResults={certTagResults} />
+          </Suspense>
         </div>
       </section>
 
@@ -136,7 +138,7 @@ export default function Home() {
       </section>
 
       <section className='scrollsnap' id='certifications'>
-        <div className="content extra-long">
+        <div className="content">
 
           <h2 className={satisfy.className}>Certifications</h2>
 

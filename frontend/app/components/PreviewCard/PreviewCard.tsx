@@ -68,7 +68,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
         if (!thumbs || thumbs.children.length < 2 || !thumbs.firstChild || !thumbs.lastChild || !(thumbs.firstChild as HTMLImageElement).style.left) return;
 
-        console.log('shuffling thumbs for card ', cardID, new Date().toLocaleDateString());
+        
 
         // Attempting Re-ordering...
         if ((thumbs.firstChild as HTMLImageElement).style.left != "0%") {
@@ -104,7 +104,6 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
             e.preventDefault();
 
             clearInterval(shuffleInterval);
-            console.log('stopped shuffle for card ', cardID, new Date().toLocaleDateString());
             shuffleInterval = null;
         }
 
@@ -112,7 +111,7 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
         const card = ref.current;
 
         if (project.thumbnails.length > 1) {
-            ref.current && console.log(ref.current.id, new Date().toLocaleString());
+            // ref.current && console.log(ref.current.id, new Date().toLocaleString());
             ref.current?.addEventListener('mouseenter', startShuffle);
             ref.current?.addEventListener('mouseleave', stopShuffle, false);
         }
@@ -153,7 +152,6 @@ const PreviewCard = ({ cardID, project, slideinterval = 2.5, observerOptions }: 
 
         // Cleanup function
         return () => {
-            console.log('cleaning up observers & Intervals for card ', cardID, new Date());
             clearInterval(shuffleInterval);
             ref.current?.removeEventListener('mouseenter', startShuffle);
             ref.current?.removeEventListener('mouseleave', stopShuffle, false);

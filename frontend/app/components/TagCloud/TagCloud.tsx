@@ -65,46 +65,39 @@ export const TagCloud: React.FC<TagCloudProps> = ({ projTagResults = false, cert
     }, []);
 
 
-    return (
-        <>
-            <div className='tag-cloud'>
-                {uniqueTags.length == 0 && 
-                    <>
-                    <span className="tag-box suspense-loading-animation"></span>
-                    <span className="tag-box suspense-loading-animation"></span>
-                    <span className="tag-box suspense-loading-animation"></span>
-                    <span className="tag-box suspense-loading-animation"></span>
-                    </>
-                }
+    if (uniqueTags.length > 0) {
+        return (
+            <>
+                <div className='tag-cloud'>
+                    {uniqueTags.map((uniqueTag) => (
+                        <span
+                            key={uniqueTag.tag}
+                            data-tag={encodeURIComponent(uniqueTag.tag)}
+                            className={`tag-box ${decodeURIComponent(searchParams.get('tags') || '').includes(uniqueTag.tag) ? 'active' : ''}`}
+                            onClick={(e) => handleTagClick(e)}
+                        >
+                            {uniqueTag.tag}
+                        </span>
+                    ))}
 
-                {uniqueTags.length > 0 && uniqueTags.map((uniqueTag) => (
-                    <span
-                        key={uniqueTag.tag}
-                        data-tag={encodeURIComponent(uniqueTag.tag)}
-                        className={`tag-box ${decodeURIComponent(searchParams.get('tags') || '').includes(uniqueTag.tag) ? 'active' : ''}`}
-                        onClick={(e) => handleTagClick(e)}
-                    >
-                        {uniqueTag.tag}
-                    </span>
-                ))}
+                </div>
+                <div className="tag-cloud-links">
+                    <a href="#projects" className={projTagResults ? 'active' : ''}>
+                        <button>
+                            🠋 See Matching Projects
+                        </button>
 
-            </div>
-            <div className="tag-cloud-links">
-                <a href="#projects" className={projTagResults ? 'active' : ''}>
-                    <button>
-                        🠋 See Matching Projects {`${projTagResults}`}
-                    </button>
+                    </a>
+                    <a href="#certifications" className={certTagResults ? 'active' : ''}>
+                        <button>
+                            🠋 See Matching Certifications
+                        </button>
 
-                </a>
-                <a href="#certifications" className={certTagResults ? 'active' : ''}>
-                    <button>
-                        🠋 See Matching Certifications {`${certTagResults}`}
-                    </button>
-
-                </a>
-            </div>
-        </>
-    );
+                    </a>
+                </div>
+            </>
+        );
+    }
 }
 
 export default TagCloud;

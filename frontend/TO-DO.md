@@ -8,6 +8,7 @@ FRONTEND:
  - ?? add a stash of .starred and .caption info on auto-saved thumbnails that get removed after refresh? (ooffftahh...)
  - page params<Promise> vs useParams 'use client' ....may not need client side.."Route Prop Helpers"
  - Logo.tsx - too old. update to actual React/useState functions
+ - img suspense?   -- https://sergiodxa.com/tutorials/react/suspense-image-loading
  - Optimizie, use fewer client components
  - After publish - add Redirect to Item Type list page...
  - X  -  Custom 404 page
