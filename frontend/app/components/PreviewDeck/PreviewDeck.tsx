@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getPortfolio from '../../../lib/getPortfolio';
-import type { Project, Certification } from '../../../lib/types';
+import type { Portfolio, Project, Certification } from '../../../lib/types';
 import PreviewCard from '../PreviewCard/PreviewCard';
 import './PreviewDeck.css';
 import { PreviewDeckSkeleton } from './PreviewDeckSkeleton';
@@ -11,6 +11,7 @@ import { set } from 'mongoose';
 
 type Props = {
   type: 'project' | 'certification';
+  portfolio?: Portfolio;
   slideInterval?: number;
   limit?: number;
   setTagResults?: (type: 'PROJ' | 'CERT', hasResults: boolean) => void;
@@ -26,7 +27,7 @@ const SearchIcon = () => {
 }
 
 
-export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResults }: Props) {
+export default function PreviewDeck({ type, portfolio = null, slideInterval = 3, limit, setTagResults }: Props) {
   const [items, setItems] = useState<Project[] | Certification[] | null>(null);
   const [allItems, setAllItems] = useState<Project[] | Certification[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -225,40 +226,44 @@ export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResu
     setLoading(true);
     setError(null);
 
-    getPortfolio()
-      .then((portfolio) => {
-        if (!mounted) return;
-        if (!portfolio) {
-          setError('No portfolio data returned');
-          return;
+    const fetchPortfolio = async () => {
+      // if portfolio wasn't passed as a prop, fetch it...
+      if (!portfolio) {
+        try {
+          portfolio = await getPortfolio();
         }
-
-        if (type === 'project') {
-          const list = portfolio.projects || [];
-          // console.log('testing list length: ', list.length);
-          // setAllItems(list);
-          // setItems(list);
-
-          // testing larger group...
-          const testList = list.concat([...list]).concat([...list]);
-          // console.log('testList length = ', testList.length);
-          setAllItems(testList);
-          setItems(testList);
-
-        } else {
-          const list = portfolio.certifications || [];
-          setAllItems(list);
-          setItems(list);
+        catch (err) {
+          if (!mounted) return;
+          setError(String(err));
         }
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        setError(String(err));
-      })
-      .finally(() => {
+      }
 
-        if (mounted) setLoading(false);
-      });
+      if (!mounted) return;
+      if (!portfolio) {
+        setError('No portfolio data returned');
+        return;
+      }
+
+      if (type === 'project') {
+        const list = portfolio.projects || [];
+        // console.log('testing list length: ', list.length);
+        // setAllItems(list);
+        // setItems(list);
+
+        // testing larger group...
+        const testList = list.concat([...list]).concat([...list]);
+        setAllItems(testList);
+        setItems(testList);
+
+      } else {
+        const list = portfolio.certifications || [];
+        setAllItems(list);
+        setItems(list);
+      }
+
+      if (mounted) setLoading(false);
+    }
+    fetchPortfolio();
 
     return () => {
       mounted = false;
@@ -298,7 +303,7 @@ export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResu
 
     // if we're clearing the query, also clear the URL tag param and reset the items to all
     if (query.trim() === '' && searchParams.get('tags')) router.replace(pathname, { scroll: false });
-    
+
 
     const q = query.split(',');
     if (!q) {
@@ -324,7 +329,7 @@ export default function PreviewDeck({ type, slideInterval = 3, limit, setTagResu
     }
     if (limit !== undefined) toBeFiltered = toBeFiltered.slice(0, limit);
     setItems(toBeFiltered);
-    
+
     if (query && setTagResults && toBeFiltered.length > 0) {
       // console.log(`Updating tag results for ${type}: ${toBeFiltered.length} matches found.`);
       setTagResults?.(type === 'project' ? 'PROJ' : 'CERT', true);

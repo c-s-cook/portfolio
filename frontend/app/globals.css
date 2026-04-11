@@ -149,9 +149,13 @@ body {
 
 }
 
+.shadow {
+  box-shadow: var(--box-shadow);
+}
+
 
 .suspense-loading-animation {
-  background: linear-gradient(90deg, var(--background-rgba-20) 25%, var(--background-rgba-40) 50%, var(--background-rgba-20) 75%);
+  background: linear-gradient(90deg, var(--background-rgba-40) 25%, var(--background-rgba-80) 50%, var(--background-rgba-20) 75%);
   background-size: 200% 100%;
   animation: loading-ani 2.5s linear infinite;
 }

@@ -28,8 +28,8 @@ export default async function RootLayout({ children }) {
 
   const navLinks = [
     { href: "/", text: "Main" },
-    { href: "/projects", text: "Projects" },
-    { href: "/certifications", text: "Certifications" },
+    { href: "#projects", text: "Projects" },
+    { href: "#certifications", text: "Certifications" },
     { href: "/dashboard", text: "Dashboard" }
   ];
 
@@ -46,7 +46,7 @@ export default async function RootLayout({ children }) {
           <Navbar isLoggedIn={isLoggedin} navLinks={navLinks} />
           {children}
           <footer className='scrollsnap'>
-            Copyright 2025 Christopher Cook. All rights reserved.
+            Copyright 2026 Christopher Cook. All rights reserved.
           </footer>
         </div>
 

@@ -1,19 +1,20 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { UniqueTag } from '@lib/types';
+import { UniqueTag, Portfolio } from '@lib/types';
 import './TagCloud.css';
 import '../AddItems/TagsInput.css';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import getPortfolio from '@lib/getPortfolio';
 
 interface TagCloudProps {
+    portfolio?: Portfolio,
     projTagResults?: boolean,
     certTagResults?: boolean,
 }
 
 
-export const TagCloud: React.FC<TagCloudProps> = ({ projTagResults = false, certTagResults = false }: TagCloudProps) => {
+export const TagCloud: React.FC<TagCloudProps> = ({ portfolio = null, projTagResults = false, certTagResults = false }: TagCloudProps) => {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -57,7 +58,7 @@ export const TagCloud: React.FC<TagCloudProps> = ({ projTagResults = false, cert
         }
 
         const fetchUniqueTags = async () => {
-            const portfolio = await getPortfolio();
+            if (!portfolio) portfolio = await getPortfolio();
 
             setUniqueTags(sortUniqueTags(portfolio.uniqueTags));
         }

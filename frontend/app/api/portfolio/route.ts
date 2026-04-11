@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     const res = await fetch(getUrl);
     const data = await res.json();
     // 5-second delay
-    // await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
     return NextResponse.json(data, { status: res.status });
 }
 
@@ -99,9 +99,8 @@ export async function POST(req: NextRequest) {
     }
     else {
         const data = await res.json();
-        let delay = setTimeout(() => {
-            return NextResponse.json(data, { status: res.status });
-        }, 2000);
+        
+        return NextResponse.json(data, { status: res.status });
         
     }
 
