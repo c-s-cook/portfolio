@@ -1,13 +1,15 @@
-"use cache"
+"use client"
 
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import type { Certification, ImageURL, Portfolio } from "@lib/types";
+import React, { useEffect, useState } from "react";
+import { useParams, notFound } from "next/navigation";
+import getPortfolio from "@lib/getPortfolio";
+import type { Certification, ImageURL } from "@lib/types";
 
 import '../../ContentPages.css';
 import Carousel from "@components/Carousel/Carousel";
+import Link from "next/link";
+// const PreviewDeck = React.lazy(() => import("@components/PreviewDeck/PreviewDeck"));
 import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
-import ContentLoading from "../../loading";
 
 const LinkIcon = () => {
 	return (
@@ -34,57 +36,85 @@ const AwardIcon = () => {
 }
 
 
-export default async function CertificationPage(props: PageProps<'/certifications/[[...slug]]'>) {
-
-	let certification: Certification = null;
-	const params = await props.params;
+export default function CertificationPage() {
+	// read catch-all slug (array) and join into single slug string
+	const params = useParams();
 	const slugArray = (params as any)?.slug as string[] | undefined;
-
 	const slug = Array.isArray(slugArray) ? slugArray.join("/") : (slugArray as unknown as string | undefined);
 
-	if (!slug) {
-		// display the PreviewDeck to list all certification if there is no slug
-		return (
-			<section className="certification-page no-snap">
-				<div className="content extra-long no-snap">
-					<PreviewDeck type={'certification'} />
-				</div>
-			</section>
-		)
-	} else {
+	const [certification, setCertification] = useState<Certification | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-		try {
-			// console.log('getting portfolio...');
-
-			const getUrl = process.env.PORTFOLIO_GET_URL!;
-			const params = new URLSearchParams({
-				type: 'CERT',
-				slug: slug
-			});
-
-
-			const res = await fetch(`${getUrl}?${params}`);
-
-			if (!res.ok) throw new Error('Error fetching the portfolio...');
-			const portfolio: Portfolio = await res.json();
-			// await new Promise(resolve => setTimeout(resolve, 19000));
-
-			const certifications: Certification[] = Array.isArray(portfolio?.certifications) ? portfolio.certifications : [];
-			certification = certifications.find((p) => p.slug === slug);
-			if (!certification) throw new Error(`Couldn't find a certification that matches the given slug: ${slug}`);
-
-		} catch (err) {
-			console.log(err);
-			notFound();
+	useEffect(() => {
+		let mounted = true;
+		if (!slug) {
+			
+			setError("No certification specified");
+			setLoading(false);
+			return;
 		}
-	}
 
+		(async () => {
+			setLoading(true);
+			setError(null);
+			try {
+				const portfolio: any = await getPortfolio();
+				const certifications: Certification[] = Array.isArray(portfolio?.certifications) ? portfolio.certifications : [];
+				const found = certifications.find((p) => p.slug === slug);
+				if (!mounted) return;
+				if (found) {
+					setCertification(found);
+				} else {
+					
+					setError("Certification not found");
+				}
+			} catch (err: any) {
+				if (!mounted) return;
+				setError(String(err?.message ?? err ?? "Unknown error"));
+			} finally {
+				if (mounted) setLoading(false);
+			}
+		})();
 
+		return () => {
+			mounted = false;
+		};
+	}, [slug]);
 
 	return (
 		<section className="certification-page no-snap">
-			<Suspense fallback={<ContentLoading />}>
 
+			{/* LOADING MSG */}
+			{loading && (
+				<div className="content with-background bg-grad">
+					<p className="loading-text">Loading certification…</p>
+				</div>
+			)}
+
+			{/* ERROR MSG */}
+			{error && slug && !loading && (
+				<div className="content with-background bg-grad">
+					<p className="error-text">{error}</p>
+				</div>
+			)}
+
+			{/* DISPLAY ALL PROJECT PREVIEW CARDS WHEN NO SLUG */}
+			{!slug && error && (
+				<div className="content extra-long no-snap">
+					
+						<PreviewDeck type={'certification'} />
+					
+				</div>
+			)}
+
+			{/* DISPLAY SPECIFIED PROJ */}
+
+
+			{/* {loading && <p className="loading-text">Loading certification…</p>}
+				{error && !loading && <p className="error-text">{error}</p>} */}
+
+			{!loading && !error && certification && (
 				<div className="content with-background bg-grad content">
 					<article className="content-article">
 						<header className="content-header">
@@ -95,7 +125,6 @@ export default async function CertificationPage(props: PageProps<'/certification
 						</header>
 
 						<Carousel images={certification.thumbnails} interval={4000} autoPlay={true} />
-						{/* <CarouselSkeleton /> */}
 
 						<div
 							className="content-body"
@@ -135,7 +164,7 @@ export default async function CertificationPage(props: PageProps<'/certification
 						</footer>
 					</article>
 				</div>
-			</Suspense>
+			)}
 
 		</section>
 	);

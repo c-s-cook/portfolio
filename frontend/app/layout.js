@@ -4,13 +4,14 @@ import { Quicksand } from 'next/font/google'
 import { cookies } from 'next/headers'
 
 
+
 import Navbar from './components/Navbars/Navbar'
 import Background from './components/Background/Background'
 
 
 
 
-export const dynamic = 'force-dynamic'
+// export const dynamic = 'force-dynamic'
 
 const quicksand = Quicksand({
   subsets: ['latin'],
@@ -28,8 +29,8 @@ export default async function RootLayout({ children }) {
 
   const navLinks = [
     { href: "/", text: "Main" },
-    { href: "#projects", text: "Projects" },
-    { href: "#certifications", text: "Certifications" },
+    { href: "/#projects", text: "Projects" },
+    { href: "/#certifications", text: "Certifications" },
     { href: "/dashboard", text: "Dashboard" }
   ];
 

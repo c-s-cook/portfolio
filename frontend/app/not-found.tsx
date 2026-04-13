@@ -1,7 +1,8 @@
+"use cache"
+
 import type { Metadata } from 'next';
 
 import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
-
 
 import { Satisfy } from 'next/font/google'
 const satisfy = Satisfy({ subsets: ['latin'], weight: ['400'] })
@@ -65,7 +66,7 @@ const RandomPithyReason = () => {
 
 
 
-export default function NotFound() {
+export default async function NotFound() {
     return (
         <section className="full">
             <div className="content centered">

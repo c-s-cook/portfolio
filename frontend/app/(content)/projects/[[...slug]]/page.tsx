@@ -1,14 +1,16 @@
-"use client"
+"use cache"
 
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import getPortfolio from "@lib/getPortfolio";
-import type { Project, ImageURL } from "@lib/types";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+
+
+import type { Project, ImageURL, Portfolio } from "@lib/types";
 
 import '../../ContentPages.css';
 import Carousel from "@components/Carousel/Carousel";
 import Link from "next/link";
 import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
+import ContentLoading from "app/(content)/loading";
 
 const LinkIcon = () => {
 	return (
@@ -27,76 +29,52 @@ const RepoIcon = () => {
 }
 
 
-export default function ProjectPage() {
-	// read catch-all slug (array) and join into single slug string
-	const params = useParams();
+export default async function ProjectPage(props: PageProps<'/projects/[[...slug]]'>) {
+
+	let project: Project = null;
+	const params = await props.params;
 	const slugArray = (params as any)?.slug as string[] | undefined;
+
 	const slug = Array.isArray(slugArray) ? slugArray.join("/") : (slugArray as unknown as string | undefined);
 
-	const [project, setProject] = useState<Project | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	if (!slug || slug == undefined) {
+		// display the PreviewDeck to list all certification if there is no slug
+		return (
+			<section className="project-page">
+				<div className="content extra-long no-snap">
+					<PreviewDeck type={'project'} />
+				</div>
+			</section>
+		)
+	} else {
 
-	useEffect(() => {
-		let mounted = true;
-		if (!slug) {
-			setError("No project specified");
-			setLoading(false);
-			return;
+		try {
+			// console.log('getting portfolio...');
+
+			const getUrl = process.env.PORTFOLIO_GET_URL!;
+
+			const res = await fetch(getUrl);
+
+			if (!res.ok) throw new Error('Error fetching the portfolio...');
+			const portfolio: Portfolio = await res.json();
+
+			const projects: Project[] = Array.isArray(portfolio?.projects) ? portfolio.projects : [];
+			project = projects.find((p) => p.slug === slug);
+			if (!project) throw new Error(`Couldn't find a project that matches the given slug: ${slug}`);
+
+		} catch (err) {
+			console.log(err);
+			notFound();
 		}
 
-		(async () => {
-			setLoading(true);
-			setError(null);
-			try {
-				const portfolio: any = await getPortfolio();
-				const projects: Project[] = Array.isArray(portfolio?.projects) ? portfolio.projects : [];
-				const found = projects.find((p) => p.slug === slug);
-				if (!mounted) return;
-				if (found) {
-					setProject(found);
-				} else {
-					setError("Project not found");
-				}
-			} catch (err: any) {
-				if (!mounted) return;
-				setError(String(err?.message ?? err ?? "Unknown error"));
-			} finally {
-				if (mounted) setLoading(false);
-			}
-		})();
 
-		return () => {
-			mounted = false;
-		};
-	}, [slug]);
+	}
+
 
 	return (
 		<section className="project-page">
+			<Suspense fallback={<ContentLoading />}>
 
-			{/* LOADING MSG */}
-			{loading && (
-				<div className="content with-background bg-grad">
-					<p className="loading-text">Loading project…</p>
-				</div>
-			)}
-
-			{/* ERROR MSG */}
-			{error && slug && !loading && (
-				<div className="content with-background bg-grad">
-					<p className="error-text">{error}</p>
-				</div>
-			)}
-
-			{/* DISPLAY ALL PROJECT PREVIEW CARDS WHEN NO SLUG */}
-			{!slug && error && (
-				<div className="content extra-long">
-						<PreviewDeck type={'project'} />
-				</div>
-			)}
-
-			{/* DISPLAY SPECIFIED PROJ */}
-			{!loading && !error && project && (
 				<div className="content with-background bg-grad">
 					<article className="content-article">
 						<header className="content-header">
@@ -139,7 +117,7 @@ export default function ProjectPage() {
 						</footer>
 					</article>
 				</div>
-			)}
+			</Suspense>
 
 		</section>
 	);

@@ -17,7 +17,7 @@ export default async function getPortfolio() {
 
             portfolio = data;
 
-            console.log('successfully fetched the projects: ');
+            // console.log('successfully fetched the projects: ');
         } catch (error) {
             portfolio['error'] = error;
             console.error('Error fetching portfolio projects from API:', error);
@@ -35,16 +35,18 @@ export default async function getPortfolio() {
 
     if (!portfolio || !portfolio.projects || !portfolio.certifications || !portfolio.uniqueTags) {
 
+
         await fetchPortfolio();
 
         if (Array.isArray(portfolio.projects)
             && Array.isArray(portfolio.certifications)
             && Array.isArray(portfolio.uniqueTags)) {
-            localStorage.setItem('portfolio', JSON.stringify(portfolio));
+            if (typeof (Storage) !== "undefined") localStorage.setItem('portfolio', JSON.stringify(portfolio));
         } else {
             portfolio['error'] = 'Had an error somewhere...';
         }
     }
+
 
     return portfolio
 }

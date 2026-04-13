@@ -23,6 +23,10 @@
   height: 100%;
   position: relative;
 }
+.carousel-slides.suspense {
+  width: 1000px;
+  height: 800px;
+}
 
 /* each slide is absolutely stacked and fades in/out */
 .carousel-slide {
@@ -35,6 +39,7 @@
   justify-content: center;
   pointer-events: none;
 }
+
 
 .carousel-slide.active {
   opacity: 1;

@@ -39,6 +39,13 @@
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     line-height: 1.05;
 }
+.content-title.suspense {
+    width: 75%;
+    height: 1.5em;
+    border-radius: 20px;
+    text-align: center;
+    margin: 0 auto;
+}
 
 /* ensure subcap uses existing small style */
 .content-subcap {
@@ -56,7 +63,10 @@
     height: 1.5em;
     display: inline;
     float: center;
-    padding-right: 0.5em;
+    margin-top: 0.4em;
+    padding-right: 0.3em;
+    color: var(--foreground-rgb);
+    fill: var(--foreground-rgb);
 }
 
 /* Thumbnails grid */
@@ -89,6 +99,13 @@
     line-height: 1.6;
 }
 
+.content-body p.suspense {
+    width: 100%;
+    height: 1em;
+    margin: 0.75em 0;
+    border-radius: 5px;
+}
+
 /* Actions (buttons) */
 .content-actions {
     display: flex;
@@ -103,6 +120,10 @@
     line-height: 2em;
     display: inline-block;
     min-width: 200px;
+}
+.content-actions button.suspense {
+    height: 3em;
+    border: transparent;
 }
 
 .content-actions button svg {
@@ -127,6 +148,10 @@
     margin-bottom: .5rem;
     font-weight: 600;
 }
+.content-tags-label.suspense {
+    height: 2em;
+    width: 10em;
+}
 
 .content-tags {
     display: flex;
@@ -134,7 +159,7 @@
     gap: 0.5rem;
 }
 
-.content-tag {
+.content-tag:not(.suspense) {
     display: inline-block;
     padding: 0.25em 0.6em;
     margin: 0.25em 0;
@@ -144,8 +169,13 @@
     color: var(--foreground-rgba-60);
     font-size: 0.75rem;
 }
-.content-tag::before {
+.content-tag:not(.suspense)::before {
     content:'#';
+}
+.content-tag.suspense {
+    width: 10em;
+    height: 1.5em;
+    border: transparent;
 }
 
 .tag-box {
