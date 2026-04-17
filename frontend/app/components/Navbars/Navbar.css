@@ -141,13 +141,13 @@ div#demo-mode {
   transition: 0.3s ease;
 }
 
-#menu li:hover {
+#menu li:not(.active):hover {
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid white;
   /* border-radius: 8px; */
 }
 #menu li.active{
-  border: 1px solid var(--background-rgba-40);
+  border: 1px solid var(--foreground-rgba-40);
   border-radius: var(--border-radius);
 }
 
@@ -155,6 +155,58 @@ div#demo-mode {
   visibility: hidden;
   opacity: 0;
 }
+
+#navbar #menu li:has(a>div.icon){
+  position: relative;
+  width: fit-content;
+  padding: 0.5em 1em;
+  margin: 0 auto;
+  text-align: center;
+}
+#navbar .icon {
+  fill: var(--foreground-rgb);
+  width: fit-content;
+  min-width: 1em;
+  height: 1em;
+  opacity: 0.4;
+  /* vertical-align: -1em; */
+  padding: 0;
+  /* margin: 0 auto; */
+  transition: 0.3s ease-in-out;
+  background-color: transparent;
+  border: transparent 1px;
+}
+#navbar .icon svg{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 1.25em;
+  width: auto;
+  vertical-align: -0.5em;
+  transition: 0.3s ease-in-out;
+}
+#navbar .icon svg.sign-in, 
+#navbar .icon svg.signed-in,
+#navbar .icon svg.is-admin{
+  margin-left: 3px;
+}
+#navbar .icon svg.for-hover{
+  opacity: 0;
+}
+#navbar #menu li:has(.icon){
+  background-color: transparent;
+  border: transparent 1px;
+}
+#navbar #menu li:has(.icon):hover .icon svg.for-hover,
+#navbar #menu li:has(.icon):hover .icon,
+#navbar #menu li.active:has(.icon) .icon{
+  opacity: 1;
+}
+#navbar #menu li:has(.icon):hover .icon svg:not(.for-hover){
+  opacity: 0;
+}
+
+
 
 
 
@@ -326,6 +378,22 @@ input[type=checkbox]#nav_checkbox_toggle {
     border: 1px solid var(--foreground-rgb);
     border-radius: 8px;
     /* transition: 0.3s ease; */
+  }
+
+  #navbar #menu .icon{
+    opacity: 1;
+  }
+  #navbar #menu .icon svg{
+    visibility: hidden;
+  }
+
+  #navbar #menu li div.sign-in::after{
+    content: 'Sign In';
+    /* background-color: green !important; */
+  }
+  #navbar #menu li div.sign-out::after{
+    content: 'Sign Out';
+    /* background-color: green !important; */
   }
 
 

@@ -34,8 +34,6 @@ export default async function RootLayout({ children }) {
     { href: "/dashboard", text: "Dashboard" }
   ];
 
-  // check for login
-  let isLoggedin = (await cookies()).get('jwt')?.value ? true : false;
 
 
   return (
@@ -44,7 +42,7 @@ export default async function RootLayout({ children }) {
       <body className={quicksand.className}>
         <Background />
         <div className='scrollsnap-container'>
-          <Navbar isLoggedIn={isLoggedin} navLinks={navLinks} />
+          <Navbar navLinks={navLinks} />
           {children}
           <footer className='scrollsnap'>
             Copyright 2026 Christopher Cook. All rights reserved.

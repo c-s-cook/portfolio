@@ -3,12 +3,29 @@ import type { NextRequest } from 'next/server'
 // import 'dotenv/config'
 // import jwt from 'jsonwebtoken'
 import { jwtVerify } from 'jose'
-import { verify } from 'crypto'
+// import { verify } from 'crypto'
 
  
 // This function can be marked `async` if using `await` inside
 export async function proxy(request: NextRequest) {
-    // console.log("dashboard middleware test")
+    
+
+    // from attempting to move user data into headers...
+    // not looping through effectively right now. Moving on... :S
+    // const { pathname } = request.nextUrl;
+    // if (!pathname.includes('dashboard')){
+    //   console.log(pathname, ' is NOT /dashboard...');
+    //   // if 'x-user' was already set, it should be auto-included, right?
+    //   const requestHeaders = new Headers(request.headers);
+    //   const userTest = requestHeaders.get('x-user') || 'nada';
+    //   console.log('userTest: ', userTest);
+    //   return NextResponse.next({
+    //     request: {
+    //       headers: requestHeaders
+    //     }
+    //   })
+    // }
+    // console.log('pathname: ', pathname);
 
     const token = request.cookies.get('jwt')?.value
 
@@ -16,22 +33,9 @@ export async function proxy(request: NextRequest) {
         console.log('No JWT token found.');
         return NextResponse.rewrite(new URL('/login', request.url))
     } else {
-        
-        // console.log('jwt token is: ', token)
 
         // check if token exists & is verified
         if(token){
-            // console.log('made it in the middleware IF...')
-
-            // jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-            //     if(err){
-            //         console.log(err.message);
-            //         return NextResponse.redirect(new URL('/login', request.url))
-            //     } else {
-            //         console.log('decoded token: ', decodedToken);
-            //         return NextResponse.next()
-            //     }
-            // })
 
             try {
                 const verified = await jwtVerify(
@@ -39,7 +43,22 @@ export async function proxy(request: NextRequest) {
                   new TextEncoder().encode(process.env.JWT_SECRET)
                 )
                 // console.log('middleware verified = ', verified.payload.jti, verified.payload.jti.email, verified.payload.jti.info);
-                return NextResponse.next()
+                return NextResponse.next();
+
+                // // attempting to jam user/admin info into the headers...
+                // const requestHeaders = new Headers(request.headers);
+                // requestHeaders.set("x-user", JSON.stringify({
+                //   email: verified.payload.jti.email?.split('@')[0],
+                //   admin: verified.payload.jti.admin || false
+                // }));
+
+                // console.log(requestHeaders.get('x-user'));
+
+                // return NextResponse.next({
+                //   request: {
+                //     headers: requestHeaders
+                //   }
+                // })
               } catch (err) {
                 console.log(err.message);
                 
@@ -53,9 +72,10 @@ export async function proxy(request: NextRequest) {
 
                 const response = NextResponse.redirect(url)
 
-                console.log("deleteing JWT cookie...")
-                response.cookies.delete('jwt')
-                response.cookies.delete('user')
+                console.log("deleteing JWT cookie...");
+                response.cookies.delete('jwt');
+                response.cookies.delete('user');
+                response.headers.delete('user');
 
                 return response
                 

@@ -92,7 +92,8 @@ export default function LoginPage() {
 
       submitBtn.textContent = 'SUCCESS!'
       // await router.push('/dashboard');
-      router.refresh(); // Refresh to send user to desired page
+      if (pathname.includes('login')) await router.push('/dashboard');
+      else router.replace('/dashboard/?login=success'); // Refresh to send user to desired page
       // console.log('Navigation REFRESH complete...?')
       return
 

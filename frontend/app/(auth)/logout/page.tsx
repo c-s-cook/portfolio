@@ -34,7 +34,7 @@ export default function LogoutPage() {
 
       const intervalId = setInterval(() => {
         clearInterval(intervalId);
-        router.push('/')
+        router.replace('/?logout=true')
       }, delay*1000);
 
     } else {

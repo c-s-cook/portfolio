@@ -29,7 +29,7 @@ const Hamburger = ({ boxChecked }: { boxChecked: boolean }) => {
 
             let tempCount: number = burgerCount < 3 ? burgerCount + 1 : 0;
             setTimeout(() => {
-                console.log('FLIPPING burgers! ', burgerCount, '->', tempCount);
+                // console.log('FLIPPING burgers! ', burgerCount, '->', tempCount);
                 setBurgerCount(tempCount);
             }, 450);
 

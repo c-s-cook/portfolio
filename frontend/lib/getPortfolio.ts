@@ -19,7 +19,7 @@ export default async function getPortfolio() {
 
             // console.log('successfully fetched the projects: ');
         } catch (error) {
-            portfolio['error'] = error;
+            portfolio['error'] = error || 'No error received...oh boy...';
             console.error('Error fetching portfolio projects from API:', error);
         }
     };
