@@ -10,7 +10,7 @@ import '../../ContentPages.css';
 import Carousel from "@components/Carousel/Carousel";
 import Link from "next/link";
 import PreviewDeck from "@components/PreviewDeck/PreviewDeck";
-import ContentLoading from "app/(content)/loading";
+import ContentLoading from "../../loading";
 
 const LinkIcon = () => {
 	return (

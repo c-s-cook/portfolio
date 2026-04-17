@@ -1,16 +1,18 @@
 FRONTEND:
-  - Add timed redirect to 404, Content Error, & Content Not Found page
+ 
  - update click displays??
  - update Publish page styling for Mobile screens
- - add a propper footer
+ - add a proper footer
  - add IntersectionObserver to fadeIn/fadeOut scrollsnap content
  - add Date() to localStorage Portfolio + a 1-day check to try a refresh...
  - ?? add a stash of .starred and .caption info on auto-saved thumbnails that get removed after refresh? (ooffftahh...)
- - page params<Promise> vs useParams 'use client' ....may not need client side.."Route Prop Helpers"
  - Logo.tsx - too old. update to actual React/useState functions
- - img suspense?   -- https://sergiodxa.com/tutorials/react/suspense-image-loading
+ 
  - Optimizie, use fewer client components
  - After publish - add Redirect to Item Type list page...
+ - X  - Add timed redirect to 404, Content Error, & Content Not Found page
+ - X  -  page params<Promise> vs useParams 'use client' ....may not need client side.."Route Prop Helpers"
+ - X  -  img suspense?   -- https://sergiodxa.com/tutorials/react/suspense-image-loading
  - X  -  Custom 404 page
  - X  -  fix Login Redirect (still not working... :S )
  - X  -  DASHBOARD:  Switch view/Edit icons & links
@@ -34,6 +36,7 @@ FRONTEND:
 
 BACKEND:
 - [VPN DETECTION] https://dev.to/saman_sardari_fecbaad4b5d/how-to-detect-vpns-with-javascript-457p
+- Add Rate Limiter
 - add Authorizer/Lambda to Image API Gateway
 - Text OTP
 - WS
