@@ -37,11 +37,11 @@ FRONTEND:
 BACKEND:
 - [VPN DETECTION] https://dev.to/saman_sardari_fecbaad4b5d/how-to-detect-vpns-with-javascript-457p
 - Add Rate Limiter
-- add Authorizer/Lambda to Image API Gateway
 - Text OTP
 - WS
 - Chat
 - Weather
+- X   add Authorizer/Lambda to Image API Gateway
 - X  Mongoose DB -- 'useNewUrlParser" -- remove
 - x  "edit" feature to 
 - X  image API resize
